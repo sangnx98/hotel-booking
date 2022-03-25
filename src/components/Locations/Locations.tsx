@@ -63,7 +63,7 @@ export default function Locations() {
                       <Typography sx={{position: 'absolute', bottom: '1rem', left: 'center', fontSize: '25px', color: 'white', fontWeight: '700'}}>
                         Hà Nội
                       </Typography>
-                      <Link to='/rooms'>
+                      <Link to='/home/rooms'>
                         <img src="http://hanoimoi.com.vn/Uploads/images/tuandiep/2020/08/20/ho-hoan-kiem.jpg" alt="" />
                       </Link>
                     </SwiperSlide>
@@ -71,7 +71,7 @@ export default function Locations() {
                       <Typography sx={{position: 'absolute', bottom: '1rem', left: 'center', fontSize: '25px', color: 'white', fontWeight: '700'}}>
                         Hạ Long
                       </Typography>
-                      <Link to='/rooms'>
+                      <Link to='/home/rooms'>
                         <img src="https://media.vneconomy.vn/w800/images/upload/2021/06/19/halong.jpg" alt="" />
                       </Link>
                   </SwiperSlide>

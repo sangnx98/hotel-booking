@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form'
+import { useNavigate } from "react-router-dom";
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -31,19 +32,23 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 type UserSubmitForm = {
+  user: OneUser[];
+};
+type OneUser = {
   email: string;
   password: string;
-  userName: string
-};
+  name: string;
+}
 
 export default function Login() {
-  const [values, setValues] = React.useState<UserSubmitForm>(
-    {
-      email: '',
-      password: '',
-      userName: ''
-    }
-  )
+  const navigate = useNavigate()
+  const [listUser, setListUser] = React.useState<any>([])
+
+  React.useEffect(() => {
+    fetch('http://localhost:4000/users')
+    .then(res => res.json())
+    .then(setListUser)
+  },[])
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -54,13 +59,22 @@ export default function Login() {
       .min(6, 'Password must be at least 6 characters')
       .max(40, 'Password must not exceed 40 characters')
     });
-  const {register, handleSubmit, formState:{ errors }} = useForm<UserSubmitForm>({resolver: yupResolver(validationSchema)});
-  const onSubmit = (data: UserSubmitForm) => {
-    setValues(data)
-    console.log(JSON.stringify(data, null, 2))
+  const {register, handleSubmit, formState:{ errors }} = useForm<OneUser>({resolver: yupResolver(validationSchema)});
+  const onSubmit = (data: OneUser) => {
+      for( let i = 0; i < listUser.length; i++){
+        if(listUser[i].email === data.email && listUser[i].password === data.password){
+          console.log('abc',listUser[i])
+          localStorage.setItem('user',JSON.stringify(listUser[i]))
+          navigate('/')
+        }
+      }
+      // const user = listUser.filter((user: OneUser) => user.email === data.email && user.password === data.password)
+     
   };
-  console.log('abc', values)
-  
+  React.useEffect(()=>{
+    localStorage.removeItem('user')
+  },[])
+  console.log('listUser',listUser)
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -93,7 +107,7 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign In
+              LUXSTAY
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
               <TextField
@@ -132,7 +146,13 @@ export default function Login() {
               >
                 Sign In
               </Button>
-              <SocialLogin/>
+              <Button
+                type="submit"
+                fullWidth
+                sx={{ mt: 1, mb: 2 }}
+              >
+                <SocialLogin/>
+              </Button>
                 <Grid item>
                   <Link href="/signup" variant="body2">
                     {"Do you have account? Sign up"}

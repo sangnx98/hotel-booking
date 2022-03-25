@@ -12,7 +12,7 @@ import Header from "../components/Header/Header";
 import { Container } from "@mui/material";
 import { Box } from "@mui/system";
 import { Theme, useTheme } from '@mui/material/styles';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

@@ -35,6 +35,7 @@ type UserSubmitForm = {
   email: string;
   password: string;
   confirmPassword: string;
+  role: string;
 };
 
 export default function Signup() {
@@ -44,7 +45,8 @@ export default function Signup() {
       email: '',
       password: '',
       name: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      role: '1'
     }
   )
   const validationSchema = Yup.object().shape({
@@ -65,12 +67,26 @@ export default function Signup() {
     });
   const {register, handleSubmit, formState:{ errors }} = useForm<UserSubmitForm>({resolver: yupResolver(validationSchema)});
   const onSubmit = (data: UserSubmitForm) => {
-    setValues(data)
+    console.log('data', data)
+    fetch('http://localhost:4000/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    //Then with the data from the response in JSON...
+    .then((data) => {
+      console.log('Success:', data);
+      navigate('/login')
+    })
+    //Then with the error genereted...
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
-  React.useEffect(()=>{
-    localStorage.setItem('user',JSON.stringify(values))
-  },[values])
 
   return (
     <ThemeProvider theme={theme}>

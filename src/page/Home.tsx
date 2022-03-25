@@ -11,7 +11,6 @@ import UserManual from '../components/UserManual/UserManual';
 export default function Home(){
   return (
     <>
-      <Header/>
       <Slider/>
       <Locations/>
       <Suggest/>

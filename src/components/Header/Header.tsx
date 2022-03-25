@@ -196,7 +196,7 @@ export default function Header() {
         </MenuItem>
         </Menu>
     );
-
+        console.log('values',values)
   return (
     <Box sx={{ flexGrow: 1}}>
       <AppBar 
@@ -236,20 +236,33 @@ export default function Header() {
                     Host
               </Typography>
               </Link>
-              <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
-                  {values.name}
-              </Typography>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle sx={{color: 'black'}}/>
-              </IconButton>
+              {(values) ?
+              (<Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+                <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
+                    {values.name}
+                </Typography>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle sx={{color: 'black'}}/>
+                </IconButton>
+              </Box>)
+              :
+              (<Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+                <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
+                    Login
+                </Typography>
+                <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
+                    Sign Up
+                </Typography>
+              </Box>)
+              }
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none', color: 'black' } }}>
             <IconButton

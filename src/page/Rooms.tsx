@@ -65,7 +65,7 @@ export default function Rooms() {
     };
   return (
     <>
-        <Header/>
+        {/* <Header/> */}
         <CssBaseline />
         <Container maxWidth="xl">
             <Box sx={{marginTop: '5rem', color: 'black !important' }} >
@@ -114,7 +114,7 @@ export default function Rooms() {
                 </FormControl>
                 <Grid container spacing={2}>
                     <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Link to='/room'>
+                        <Link to='/home/room'>
                         <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
                             <CardActionArea>
                                 <CardMedia
