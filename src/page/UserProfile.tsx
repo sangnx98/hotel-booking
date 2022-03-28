@@ -70,7 +70,6 @@ export default function UserProfile() {
         }
         return JSON.parse(storedValues)
         })
-      console.log('abc',values)
   return (
     <>
         <Header/>

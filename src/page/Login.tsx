@@ -31,9 +31,6 @@ function Copyright(props: any) {
 }
 
 const theme = createTheme();
-type UserSubmitForm = {
-  user: OneUser[];
-};
 type OneUser = {
   email: string;
   password: string;
@@ -50,6 +47,8 @@ export default function Login() {
     .then(setListUser)
   },[])
 
+
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email is required')
@@ -63,18 +62,14 @@ export default function Login() {
   const onSubmit = (data: OneUser) => {
       for( let i = 0; i < listUser.length; i++){
         if(listUser[i].email === data.email && listUser[i].password === data.password){
-          console.log('abc',listUser[i])
           localStorage.setItem('user',JSON.stringify(listUser[i]))
           navigate('/')
         }
-      }
-      // const user = listUser.filter((user: OneUser) => user.email === data.email && user.password === data.password)
-     
+      } 
   };
   React.useEffect(()=>{
     localStorage.removeItem('user')
   },[])
-  console.log('listUser',listUser)
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Header from '../components/Header/Header';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -18,6 +17,7 @@ import { CardActionArea } from '@mui/material';
 import {Link} from 'react-router-dom'
 
 import '../App.css'
+import RoomDetail from './RoomDetail';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -32,14 +32,6 @@ const MenuProps = {
 
 const choices = ["Giá tăng dần", "Giá giảm dần"];
 
-// const useStyles = makeStyles({
-//     gridContainer: {
-//       paddingLeft: "40px",
-//       paddingRight: "40px"
-//     }
-//   });
-  
-
 function getStyles(choices: string, personName: readonly string[], theme: Theme) {
   return {
     fontWeight:
@@ -49,20 +41,39 @@ function getStyles(choices: string, personName: readonly string[], theme: Theme)
   };
 }
 
+type Rooms = {
+    host_id: string,
+    room_type: string,
+    room_name: string,
+    address: string,
+    square: string,
+    bed_rooms: string,
+    bath_rooms: string,
+    beds: number,
+    price: string,
+    guest_nums: number,
+    status: boolean,
+    is_checked: boolean,
+}
+
 export default function Rooms() {
     const theme = useTheme();
-    // const classes = useStyles();
     const [personName, setPersonName] = React.useState<string[]>([]);
+    const [rooms, setRooms] = React.useState<any>([])
 
     const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {
       target: { value }
     } = event;
         setPersonName(
-        // On autofill we get a stringified value.
         typeof value === "string" ? value.split(",") : value
         );
     };
+    React.useEffect(() => {
+        fetch('http://localhost:4000/rooms')
+        .then(res => res.json())
+        .then(setRooms)
+      },[])
   return (
     <>
         {/* <Header/> */}
@@ -112,197 +123,38 @@ export default function Rooms() {
                     ))}
                     </Select>
                 </FormControl>
-                <Grid container spacing={2}>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Link to='/home/room'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        <b>850.000đ</b>
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                        </Link>
+                <Grid container spacing={2} >
+                    {rooms.map((item: any)=>(
+                            <Grid item xs={6} sm={6} md={2} justifyContent='center' key={item.id}>
+                                <Link to={`/home/room/${item.id}`}>
+                                    <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
+                                        <CardActionArea>
+                                            <CardMedia
+                                            component="img"
+                                            height="140"
+                                            image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
+                                            alt="green iguana"
+                                            />
+                                            <CardContent sx={{padding:'1rem 0 1rem 0'}}>
+                                                <Typography gutterBottom variant="subtitle1" component="div">
+                                                    {item.room_type} - {item.bed_rooms} phòng ngủ
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {item.room_name} - {item.bed_rooms} phòng ngủ
+                                                </Typography>
+                                                <Typography gutterBottom variant="subtitle1" component="div">
+                                                    <b>{item.price}đ</b>
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
+                                </Link>
+                            </Grid>
+                    ))}
                     </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={2} justifyContent='center'>
-                        <Card sx={{ maxWidth: 300, borderRadius: '10px', boxShadow: 'none', marginBottom:'2rem' }}>
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://cdn.luxstay.com/home/apartment/apartment_1_1625465608.jpg"
-                                alt="green iguana"
-                                />
-                                <CardContent sx={{padding:'1rem 0 1rem 0'}}>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        Căn hộ dịch vụ - 1 phòng ngủ
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trải nghiệm không gian thoáng cho chuyến đi ngay gần Hà Nội
-                                    </Typography>
-                                    <Typography gutterBottom variant="subtitle1" component="div">
-                                        850.000đ
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    
-                </Grid>
             </Box>
         </Container>
+        
     </>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from "swiper/react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -18,23 +19,92 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-// import "swiper/css";
-// import "swiper/css/pagination";
-// import "swiper/css/navigation";
-
 import { Pagination, FreeMode, Navigation } from "swiper";
 import Header from "../components/Header/Header";
 
-export default function RoomDetail() {
-    const [open, setOpen] = React.useState(false);
-    const [children, setChildren] = React.useState<number | string>("");
-    const [aldut, setAdult] = React.useState<number | string>("");
+type Booking = {
+    user_id: string,
+    host_id: string,
+    room_id: string,
+    startDate: string,
+    endDate: string,
+    status: boolean,
+    total_guests: string,
+    children: string,
+    adult: string
+}
 
-    const handleAdultChange = (event: SelectChangeEvent<typeof aldut>) => {
+const getUserData = () =>{
+    const storedValues = localStorage.getItem('user');
+    if(!storedValues) return {
+        name: ''
+    }
+    return JSON.parse(storedValues)
+}
+
+export default function RoomDetail() {
+    const [user, setUser] = React.useState(getUserData)
+    const [booking, setBooking] = React.useState<Booking>({
+        user_id: '',
+        host_id: '',
+        room_id: '',
+        startDate: '',
+        endDate: '',
+        status: false,
+        total_guests: '',
+        children: '',
+        adult: ''
+    })
+    const [open, setOpen] = React.useState(false);
+    const [children, setChildren] = React.useState<number>(0);
+    const [adult, setAdult] = React.useState<number>(0);
+    const [roomDetail, setRoomDetail] = React.useState<any>({})
+    const total_guests = children + adult;
+    let params = useParams();
+
+
+    const handleBooking = () =>{
+        const newBooking = {
+            dateStart : value[0],
+            endDate : value[1],
+            hostId: roomDetail.hostId,
+            status: true,
+            total_guests: total_guests,
+            children: children,
+            adult: adult,
+            userId: user.id
+        }
+        fetch('http://localhost:4000/booking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+        },
+            body: JSON.stringify(newBooking),
+            })
+            .then((response) => response.json())
+            //Then with the data from the response in JSON...
+            .then((data) => {
+                const requestOptions = {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: true })
+                };
+                fetch(`http://localhost:4000/rooms/${params.id}`, requestOptions)
+                    .then(response => response.json())
+                    .then(data => setRoomDetail(data.id));
+            alert('Đặt chỗ thành công')
+            })
+            //Then with the error genereted...
+            .catch((error) => {
+            console.error('Error:', newBooking);
+            });
+
+    }
+
+    const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAdult(Number(event.target.value));
     };
 
-    const handleChildrenChange = (event: SelectChangeEvent<typeof children>) => {
+    const handleChildrenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChildren(Number(event.target.value));
     };
 
@@ -67,6 +137,13 @@ export default function RoomDetail() {
           Room Detail
         </Typography>,
       ];
+      React.useEffect(() => {
+        fetch(`http://localhost:4000/rooms/${params.id}`)
+        .then(res => res.json())
+        .then(setRoomDetail)
+      },[])
+
+      
   return (
     <>
         <Header/>
@@ -119,16 +196,16 @@ export default function RoomDetail() {
                     <Grid item xs={12} sm={6} md={8}>
                         <Box sx={{mb:'2rem'}}>
                             <Typography variant="h5" component="h2" sx={{display: 'flex', fontWeight: '600', marginBottom: '2rem' }}>
-                                The Galaxy Home - 1 Phòng Ngủ, 60m2, View Thành Phố, Ban Công - Dịch Vọng
+                                {roomDetail.room_name} - {roomDetail.intro}
                             </Typography>
                             <Typography variant="subtitle2" component="h2" sx={{display: 'flex', fontWeight: '600', marginBottom: '1rem' }}>
-                                Địa chỉ: Cầu Giấy, Hà Nội
+                                Địa chỉ: {roomDetail.address}
                             </Typography>
                             <Typography variant="subtitle2" component="h5" sx={{display: 'flex', fontWeight: '600', marginBottom: '1rem' }}>
-                                Căn hộ dịch vụ: 55m2
+                                Căn hộ dịch vụ: {roomDetail.square}
                             </Typography>
                             <Typography variant="subtitle2" component="h2" sx={{display: 'flex', marginBottom: '1rem' }}>
-                                Phòng riêng · 1 Phòng tắm · 1 giường · 1 phòng ngủ · 2 khách (tối đa 3 khách)
+                                Phòng riêng · {roomDetail.bath_rooms} phòng · {roomDetail.beds} giường · {roomDetail.bed_rooms} phòng ngủ · 2 khách (tối đa {roomDetail.guestNums} khách)
                             </Typography>
                         </Box>
                         <Box sx={{mb: '3rem'}}>
@@ -158,7 +235,7 @@ export default function RoomDetail() {
                     <Grid item xs={0} sm={4} md={4}>
                         <Box sx={{width: '100%', height: '40%', border:'2px solid #dbd3bd', borderRadius: '10px', padding: '2rem', display: 'flex', flexDirection: 'column'}}>
                             <Typography variant="h5" component="h2" sx={{display: 'flex', fontWeight: '700', marginBottom: '2rem' }}>
-                                850.000đ/đêm
+                                {roomDetail.price}đ/đêm
                             </Typography>
                             <LocalizationProvider dateAdapter={AdapterDateFns} sx={{mb: '2rem'}}>
                                 <DateRangePicker
@@ -168,13 +245,16 @@ export default function RoomDetail() {
                                     onChange={(newValue) => {
                                     setValue(newValue);
                                     }}
-                                    renderInput={(startProps, endProps) => (
-                                    <React.Fragment>
+                                    renderInput={(startProps, endProps) => {
+                                     return (
+                                        <React.Fragment>
                                         <TextField {...startProps}/>
                                         <Box sx={{ mx: 2 }}> to </Box>
                                         <TextField {...endProps}/>
                                     </React.Fragment>
-                                    )}
+                                     )
+                                    }}
+                                    
                                 />
                             </LocalizationProvider>
                             <Button onClick={handleClickOpen} sx={{m: '1rem'}}>Số lượng người tham gia</Button>
@@ -193,7 +273,7 @@ export default function RoomDetail() {
                                     id="outlined-disabled"
                                     label="Người lớn"
                                     type="number"
-                                    onChange={()=>handleAdultChange}
+                                    onChange={handleAdultChange}
                                     InputLabelProps={{
                                         shrink: true
                                     }}
@@ -205,7 +285,7 @@ export default function RoomDetail() {
                                     id="outlined-number"
                                     label="Trẻ em"
                                     type="number"
-                                    onChange={()=>handleChildrenChange}
+                                    onChange={handleChildrenChange}
                                     InputLabelProps={{
                                         shrink: true
                                     }}
@@ -220,7 +300,7 @@ export default function RoomDetail() {
                                 <Button onClick={handleClose}>Ok</Button>
                                 </DialogActions>
                             </Dialog>
-                            <Button variant="outlined">Đặt ngay</Button>
+                            <Button variant="outlined" onClick={handleBooking}>Đặt ngay</Button>
                         </Box>
                         <Box sx={{width: '100%', height: '35%', border:'2px solid #dbd3bd', borderRadius: '10px', padding: '2rem', display: 'flex', flexDirection: 'column', mt:'2rem'}}>
                             <Typography variant="h5" component="h2" sx={{display: 'flex', fontWeight: '700', marginBottom: '1rem' }}>

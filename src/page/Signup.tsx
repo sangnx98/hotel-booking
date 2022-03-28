@@ -40,6 +40,7 @@ type UserSubmitForm = {
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [listUser, setListUser] = React.useState<any>([])
   const [values, setValues] = React.useState<UserSubmitForm>(
     {
       email: '',
@@ -49,6 +50,7 @@ export default function Signup() {
       role: '1'
     }
   )
+
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('Username is required')
@@ -67,7 +69,11 @@ export default function Signup() {
     });
   const {register, handleSubmit, formState:{ errors }} = useForm<UserSubmitForm>({resolver: yupResolver(validationSchema)});
   const onSubmit = (data: UserSubmitForm) => {
-    console.log('data', data)
+
+    const emailExist = listUser.find((user:any) => user.email === data.email)
+    if(emailExist){
+      alert('Email is already exist')
+    }else{
     fetch('http://localhost:4000/users', {
       method: 'POST',
       headers: {
@@ -78,14 +84,18 @@ export default function Signup() {
     .then((response) => response.json())
     //Then with the data from the response in JSON...
     .then((data) => {
-      console.log('Success:', data);
       navigate('/login')
     })
     //Then with the error genereted...
     .catch((error) => {
       console.error('Error:', error);
     });
-  };
+  }};
+  React.useEffect(() => {
+    fetch('http://localhost:4000/users')
+    .then(res => res.json())
+    .then(setListUser)
+  },[])
 
 
   return (

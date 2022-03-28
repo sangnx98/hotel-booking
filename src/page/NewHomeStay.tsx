@@ -250,7 +250,7 @@ const NewHomeStay = () => {
     }
     setActiveStep(activeStep + 1);
   };
-  console.log("ahihi", values)
+
   return (
       <>
       <Header/>

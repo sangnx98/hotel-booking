@@ -9,6 +9,23 @@ export default function SocialLogin() {
     const handleLogin = (res: any) =>{
         setUser(res.profileObj)
         navigate('/')
+        fetch('http://localhost:4000/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(res.profileObj),
+          })
+          .then((response) => response.json())
+          //Then with the data from the response in JSON...
+          .then((data) => {
+            console.log('Success:', res.profileObj);
+            navigate('/')
+          })
+          //Then with the error genereted...
+          .catch((error) => {
+            console.error('Error:', error);
+          });
     }
 
     const handleFailure = (res: any) =>{
