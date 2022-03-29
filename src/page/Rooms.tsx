@@ -137,10 +137,10 @@ export default function Rooms() {
                                             />
                                             <CardContent sx={{padding:'1rem 0 1rem 0'}}>
                                                 <Typography gutterBottom variant="subtitle1" component="div">
-                                                    {item.room_type} - {item.bed_rooms} phòng ngủ
+                                                    {item.homeStayType} - {item.bedRooms} phòng ngủ
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
-                                                    {item.room_name} - {item.bed_rooms} phòng ngủ
+                                                    {item.homeStayName} - {item.bedRooms} phòng ngủ
                                                 </Typography>
                                                 <Typography gutterBottom variant="subtitle1" component="div">
                                                     <b>{item.price}đ</b>

@@ -196,7 +196,6 @@ export default function Header() {
         </MenuItem>
         </Menu>
     );
-        console.log('values',values)
   return (
     <Box sx={{ flexGrow: 1}}>
       <AppBar 
@@ -236,7 +235,7 @@ export default function Header() {
                     Host
               </Typography>
               </Link>
-              {(values) ?
+              {localStorage.getItem('user') ?
               (<Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
                 <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
                     {values.name}
@@ -255,12 +254,11 @@ export default function Header() {
               </Box>)
               :
               (<Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-                <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
-                    Login
-                </Typography>
-                <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
-                    Sign Up
-                </Typography>
+                <Link to='/login'>
+                  <Typography variant="subtitle2" component="h2" sx={{display: 'flex', justifyContent:'center', alignItems:'center', color: 'black'}}>
+                      Login
+                  </Typography>
+                </Link>
               </Box>)
               }
           </Box>

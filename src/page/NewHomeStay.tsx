@@ -11,8 +11,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Header from "../components/Header/Header";
 import { Container } from "@mui/material";
 import { Box } from "@mui/system";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Theme, useTheme } from '@mui/material/styles';
-import { SelectChangeEvent } from '@mui/material/Select';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,6 +28,19 @@ const MenuProps = {
     },
   },
 };
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -69,9 +86,30 @@ const GetStepContent = (props: any):JSX.Element => {
   if(props.step === 0){
       return (
         <>
-         <TextField
+         {/* <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel id="demo-multiple-name-label">Name</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              multiple
+              value={props.params.homeStayType}
+              onChange={(e) => props.handleSetParams("homeStayType", e.target.value)}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl> */}
+          <TextField
             variant="outlined"
-            placeholder="Enter Your Last Name"
+            placeholder="Loại chỗ nghỉ"
             fullWidth
             margin="normal"
             value={props.params.homeStayType}
@@ -85,7 +123,6 @@ const GetStepContent = (props: any):JSX.Element => {
             value={props.params.homeStayName}
             onChange={(e) => props.handleSetParams("homeStayName", e.target.value)}
           />
-          
         </>
       );
     }else if(props.step === 1) {
@@ -93,7 +130,7 @@ const GetStepContent = (props: any):JSX.Element => {
         <>
           <TextField
             variant="outlined"
-            placeholder="Enter Your E-mail Address"
+            placeholder="Đất nước"
             fullWidth
             margin="normal"
             value={props.params.country}
@@ -101,7 +138,7 @@ const GetStepContent = (props: any):JSX.Element => {
           />
           <TextField
             variant="outlined"
-            placeholder="Enter Your Phone Number"
+            placeholder="Tỉnh/Thành phố"
             fullWidth
             margin="normal"
             value={props.params.province}
@@ -109,7 +146,7 @@ const GetStepContent = (props: any):JSX.Element => {
           />
           <TextField
             variant="outlined"
-            placeholder="Enter Your Alternate Phone"
+            placeholder="Quận/Huyện"
             fullWidth
             margin="normal"
             value={props.params.district}
@@ -117,7 +154,7 @@ const GetStepContent = (props: any):JSX.Element => {
           />
           <TextField
             variant="outlined"
-            placeholder="Enter Your Alternate Phone"
+            placeholder="Phường/Xã"
             fullWidth
             margin="normal"
             value={props.params.subDistrict}
@@ -125,11 +162,27 @@ const GetStepContent = (props: any):JSX.Element => {
           />
           <TextField
             variant="outlined"
-            placeholder="Enter Your Alternate Phone"
+            placeholder="Đường"
             fullWidth
             margin="normal"
             value={props.params.street}
             onChange={(e) => props.handleSetParams("street", e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            placeholder="Số nhà"
+            fullWidth
+            margin="normal"
+            value={props.params.apartNumber}
+            onChange={(e) => props.handleSetParams("apartNumber", e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            placeholder="Địa chỉ cụ thể"
+            fullWidth
+            margin="normal"
+            value={props.params.addressDetail}
+            onChange={(e) => props.handleSetParams("addressDetail", e.target.value)}
           />
         </>
       );
@@ -138,27 +191,43 @@ const GetStepContent = (props: any):JSX.Element => {
         <>
           <TextField
             variant="outlined"
-            placeholder="Enter Your Address 1"
+            placeholder="Diện tích"
             fullWidth
             margin="normal"
-            value={props.params.address1}
-            onChange={(e) => props.handleSetParams("address1", e.target.value)}
+            value={props.params.square}
+            onChange={(e) => props.handleSetParams("square", e.target.value)}
           />
           <TextField
             variant="outlined"
-            placeholder="Enter Your Address 2"
+            placeholder="Phòng ngủ"
             fullWidth
             margin="normal"
-            value={props.params.address2}
-            onChange={(e) => props.handleSetParams("address2", e.target.value)}
+            value={props.params.bedRooms}
+            onChange={(e) => props.handleSetParams("bedRooms", e.target.value)}
           />
           <TextField
             variant="outlined"
             placeholder="Enter Your Country Name"
             fullWidth
             margin="normal"
-            value={props.params.country}
-            onChange={(e) => props.handleSetParams("country", e.target.value)}
+            value={props.params.bedNums}
+            onChange={(e) => props.handleSetParams("bedNums", e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            placeholder="Enter Your Country Name"
+            fullWidth
+            margin="normal"
+            value={props.params.bathRooms}
+            onChange={(e) => props.handleSetParams("bathRooms", e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            placeholder="Enter Your Country Name"
+            fullWidth
+            margin="normal"
+            value={props.params.kitchens}
+            onChange={(e) => props.handleSetParams("kitchens", e.target.value)}
           />
         </>
       );
@@ -205,12 +274,31 @@ const NewHomeStay = () => {
     district: '',
     subDistrict: '',
     street: '',
-    address2: '',
-    roomSquare: '',
-    bedRoomNums: '',
+    apartNumber: '',
+    addressDetail: '',
+    square: '',
+    bedRooms: '',
     bedNums: '',
-    bathRoomNums: '',
-    kitchenNums:'',
+    bathRooms: '',
+    kitchens:'',
+    price: '',
+    guestNums: '',
+    status: false,
+    isChecked: false,
+    intro: '',
+    img:[
+      {
+        cover: 'https://cdn.luxstay.com/rooms/66652/large/69ad8ebe05e3fdbda4f2.jpg',
+        img1:'https://cdn.luxstay.com/admins/12/2TR6G7u6ua140zR2NI4yUJdG.png',
+        img2: 'https://cdn.luxstay.com/users/329302/X2Ht56Nlx5GBsHV4oUmeE1w-.jpg',
+        img3: 'https://cdn.luxstay.com/users/329302/gZYx2s7zKDzsfvTSPeAuSy5H.jpg',
+        img4: 'https://cdn.luxstay.com/users/329302/W0VeOXy7lNzUTRkl4Zb0CbAr.jpg',
+        img5: 'https://cdn.luxstay.com/users/329302/8ERe5M4_IC3hVE9G1vJ0CttR.jpg',
+        img6: 'https://cdn.luxstay.com/users/329302/KSia-v90R1NxrICETct8VbcV.jpg',
+        img7: 'https://cdn.luxstay.com/users/329302/YF1ngXmAcWh14z4N0J6glyfM.jpg',
+        img8: 'https://cdn.luxstay.com/users/329302/GDMKfBwuqAZYgh5WXG-JSc_z.jpg'
+      }
+    ]
   })
 
   const handleSetValue = (key: any, value: any)=>{
@@ -238,6 +326,23 @@ const NewHomeStay = () => {
   const handleNext = () => {
     setActiveStep(activeStep + 1);
     setSkippedSteps(skippedSteps.filter((skipItem) => skipItem !== activeStep));
+    if(activeStep === steps.length -1){
+      fetch('http://localhost:4000/rooms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+      .then((response) => response.json())
+      //Then with the data from the response in JSON...
+      .then((data) => {
+      })
+      //Then with the error genereted...
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
   };
 
   const handleBack = () => {
@@ -250,7 +355,10 @@ const NewHomeStay = () => {
     }
     setActiveStep(activeStep + 1);
   };
-
+  const handleSubmit = () =>{
+    
+  }
+  console.log("ahihi", values)
   return (
       <>
       <Header/>
@@ -260,20 +368,6 @@ const NewHomeStay = () => {
                 {steps.map((step, index) => {
                 const labelProps: any = {};
                 const stepProps: any = {};
-                // if (isStepOptional(index)) {
-                //     labelProps.optional = (
-                //     <Typography
-                //         variant="caption"
-                //         align="center"
-                //         style={{ display: "block" }}
-                //     >
-                //         optional
-                //     </Typography>
-                //     );
-                // }
-                // if (isStepSkipped(index)) {
-                //     stepProps.completed = false;
-                // }
                 return (
                     <Step {...stepProps} key={index}>
                     <StepLabel {...labelProps}>{step}</StepLabel>
@@ -296,25 +390,15 @@ const NewHomeStay = () => {
                     disabled={activeStep === 0}
                     onClick={handleBack}
                 >
-                    back
+                    Back
                 </Button>
-                {/* {isStepOptional(activeStep) && (
-                    <Button
-                    className={classes.button}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSkip}
-                    >
-                    skip
-                    </Button>
-                )} */}
                 <Button
                     className={classes.button}
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
                 >
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    {activeStep === steps.length - 1 ? "Finish": "Next"}
                 </Button>
                 </>
             )}

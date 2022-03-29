@@ -19,22 +19,18 @@ export default function SocialLogin() {
           .then((response) => response.json())
           //Then with the data from the response in JSON...
           .then((data) => {
-            console.log('Success:', res.profileObj);
             navigate('/')
           })
           //Then with the error genereted...
           .catch((error) => {
-            console.error('Error:', error);
           });
     }
 
     const handleFailure = (res: any) =>{
-        console.log("Login failed!", res)
     }
 
     React.useEffect(()=>{
         localStorage.setItem('user', JSON.stringify(user))
-        console.log('user', user)
     },[user])
     
     return (

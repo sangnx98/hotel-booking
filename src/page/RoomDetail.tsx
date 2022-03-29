@@ -74,6 +74,9 @@ export default function RoomDetail() {
             adult: adult,
             userId: user.id
         }
+        if(newBooking.dateStart == null || newBooking.endDate == null || newBooking.total_guests === 0){
+            alert('Please fill all the blank')
+        }else{
         fetch('http://localhost:4000/booking', {
             method: 'POST',
             headers: {
@@ -84,22 +87,26 @@ export default function RoomDetail() {
             .then((response) => response.json())
             //Then with the data from the response in JSON...
             .then((data) => {
-                const requestOptions = {
-                    method: 'PUT',
-                    body: JSON.stringify({ status: true })
-                };
-                fetch(`http://localhost:4000/rooms/${params.id}`, requestOptions)
-                    .then(response => response.json())
-                    .then(data => setRoomDetail(data.id));
-            alert('Đặt chỗ thành công')
+                fetch(`http://localhost:4000/rooms/${params.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({...roomDetail, status: true})
+                })
+                    .then(res => res.json())
+                    .then((result) => {
+                        setRoomDetail({...result, status: true})
+                    });
             })
             //Then with the error genereted...
             .catch((error) => {
             console.error('Error:', newBooking);
             });
-
+            console.log('Booking', newBooking)
+        }
     }
-
+    console.log('user', user)
     const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAdult(Number(event.target.value));
     };
@@ -196,16 +203,16 @@ export default function RoomDetail() {
                     <Grid item xs={12} sm={6} md={8}>
                         <Box sx={{mb:'2rem'}}>
                             <Typography variant="h5" component="h2" sx={{display: 'flex', fontWeight: '600', marginBottom: '2rem' }}>
-                                {roomDetail.room_name} - {roomDetail.intro}
+                                {roomDetail.homeStayName} - {roomDetail.intro}
                             </Typography>
                             <Typography variant="subtitle2" component="h2" sx={{display: 'flex', fontWeight: '600', marginBottom: '1rem' }}>
-                                Địa chỉ: {roomDetail.address}
+                                Địa chỉ: {roomDetail.addressDetail}
                             </Typography>
                             <Typography variant="subtitle2" component="h5" sx={{display: 'flex', fontWeight: '600', marginBottom: '1rem' }}>
-                                Căn hộ dịch vụ: {roomDetail.square}
+                                Căn hộ dịch vụ: {roomDetail.square} m2
                             </Typography>
                             <Typography variant="subtitle2" component="h2" sx={{display: 'flex', marginBottom: '1rem' }}>
-                                Phòng riêng · {roomDetail.bath_rooms} phòng · {roomDetail.beds} giường · {roomDetail.bed_rooms} phòng ngủ · 2 khách (tối đa {roomDetail.guestNums} khách)
+                                Phòng riêng · {roomDetail.bathRooms} phòng · {roomDetail.bedNums} giường · {roomDetail.bedRooms} phòng ngủ · 2 khách (tối đa {roomDetail.guestNums} khách)
                             </Typography>
                         </Box>
                         <Box sx={{mb: '3rem'}}>
