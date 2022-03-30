@@ -9,6 +9,12 @@ import Suggest from '../components/Suggestions/Suggest';
 import UserManual from '../components/UserManual/UserManual';
 
 export default function Home(){
+  React.useEffect(()=>{
+    fetch('https://provinces.open-api.vn/api/ depth==2')
+    .then((res)=>{
+      console.log('res', res)
+    })
+  },[])
   return (
     <>
       <Slider/>

@@ -9,11 +9,18 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "../components/Header/Header";
-import { Container } from "@mui/material";
+import {
+  Chip,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { SelectChangeEvent } from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
-import {CONFIG} from '../config/config'
+import { CONFIG } from "../config/config";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,16 +34,12 @@ const MenuProps = {
 };
 
 const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
+  "Homestay",
+  "Studio",
+  "Biệt Thự",
+  "Duplex",
+  "Căn hộ",
+  "Khách sạn"
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -69,37 +72,50 @@ const GetStepContent = (props: any): JSX.Element => {
   if (props.step === 0) {
     return (
       <>
-        {/* <FormControl sx={{ m: 1, width: 300 }}>
-            <InputLabel id="demo-multiple-name-label">Name</InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              multiple
-              value={props.params.homeStayType}
-              onChange={(e) => props.handleSetParams("homeStayType", e.target.value)}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl> */}
-        <TextField
-          variant="outlined"
-          placeholder="Loại chỗ nghỉ"
-          fullWidth
-          margin="normal"
-          value={props.params.homeStayType}
-          onChange={(e) =>
-            props.handleSetParams("homeStayType", e.target.value)
-          }
-        />
+        <FormControl sx={{ width: "100%" }}>
+          <InputLabel id="demo-multiple-name-label">Loại căn hộ</InputLabel>
+          <Select
+            labelId="demo-multiple-name-label"
+            id="demo-multiple-name"
+            // value={props.params.homeType}
+            onChange={props.handleSelectValue}
+            input={<OutlinedInput label="Name" />}
+            MenuProps={MenuProps}
+          >
+            {names.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {/* <FormControl sx={{ m: 1, width: "100%" }}>
+          <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+          <Select
+            labelId="demo-multiple-chip-label"
+            id="demo-multiple-chip"
+            // multiple
+            onChange={props.handleSelectValue}
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            renderValue={(selected:any) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value: any) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {names.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl> */}
         <TextField
           variant="outlined"
           placeholder="Tên chỗ nghỉ"
@@ -196,7 +212,7 @@ const GetStepContent = (props: any): JSX.Element => {
         />
         <TextField
           variant="outlined"
-          placeholder="Enter Your Country Name"
+          placeholder="Số lượng giường ngủ"
           fullWidth
           margin="normal"
           value={props.params.bedNums}
@@ -204,7 +220,7 @@ const GetStepContent = (props: any): JSX.Element => {
         />
         <TextField
           variant="outlined"
-          placeholder="Enter Your Country Name"
+          placeholder="Số lượng phòng tắm"
           fullWidth
           margin="normal"
           value={props.params.bathRooms}
@@ -212,11 +228,19 @@ const GetStepContent = (props: any): JSX.Element => {
         />
         <TextField
           variant="outlined"
-          placeholder="Enter Your Country Name"
+          placeholder="Số lượng nhà bếp"
           fullWidth
           margin="normal"
           value={props.params.kitchens}
           onChange={(e) => props.handleSetParams("kitchens", e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          placeholder="Giá phòng"
+          fullWidth
+          margin="normal"
+          value={props.params.price}
+          onChange={(e) => props.handleSetParams("price", e.target.value)}
         />
       </>
     );
@@ -249,11 +273,11 @@ const GetStepContent = (props: any): JSX.Element => {
 
 const NewHomeStay = () => {
   const classes = useStyles();
+  const [personName, setPersonName] = React.useState<string[]>([]);
   const [activeStep, setActiveStep] = useState(0);
   const [skippedSteps, setSkippedSteps] = useState<any[]>([]);
   const steps = getSteps();
   const theme = useTheme();
-  const [homeType, setHomeType] = useState<string[]>([]);
   const [values, setValues] = useState<{}>({
     hostId: "",
     homeStayType: "",
@@ -292,21 +316,16 @@ const NewHomeStay = () => {
   });
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");
-    setValues({...values, hostId: userValues.id});
+    setValues({ ...values, hostId: userValues.id });
   }, []);
 
   const handleSetValue = (key: any, value: any) => {
     setValues({ ...values, [key]: value });
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof homeType>) => {
-    const {
-      target: { value },
-    } = event;
-    setHomeType(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+  const handleChange = (event: SelectChangeEvent) => {
+    console.log("===============", event.target.value);
+    handleSetValue("homeStayType", event.target.value);
   };
 
   const isStepOptional = (step: any) => {
@@ -378,6 +397,7 @@ const NewHomeStay = () => {
                   step={activeStep}
                   handleSetParams={handleSetValue}
                   params={values}
+                  handleSelectValue={handleChange}
                 />
               </form>
               <Button
@@ -385,7 +405,7 @@ const NewHomeStay = () => {
                 disabled={activeStep === 0}
                 onClick={handleBack}
               >
-                Back
+                Quay lại
               </Button>
               <Button
                 className={classes.button}
@@ -393,7 +413,7 @@ const NewHomeStay = () => {
                 color="primary"
                 onClick={handleNext}
               >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                {activeStep === steps.length - 1 ? "Kết thúc" : "Tiếp theo"}
               </Button>
             </>
           )}
