@@ -7,25 +7,12 @@ import Rooms from './page/Rooms';
 import RoomDetail from './page/RoomDetail';
 import Host from './page/Host';
 import NewHomeStay from './page/NewHomeStay';
+import UserProfile from './page/UserProfile';
 // import Header from './components/Header/Header';
 import Layout from './page/Layout';
 
-const getUserData = () =>{
-  const storedValues = localStorage.getItem('user');
-  if(!storedValues) return {
-      name: ''
-  }
-  return JSON.parse(storedValues)
-}
-
-type User = {
-  email: string,
-  name: string,
-  psassword: string
-}
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<User>(getUserData)
   return (
     <>
       <BrowserRouter>
@@ -35,12 +22,13 @@ function App() {
             <Route path='/home/*' element={<Layout/>}>
               <Route path="" element={<Home />} />
               <Route path="rooms" element={<Rooms />} />
-              <Route path="room/:id" element={<RoomDetail />} />
+              <Route path="rooms/:id" element={<RoomDetail />} />
             </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/host" element={<Host />} />
           <Route path="/newhomestay" element={<NewHomeStay />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </BrowserRouter>
     </>
