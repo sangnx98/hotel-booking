@@ -19,8 +19,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import {CONFIG} from '../config/config'
-import { getRoomDetail, addNewBooking} from "../services/homestayService";
+import { CONFIG } from "../config/config";
+import { getRoomDetail, addNewBooking } from "../services/homestayService";
 
 import { Pagination, FreeMode, Navigation } from "swiper";
 import Header from "../components/Header/Header";
@@ -143,13 +143,14 @@ export default function RoomDetail() {
   useEffect(() => {
     fetch(CONFIG.ApiRoom + params.id, {
       headers: {
-          "Content-Type": "application/json",
-        }})
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
       .then(setRoomDetail);
   }, []);
-  console.log('abc',params.id)
-  console.log('roomDetail',roomDetail[0])
+  console.log("abc", params.id);
+  console.log("roomDetail", roomDetail[0]);
   return (
     <>
       <Header />

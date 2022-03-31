@@ -298,21 +298,7 @@ const NewHomeStay = () => {
     guestNums: "",
     status: false,
     isChecked: false,
-    intro: "",
-    img: [
-      {
-        cover:
-          "https://cdn.luxstay.com/rooms/66652/large/69ad8ebe05e3fdbda4f2.jpg",
-        img1: "https://cdn.luxstay.com/admins/12/2TR6G7u6ua140zR2NI4yUJdG.png",
-        img2: "https://cdn.luxstay.com/users/329302/X2Ht56Nlx5GBsHV4oUmeE1w-.jpg",
-        img3: "https://cdn.luxstay.com/users/329302/gZYx2s7zKDzsfvTSPeAuSy5H.jpg",
-        img4: "https://cdn.luxstay.com/users/329302/W0VeOXy7lNzUTRkl4Zb0CbAr.jpg",
-        img5: "https://cdn.luxstay.com/users/329302/8ERe5M4_IC3hVE9G1vJ0CttR.jpg",
-        img6: "https://cdn.luxstay.com/users/329302/KSia-v90R1NxrICETct8VbcV.jpg",
-        img7: "https://cdn.luxstay.com/users/329302/YF1ngXmAcWh14z4N0J6glyfM.jpg",
-        img8: "https://cdn.luxstay.com/users/329302/GDMKfBwuqAZYgh5WXG-JSc_z.jpg",
-      },
-    ],
+    intro: ""
   });
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");

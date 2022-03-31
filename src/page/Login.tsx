@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { useNavigate, Navigate } from "react-router-dom";
-
-import { CONFIG } from "../config/config";
+import { useNavigate } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -18,7 +16,8 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SocialLogin from "../components/SocialLogin";
-import { getAllUser } from "../services/userService";
+import { signUpSuccess } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 function Copyright(props: any) {
   return (
@@ -45,18 +44,37 @@ type OneUser = {
   name: string;
 };
 
-
-
 export default function Login() {
+  const dispatch = useDispatch()
+  const user = useRef({});
   const navigate = useNavigate();
   const [listUser, setListUser] = useState<any>([]);
 
-  useEffect(() => {
-    getAllUser()
-      .then((res) => res.json())
-      .then(setListUser);
-  }, []);
-  // const crUser = JSON.parse(localStorage.getItem('user') || '')
+  const handleUser = async (email: String, password: String) => {
+    const settings = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+    try {
+      const response = await fetch(
+        `http://localhost:4000/users?email=${email}&password=${password}`,
+        settings
+      );
+
+      const data = await response.json();
+      if (data) {
+        user.current = data[0];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
@@ -69,22 +87,17 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<OneUser>({ resolver: yupResolver(validationSchema) });
-  const onSubmit = (data: OneUser) => {
-    for (let i = 0; i < listUser.length; i++) {
-      if (
-        listUser[i].email === data.email &&
-        listUser[i].password === data.password
-      ) {
-        localStorage.setItem("user", JSON.stringify(listUser[i]));
-        navigate("/");
-      }
+  const onSubmit = async (data: OneUser) => {
+    const loginUser = await handleUser(data.email, data.password);
+    if (loginUser) {
+      navigate("/");
+      localStorage.setItem("user", JSON.stringify(user.current));
+      dispatch(signUpSuccess(user.current))
+    } else {
+      alert("Sai tài khoản hoặc mật khẩu");
     }
   };
-  // useEffect(()=>{
-  //   if(crUser){
-  //     <Navigate to='/'/>
-  //   }
-  // },[])
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

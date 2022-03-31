@@ -17,6 +17,7 @@ import PageviewIcon from "@mui/icons-material/Pageview";
 import { Link } from "react-router-dom";
 
 import "./Header.css";
+import { useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -91,12 +92,17 @@ const getUserData = () => {
 };
 
 type UserSubmitForm = {
+  // email: string;
+  // password: string;
+  // name: string;
   email: string;
   password: string;
+  confirmPassword: string;
   name: string;
 };
 
 export default function Header() {
+  const username = useSelector((state: any) => state.user.user);
   const navigate = useNavigate();
   const [values, setValues] = useState<UserSubmitForm>(getUserData);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -195,6 +201,7 @@ export default function Header() {
       </MenuItem>
     </Menu>
   );
+  console.log("username", username);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar

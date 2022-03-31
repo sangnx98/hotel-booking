@@ -10,6 +10,7 @@ import NewHomeStay from './page/NewHomeStay';
 import UserProfile from './page/UserProfile';
 // import Header from './components/Header/Header';
 import Layout from './page/Layout';
+import AdminDashboard from './page/AdminDashboard';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/host" element={<Host />} />
           <Route path="/newhomestay" element={<NewHomeStay />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { GoogleLogin } from "react-google-login";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { CONFIG } from "../config/config";
+import { signUpUser } from "../store/apiRequest";
+import { signUpSuccess } from "../store/userSlice";
 
 export default function SocialLogin() {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [user, setUser] = useState<any>();
   const clientId = CONFIG.GOOGLE_API;
   const handleLogin = (res: any) => {
     setUser(res.profileObj);
     navigate("/");
-    fetch(CONFIG.ApiUser, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(res.profileObj),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        localStorage.setItem("user", JSON.stringify(data))
-        navigate("/");
-      })
-      .catch((error) => {});
+    signUpUser(res.profileObj, dispatch(signUpSuccess(res.profileObj)))
   };
 
   const handleFailure = (res: any) => {};

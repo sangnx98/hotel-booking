@@ -18,6 +18,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { CONFIG } from "../config/config";
 import { signUp } from "../services/userService";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpUser } from "../store/apiRequest";
+import { signUpSuccess } from "../store/userSlice";
 
 function Copyright(props: any) {
   return (
@@ -38,23 +41,16 @@ function Copyright(props: any) {
 }
 
 const theme = createTheme();
-type UserSubmitForm = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: string;
-};
 
 export default function Signup() {
+  const dispatch = useDispatch()
+  const userData = useSelector((state: any)=> state.user.user)
   const navigate = useNavigate();
   const [listUser, setListUser] = useState<any>([]);
-  const [values, setValues] = useState<UserSubmitForm>({
-    email: "",
-    password: "",
-    name: "",
-    confirmPassword: "",
-    role: "1",
+  const [values, setValues] = useState({
+    email: userData.email,
+    password: userData.password,
+    name: userData.name,
   });
 
   const validationSchema = Yup.object().shape({
@@ -75,22 +71,14 @@ export default function Signup() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserSubmitForm>({ resolver: yupResolver(validationSchema) });
-  const onSubmit = (data: UserSubmitForm) => {
+  } = useForm<any>({ resolver: yupResolver(validationSchema) });
+  const onSubmit = (data: any) => {
     const emailExist = listUser.find((user: any) => user.email === data.email);
     if (emailExist) {
       alert("Email is already exist");
     } else {
-      signUp(data)
-        .then((response) => response.json())
-        //Then with the data from the response in JSON...
-        .then((data) => {
-          navigate("/login");
-        })
-        //Then with the error genereted...
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+      signUpUser(data, dispatch(signUpSuccess(data)))
+      console.log('data', data)
     }
   };
   useEffect(() => {
@@ -98,7 +86,7 @@ export default function Signup() {
       .then((res) => res.json())
       .then(setListUser);
   }, []);
-
+  console.log('user', userData)
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
