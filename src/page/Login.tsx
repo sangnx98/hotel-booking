@@ -66,7 +66,7 @@ export default function Login() {
       const data = await response.json();
       if (data) {
         user.current = data[0];
-        return true;
+        return user.current;
       } else {
         return false;
       }
@@ -89,6 +89,7 @@ export default function Login() {
   } = useForm<OneUser>({ resolver: yupResolver(validationSchema) });
   const onSubmit = async (data: OneUser) => {
     const loginUser = await handleUser(data.email, data.password);
+    console.log('loginUser', loginUser)
     if (loginUser) {
       navigate("/");
       localStorage.setItem("user", JSON.stringify(user.current));
@@ -97,7 +98,7 @@ export default function Login() {
       alert("Sai tài khoản hoặc mật khẩu");
     }
   };
-
+  
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

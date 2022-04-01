@@ -102,12 +102,10 @@ export default function RoomDetail() {
         })
         //Then with the error genereted...
         .catch((error) => {
-          console.error("Error:", newBooking);
+          console.error("Error:", error);
         });
-      console.log("Booking", newBooking);
     }
   };
-  console.log("user", user);
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAdult(Number(event.target.value));
   };
@@ -149,8 +147,7 @@ export default function RoomDetail() {
       .then((res) => res.json())
       .then(setRoomDetail);
   }, []);
-  console.log("abc", params.id);
-  console.log("roomDetail", roomDetail[0]);
+  console.log("roomDetail", roomDetail);
   return (
     <>
       <Header />
@@ -246,7 +243,7 @@ export default function RoomDetail() {
                     marginBottom: "1rem",
                   }}
                 >
-                  Địa chỉ: {roomDetail.addressDetail}
+                  Địa chỉ: {roomDetail.apartNumber} đường {roomDetail.street}, {roomDetail.province} 
                 </Typography>
                 <Typography
                   variant="subtitle2"

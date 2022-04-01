@@ -42,6 +42,16 @@ const names = [
   "Khách sạn"
 ];
 
+const provinces = [
+  "Hà Nội",
+  "Đà Nẵng",
+  "Hồ Chí Minh",
+  "Quảng Ninh",
+  "Nha Trang",
+  "Phú Quốc"
+];
+
+
 const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: theme.spacing(1),
@@ -53,8 +63,6 @@ function getSteps() {
     "Thông tin cơ bản",
     "Địa chỉ",
     "Phòng",
-    "Tiện nghi",
-    "Nội quy chỗ nghỉ",
     "Giới thiệu",
   ];
 }
@@ -131,22 +139,23 @@ const GetStepContent = (props: any): JSX.Element => {
   } else if (props.step === 1) {
     return (
       <>
-        <TextField
-          variant="outlined"
-          placeholder="Đất nước"
-          fullWidth
-          margin="normal"
-          value={props.params.country}
-          onChange={(e) => props.handleSetParams("country", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Tỉnh/Thành phố"
-          fullWidth
-          margin="normal"
-          value={props.params.province}
-          onChange={(e) => props.handleSetParams("province", e.target.value)}
-        />
+        <FormControl sx={{ width: "100%" }}>
+          <InputLabel id="demo-multiple-ptovinces-label">Tỉnh/Thành phố</InputLabel>
+          <Select
+            labelId="demo-multiple-provinces-label"
+            id="demo-multiple-provinces"
+            // value={props.params.homeType}
+            onChange={props.handleSelecProvincestValue}
+            input={<OutlinedInput label="Tỉnh/Thành phố" />}
+            MenuProps={MenuProps}
+          >
+            {provinces.map((province) => (
+              <MenuItem key={province} value={province}>
+                {province}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           variant="outlined"
           placeholder="Quận/Huyện"
@@ -154,14 +163,6 @@ const GetStepContent = (props: any): JSX.Element => {
           margin="normal"
           value={props.params.district}
           onChange={(e) => props.handleSetParams("district", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Phường/Xã"
-          fullWidth
-          margin="normal"
-          value={props.params.subDistrict}
-          onChange={(e) => props.handleSetParams("subDistrict", e.target.value)}
         />
         <TextField
           variant="outlined"
@@ -178,16 +179,6 @@ const GetStepContent = (props: any): JSX.Element => {
           margin="normal"
           value={props.params.apartNumber}
           onChange={(e) => props.handleSetParams("apartNumber", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Địa chỉ cụ thể"
-          fullWidth
-          margin="normal"
-          value={props.params.addressDetail}
-          onChange={(e) =>
-            props.handleSetParams("addressDetail", e.target.value)
-          }
         />
       </>
     );
@@ -236,6 +227,14 @@ const GetStepContent = (props: any): JSX.Element => {
         />
         <TextField
           variant="outlined"
+          placeholder="Số lượng khách tối đa"
+          fullWidth
+          margin="normal"
+          value={props.params.guestNums}
+          onChange={(e) => props.handleSetParams("guestNums", e.target.value)}
+        />
+        <TextField
+          variant="outlined"
           placeholder="Giá phòng"
           fullWidth
           margin="normal"
@@ -249,21 +248,19 @@ const GetStepContent = (props: any): JSX.Element => {
       <>
         <TextField
           variant="outlined"
-          placeholder="Enter Your Card Number"
+          placeholder="Tiêu đề"
           fullWidth
           margin="normal"
+          value={props.params.intro}
+          onChange={(e) => props.handleSetParams("intro", e.target.value)}
         />
         <TextField
           variant="outlined"
-          placeholder="Enter Your Card Month"
+          placeholder="Ảnh đại diện phòng"
           fullWidth
           margin="normal"
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Enter Your Card Year"
-          fullWidth
-          margin="normal"
+          value={props.params.bgUrl}
+          onChange={(e) => props.handleSetParams("bgUrl", e.target.value)}
         />
       </>
     );
@@ -282,13 +279,10 @@ const NewHomeStay = () => {
     hostId: "",
     homeStayType: "",
     homeStayName: "",
-    country: "",
     province: "",
     district: "",
-    subDistrict: "",
     street: "",
     apartNumber: "",
-    addressDetail: "",
     square: "",
     bedRooms: "",
     bedNums: "",
@@ -297,8 +291,9 @@ const NewHomeStay = () => {
     price: "",
     guestNums: "",
     status: false,
-    isChecked: false,
-    intro: ""
+    isChecked: 0,
+    intro: "",
+    bgUrl: ""
   });
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");
@@ -309,8 +304,11 @@ const NewHomeStay = () => {
     setValues({ ...values, [key]: value });
   };
 
+  const handleProvincesChange = (event: SelectChangeEvent) => {
+    handleSetValue("province", event.target.value);
+  };
+
   const handleChange = (event: SelectChangeEvent) => {
-    console.log("===============", event.target.value);
     handleSetValue("homeStayType", event.target.value);
   };
 
@@ -374,7 +372,7 @@ const NewHomeStay = () => {
 
           {activeStep === steps.length ? (
             <Typography variant="h3" align="center">
-              Thank You
+              Đã thêm mới homestay
             </Typography>
           ) : (
             <>
@@ -384,6 +382,7 @@ const NewHomeStay = () => {
                   handleSetParams={handleSetValue}
                   params={values}
                   handleSelectValue={handleChange}
+                  handleSelecProvincestValue={handleProvincesChange}
                 />
               </form>
               <Button

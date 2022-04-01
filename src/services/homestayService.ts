@@ -18,6 +18,7 @@ export const getRoomDetail = (params: any) => {
 
 export const addNewBooking = (body: any) => {
     return fetch(CONFIG.ApiBooking, {
+        method: 'POST',
         headers: {
             "Content-Type": "application/json",
           },

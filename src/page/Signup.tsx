@@ -75,9 +75,11 @@ export default function Signup() {
   const onSubmit = (data: any) => {
     const emailExist = listUser.find((user: any) => user.email === data.email);
     if (emailExist) {
-      alert("Email is already exist");
+      alert("Tài khoản đã tồn tại");
     } else {
       signUpUser(data, dispatch(signUpSuccess(data)))
+      alert("Đăng kí thành công, vui lòng đăng nhập")
+      navigate('/login')
       console.log('data', data)
     }
   };

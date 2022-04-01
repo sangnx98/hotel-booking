@@ -14,12 +14,13 @@ export default function SocialLogin() {
   const clientId = CONFIG.GOOGLE_API;
   const handleLogin = (res: any) => {
     setUser(res.profileObj);
+    localStorage.setItem('user', JSON.stringify(res.profileObj))
     navigate("/");
     signUpUser(res.profileObj, dispatch(signUpSuccess(res.profileObj)))
+    console.log(res.profileObj)
   };
-
   const handleFailure = (res: any) => {};
-
+  
   return (
     <>
       <GoogleLogin

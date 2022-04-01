@@ -11,9 +11,16 @@ import UserProfile from './page/UserProfile';
 // import Header from './components/Header/Header';
 import Layout from './page/Layout';
 import AdminDashboard from './page/AdminDashboard';
-
+import { useDispatch } from 'react-redux';
+import { signUpSuccess } from './store/userSlice';
 
 function App() {
+  const dispatch = useDispatch()
+  React.useEffect(()=>{
+    const userData = JSON.parse(localStorage.getItem('user')|| "")
+    dispatch(signUpSuccess(userData))
+  }, [])
+  
   return (
     <>
       <BrowserRouter>

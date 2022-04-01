@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header/Header";
-import { Container } from "@mui/material";
+import { Container, Menu, MenuItem } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -23,12 +23,43 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { Link } from "react-router-dom";
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { useDispatch, useSelector } from "react-redux";
+import { CONFIG } from "../config/config";
+import { getRoomsById } from "../store/userSlice";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -57,51 +88,64 @@ function a11yProps(index: number) {
   };
 }
 
-// const handleClick = (event, cellValues: boolean) => {
-//   console.log(cellValues.row);
-// };
-
 export default function Host() {
-  const rows: GridRowsProp = [
-    { id: 1, col1: "Hello", col2: "World" },
-    { id: 2, col1: "XGrid", col2: "is Awesome" },
-    { id: 3, col1: "Material-UI", col2: "is Amazing" },
-    { id: 4, col1: "Hello", col2: "World" },
-    { id: 5, col1: "XGrid", col2: "is Awesome" },
-    { id: 6, col1: "Material-UI", col2: "is Amazing" },
-  ];
-
-  const columns: GridColDef[] = [
-    { field: "col1", headerName: "ID", width: 80 },
-    { field: "col2", headerName: "Tên chỗ nghỉ", width: 300 },
-    { field: "col3", headerName: "Đặ phòng nhanh", width: 150 },
-    { field: "col4", headerName: "Địa điểm", width: 450 },
-    { field: "col5", headerName: "Trang thái", width: 150 },
-    { field: "col6", headerName: "Hiển thị/Ẩn", width: 150 },
-    { field: "col7", headerName: "Lần sửa cuối cùng", width: 150 },
-    {
-      field: "Hành động",
-      renderCell: (cellValues) => {
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => {
-              // handleClick(event, cellValue);
-            }}
-          >
-            Thiết lập
-          </Button>
-        );
-      },
-      width: 150,
-    },
-  ];
+  const dispatch = useDispatch();
+  const [rooms, setRooms] = useState([]);
+  const selector = useSelector((state: any) => state.user);
+  console.log("============", selector.user.id);
   const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const handleCancelBooking = async (id: number) => {
+    const room = rooms.find((item: any) => item.id === id);
+    console.log("room", room);
+    console.log("rooms_id", id);
+    await fetch(CONFIG.ApiRoom + id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ ...room, status: false }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setRooms({ ...result, status: false });
+      });
+  };
+  // console.log("rooms", rooms)
+
+  const handleClickDelete = async (id: number) => {
+    console.log("id", `${CONFIG.ApiRooms}/${id}`);
+    try {
+      const data = await fetch(`${CONFIG.ApiRooms}/${id}`, {
+        method: "DELETE",
+      });
+      data ? alert("Xoá thành công") : alert("Xóa thất bại");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getData = async () => {
+    const data = await fetch(`http://localhost:4000/rooms?hostId=${selector.user.id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  }
+
+  getData()
 
   return (
     <>
@@ -309,9 +353,91 @@ export default function Host() {
                 />
               </div>
             </Box>
-            <div style={{ height: 400, width: "100%" }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">ID</StyledTableCell>
+                    <StyledTableCell align="center">Ảnh</StyledTableCell>
+                    <StyledTableCell align="center">Tên chỗ ở</StyledTableCell>
+                    <StyledTableCell align="center">Địa chỉ</StyledTableCell>
+                    <StyledTableCell align="center">Trạng thái</StyledTableCell>
+                    <StyledTableCell align="center">Hành động</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rooms.map((room: any) => (
+                    <StyledTableRow key={room.hostId}>
+                      <StyledTableCell align="center">
+                        {room.id}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        component="th"
+                        scope="row"
+                        sx={{ textAlign: "center" }}
+                      >
+                        <img src={room.bgUrl} alt="" width="250px" />
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.homeStayName}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.street}, {room.province}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          color: `${room.status === true ? "green" : "red"}`,
+                        }}
+                      >
+                        {room.status === true ? "Đang thuê" : "Chưa thuê"}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        <Box>
+                          <Button
+                            id="basic-button"
+                            aria-controls={open ? "basic-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={handleClick}
+                          >
+                            Thiết lập
+                          </Button>
+                          <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                              "aria-labelledby": "basic-button",
+                            }}
+                          >
+                            {/* {(room.status === false) ? (
+                              <> */}
+                            <MenuItem onClick={handleClose}>Chỉnh sửa</MenuItem>
+                            <MenuItem
+                              onClick={() => handleClickDelete(room.id)}
+                            >
+                              Xóa chỗ ở
+                            </MenuItem>
+                            {/* </> */}
+                            {/* )
+                              :
+                            ( */}
+                            <MenuItem
+                              onClick={() => handleCancelBooking(room.id)}
+                            >
+                              Hủy phòng
+                            </MenuItem>
+                            {/* )} */}
+                          </Menu>
+                        </Box>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </TabPanel>
         </Box>
       </Container>
