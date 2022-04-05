@@ -65,6 +65,12 @@ export default function RoomDetail() {
   const [roomDetail, setRoomDetail] = useState<any>({});
   const total_guests = children + adult;
   let params = useParams();
+  const minValue: Date = new Date(new Date());
+  const maxValue: Date = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    90
+  );
 
   const handleBooking = () => {
     const newBooking = {
@@ -99,6 +105,7 @@ export default function RoomDetail() {
             .then((result) => {
               setRoomDetail({ ...result, status: true });
             });
+            console.log("newBooking", newBooking)
         })
         //Then with the error genereted...
         .catch((error) => {
@@ -236,7 +243,7 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  component={'span'}
                   sx={{
                     display: "flex",
                     fontWeight: "600",
@@ -258,7 +265,7 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  component={'span'}
                   sx={{ display: "flex", marginBottom: "1rem" }}
                 >
                   Phòng riêng · {roomDetail.bathRooms} phòng ·{" "}
@@ -481,6 +488,8 @@ export default function RoomDetail() {
                   <DateRangePicker
                     startText="Check-in"
                     endText="Check-out"
+                    maxDate={maxValue}
+                    minDate={minValue}
                     value={value}
                     onChange={(newValue) => {
                       setValue(newValue);

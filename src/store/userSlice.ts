@@ -32,8 +32,7 @@ export const userSlice = createSlice({
         getRoomsById: (state, action) =>{
             state.roomById = action.payload
         }
-            
     }
 })
-export const {signUpStart, signUpError, signUpSuccess, getRoomsById} =userSlice.actions
+export const {signUpStart, signUpError, signUpSuccess, getRoomsById} = userSlice.actions
 export default userSlice.reducer

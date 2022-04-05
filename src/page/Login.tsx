@@ -15,6 +15,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import SocialLogin from "../components/SocialLogin";
 import { signUpSuccess } from "../store/userSlice";
 import { useDispatch } from "react-redux";
@@ -45,7 +46,7 @@ type OneUser = {
 };
 
 export default function Login() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const user = useRef({});
   const navigate = useNavigate();
   const [listUser, setListUser] = useState<any>([]);
@@ -87,18 +88,19 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<OneUser>({ resolver: yupResolver(validationSchema) });
+
   const onSubmit = async (data: OneUser) => {
     const loginUser = await handleUser(data.email, data.password);
-    console.log('loginUser', loginUser)
+    console.log("loginUser", loginUser);
     if (loginUser) {
       navigate("/");
       localStorage.setItem("user", JSON.stringify(user.current));
-      dispatch(signUpSuccess(user.current))
+      dispatch(signUpSuccess(user.current));
     } else {
       alert("Sai tài khoản hoặc mật khẩu");
     }
   };
-  
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

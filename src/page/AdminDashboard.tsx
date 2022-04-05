@@ -19,8 +19,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getAllRooms } from "../services/homestayService";
+import axios from "axios";
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import { Room } from "../types";
+import { CONFIG } from "../config/config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,16 +48,55 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AdminDashboard() {
-  const [rooms, setRooms] = React.useState([]);
-  const [value, setValue] = React.useState("1");
+  const [rooms, setRooms] = React.useState<Room[]>([]);
+  const [value, setValue] = React.useState<string>("1");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   React.useEffect(() => {
     getAllRooms()
       .then((res) => res.json())
       .then(setRooms);
   }, []);
+
+  const setApprove = async (room: Room, index: number) => {
+    const { id } = room;
+    const data = { ...room, isChecked: 1 };
+
+    fetch(`${CONFIG.ApiRooms}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log("result", result);
+        const newRooms = [...rooms];
+        newRooms[index] = result;
+        setRooms(newRooms);
+      });
+  };
+
+  const setDennie = async (room: Room, index: number) => {
+    const { id } = room;
+    const data = { ...room, isChecked: 2 };
+
+    fetch(`${CONFIG.ApiRooms}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log("result", result);
+        const newRooms = [...rooms];
+        newRooms[index] = result;
+        setRooms(newRooms);
+      });
+  };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,6 +108,7 @@ export default function AdminDashboard() {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
   return (
     <>
       <AdminHeader />
@@ -105,8 +150,8 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rooms.map((room: any) => (
-                        <StyledTableRow key={room.hostId}>
+                      {rooms.map((room: any, index: any) => (
+                        <StyledTableRow key={index}>
                           <StyledTableCell align="center">
                             {room.id}
                           </StyledTableCell>
@@ -127,45 +172,28 @@ export default function AdminDashboard() {
                             align="center"
                             style={{
                               color: `${
-                                room.status === 0
+                                room.isChecked === 0
                                   ? "orange"
-                                  : room.status === 1
+                                  : room.isChecked === 1
                                   ? "green"
                                   : "red"
                               }`,
                             }}
                           >
-                            {room.status === 0
+                            {room.isChecked === 0
                               ? "Đang chờ"
-                              : room.status === 1
+                              : room.isChecked === 1
                               ? "Đã duyệt"
                               : "Từ chối"}
                           </StyledTableCell>
-                          <StyledTableCell align="right">
+                          <StyledTableCell align="center">
                             <Box>
-                              <Button
-                                id="basic-button"
-                                aria-controls={open ? "basic-menu" : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? "true" : undefined}
-                                onClick={handleClick}
-                              >
-                                Thiết lập
-                              </Button>
-                              <Menu
-                                id="basic-menu"
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                                MenuListProps={{
-                                  "aria-labelledby": "basic-button",
-                                }}
-                              >
-                                <MenuItem onClick={handleClose}>
-                                  Chỉnh sửa
-                                </MenuItem>
-                                <MenuItem onClick={handleClose}></MenuItem>
-                              </Menu>
+                              <CheckCircleIcon
+                                onClick={() => setApprove(room, index)}
+                              />
+                              <CancelIcon 
+                              onClick={() => setDennie(room, index)}
+                              />
                             </Box>
                           </StyledTableCell>
                         </StyledTableRow>

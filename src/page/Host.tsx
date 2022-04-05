@@ -32,8 +32,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
+
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -90,7 +92,7 @@ function a11yProps(index: number) {
 
 export default function Host() {
   const dispatch = useDispatch();
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<any[]>([]);
   const selector = useSelector((state: any) => state.user);
   console.log("============", selector.user.id);
   const [value, setValue] = useState(0);
@@ -106,6 +108,24 @@ export default function Host() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const user = JSON.parse(localStorage.getItem("user") || "");
+
+  const getRooms = () => {
+    fetch(`http://localhost:4000/rooms?hostId=${user.id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res: any) => res.json())
+      .then(setRooms);
+  };
+
+  if (rooms) {
+    dispatch(getRoomsById(rooms));
+  }
+  useEffect(() => {
+    getRooms();
+  }, []);
 
   const handleCancelBooking = async (id: number) => {
     const room = rooms.find((item: any) => item.id === id);
@@ -123,7 +143,6 @@ export default function Host() {
         setRooms({ ...result, status: false });
       });
   };
-  // console.log("rooms", rooms)
 
   const handleClickDelete = async (id: number) => {
     console.log("id", `${CONFIG.ApiRooms}/${id}`);
@@ -137,16 +156,7 @@ export default function Host() {
     }
   };
 
-  const getData = async () => {
-    const data = await fetch(`http://localhost:4000/rooms?hostId=${selector.user.id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  }
-
-  getData()
-
+  console.log("rooms", rooms);
   return (
     <>
       <Header />
@@ -412,24 +422,12 @@ export default function Host() {
                               "aria-labelledby": "basic-button",
                             }}
                           >
-                            {/* {(room.status === false) ? (
-                              <> */}
                             <MenuItem onClick={handleClose}>Chỉnh sửa</MenuItem>
                             <MenuItem
                               onClick={() => handleClickDelete(room.id)}
                             >
                               Xóa chỗ ở
                             </MenuItem>
-                            {/* </> */}
-                            {/* )
-                              :
-                            ( */}
-                            <MenuItem
-                              onClick={() => handleCancelBooking(room.id)}
-                            >
-                              Hủy phòng
-                            </MenuItem>
-                            {/* )} */}
                           </Menu>
                         </Box>
                       </StyledTableCell>
