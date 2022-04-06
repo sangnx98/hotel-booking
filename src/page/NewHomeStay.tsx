@@ -97,33 +97,6 @@ const GetStepContent = (props: any): JSX.Element => {
             ))}
           </Select>
         </FormControl>
-        {/* <FormControl sx={{ m: 1, width: "100%" }}>
-          <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            // multiple
-            onChange={props.handleSelectValue}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected:any) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value: any) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
         <TextField
           variant="outlined"
           placeholder="Tên chỗ nghỉ"

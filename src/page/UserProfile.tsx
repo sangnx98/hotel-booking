@@ -28,6 +28,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import _ from 'lodash'
 
 import { Booking, Room } from "../types";
 import { CONFIG } from "../config/config";
@@ -53,19 +54,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+type User = {
+  username: string,
+  email: string,
+  password: string
+}
+
 export default function AdminDashboard() {
-  const [rooms, setRooms] = React.useState<Room[]>([]);
+  const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [value, setValue] = React.useState<string>("1");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [rooms, setRooms] = React.useState<Room[]>([])
+  const [userData, setUserData] = React.useState<User>({
+    username: '',
+    email: '',
+    password: ''
+  })
+
+  const user = JSON.parse(localStorage.getItem("user") || "");
+  React.useEffect(()=>{
+    if(!_.isEmpty(user) && _.isEmpty(userData.username) && _.isEmpty(userData.email) && _.isEmpty(userData.password)){
+      console.log('abc')
+      setUserData({...userData, username: user.name, password: user.password, email: user.email})
+    }
+  },[user, userData])
 
   React.useEffect(() => {
+    getBooking();
     getRooms();
   }, []);
 
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const getBooking = () => {
+    fetch(`http://localhost:4000/booking?userId=${user.id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res: any) => res.json())
+      .then(setBookings);
+  };
+  const handleSetValue = (key: any, value: any) => {
+    setUserData({ ...userData, [key]: value });
+  };
+  const handleNameChange = (event: any ) => {
+    handleSetValue("username", event.target.value);
+  };
+
+  const handleEmailChange = (event: any ) => {
+    handleSetValue("email", event.target.value);
+  };
+
+  const handlePasswordChange = (event: any ) => {
+    handleSetValue("password", event.target.value);
+  };
 
   const getRooms = () => {
-    fetch(`http://localhost:4000/booking?userId=${user.id}`, {
+    fetch(`http://localhost:4000/rooms?userId=${user.id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -74,10 +118,10 @@ export default function AdminDashboard() {
       .then(setRooms);
   };
 
-  const cancelBooking = async (room: Booking, index: number) => {
-    const { id } = room;
-    console.log("room", room);
-    const data = { ...room, status: false };
+  const cancelBooking = async (booking: Booking, index: number) => {
+    const { id } = booking;
+    console.log("room", booking);
+    const data = { ...booking, status: false };
 
     fetch(`${CONFIG.ApiBooking}/${id}`, {
       method: "PUT",
@@ -89,11 +133,33 @@ export default function AdminDashboard() {
       .then((res) => res.json())
       .then((result) => {
         console.log("result", result);
-        const newRooms = [...rooms];
+        const newRooms = [...bookings];
         newRooms[index] = result;
-        setRooms(newRooms);
+        setBookings(newRooms);
+        
       });
   };
+  // console.log('booking', bookings)
+  // const updateRoomStatus = async (room: Room, index: number) => {
+  //   const { id } = room;
+  //   console.log("room", room);
+  //   const data = { ...room, status: false };
+
+  //   fetch(`${CONFIG.ApiRooms}/${id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((result) => {
+  //       console.log("result", result);
+  //       const newRooms = [...rooms];
+  //       newRooms[index] = result;
+  //       setRooms(newRooms);
+  //     });
+  // };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -109,13 +175,20 @@ export default function AdminDashboard() {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    console.log("handleClickOpen")
     setOpen(true);
   };
 
   const handleCloseDialog = () => {
+    console.log("handleCloseDialog")
+    setUserData({
+      email: '',
+      username: '',
+      password: ''
+    })
     setOpen(false);
   };
-
+  console.log("user", userData, user)
   return (
     <>
       <Header />
@@ -294,8 +367,8 @@ export default function AdminDashboard() {
                           <TextField
                             autoComplete="given-name"
                             name="firstName"
-                            value={user.name}
-
+                            value={userData?.username}
+                            onChange={handleNameChange}
                             required
                             fullWidth
                             id="firstName"
@@ -307,6 +380,8 @@ export default function AdminDashboard() {
                           <TextField
                             required
                             fullWidth
+                            value={userData?.email}
+                            onChange={handleEmailChange}
                             id="email"
                             label="Email Address"
                             name="email"
@@ -317,6 +392,8 @@ export default function AdminDashboard() {
                           <TextField
                             required
                             fullWidth
+                            value={userData?.password}
+                            onChange={handlePasswordChange}
                             name="password"
                             label="Password"
                             type="password"
@@ -368,48 +445,48 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rooms.map((room: any, index: any) => (
+                      {bookings.map((bookings: any, index: any) => (
                         <StyledTableRow key={index}>
                           <StyledTableCell align="center">
-                            {room.id}
+                            {bookings.id}
                           </StyledTableCell>
                           <StyledTableCell
                             component="th"
                             scope="row"
                             sx={{ textAlign: "center" }}
                           >
-                            <img src={room.roomImg} alt="" width="250px" />
+                            <img src={bookings.roomImg} alt="" width="250px" />
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.roomName}
+                            {bookings.roomName}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.roomApartNums}, {room.roomStreet},{" "}
-                            {room.roomDistrict}, {room.roomProvince}
+                            {bookings.roomApartNums}, {bookings.roomStreet},{" "}
+                            {bookings.roomDistrict}, {bookings.roomProvince}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.dateStart}
+                            {bookings.dateStart}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.endDate}
+                            {bookings.endDate}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.total_guests}
+                            {bookings.total_guests}
                           </StyledTableCell>
                           <StyledTableCell
                             align="center"
                             style={{
                               color: `${
-                                room.status === true ? "green" : "red"
+                                bookings.status === true ? "green" : "red"
                               }`,
                             }}
                           >
-                            {room.status === true ? "Đã đặt" : "Đã hủy"}
+                            {bookings.status === true ? "Đã đặt" : "Đã hủy"}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {room.status ? (
+                            {bookings.status ? (
                               <Button
-                                onClick={() => cancelBooking(room, index)}
+                                onClick={() => cancelBooking(bookings, index)}
                               >
                                 Hủy phòng
                               </Button>

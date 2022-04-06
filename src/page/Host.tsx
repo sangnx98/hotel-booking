@@ -164,7 +164,6 @@ export default function Host() {
       // .then((res) => res.json())
       .then((res) => {
         getRooms();
-       
       });
   };
 
