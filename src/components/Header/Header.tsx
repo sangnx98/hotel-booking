@@ -152,7 +152,9 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <Link to='/profile'>
+        <MenuItem sx={{color: 'black'}}>Trang Cá Nhân</MenuItem>
+      </Link>
       <MenuItem onClick={removeData}>Logout</MenuItem>
     </Menu>
   );
@@ -201,7 +203,6 @@ export default function Header() {
       </MenuItem>
     </Menu>
   );
-  console.log("username", username);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar

@@ -1,4 +1,5 @@
 import {CONFIG} from '../config/config'
+import axios from 'axios'
 
 export const getAllRooms = () => {
     return fetch(CONFIG.ApiRooms, {
@@ -25,3 +26,7 @@ export const addNewBooking = (body: any) => {
         body: JSON.stringify(body),
     })
 }
+
+export const removeRoom = async (id: number) => {
+    return await axios.delete(`${CONFIG.ApiRooms}/${id}`);
+  };

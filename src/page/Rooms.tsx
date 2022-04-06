@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 
 import "../App.css";
 import { getAllRooms} from "../services/homestayService";
+import { CONFIG } from "../config/config";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -72,7 +73,11 @@ export default function Rooms() {
     setPersonName(typeof value === "string" ? value.split(",") : value);
   };
   useEffect(() => {
-    getAllRooms()
+    fetch('http://localhost:4000/rooms?status=false&isChecked=1', {
+      headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => res.json())
       .then(setRooms);
   }, []);

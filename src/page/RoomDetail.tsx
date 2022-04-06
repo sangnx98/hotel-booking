@@ -12,7 +12,6 @@ import TextField from "@mui/material/TextField";
 import DateRangePicker, { DateRange } from "@mui/lab/DateRangePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -20,22 +19,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import { CONFIG } from "../config/config";
-import { getRoomDetail, addNewBooking } from "../services/homestayService";
+import { addNewBooking } from "../services/homestayService";
 
 import { Pagination, FreeMode, Navigation } from "swiper";
 import Header from "../components/Header/Header";
-
-type Booking = {
-  user_id: string;
-  host_id: string;
-  room_id: string;
-  startDate: string;
-  endDate: string;
-  status: boolean;
-  total_guests: string;
-  children: string;
-  adult: string;
-};
 
 const getUserData = () => {
   const storedValues = localStorage.getItem("user");
@@ -48,17 +35,6 @@ const getUserData = () => {
 
 export default function RoomDetail() {
   const [user, setUser] = useState(getUserData);
-  const [booking, setBooking] = useState<Booking>({
-    user_id: "",
-    host_id: "",
-    room_id: "",
-    startDate: "",
-    endDate: "",
-    status: false,
-    total_guests: "",
-    children: "",
-    adult: "",
-  });
   const [open, setOpen] = useState(false);
   const [children, setChildren] = useState<number>(0);
   const [adult, setAdult] = useState<number>(0);
@@ -77,11 +53,18 @@ export default function RoomDetail() {
       dateStart: value[0],
       endDate: value[1],
       hostId: roomDetail.hostId,
-      status: true,
       total_guests: total_guests,
       children: children,
       adult: adult,
       userId: user.id,
+      roomId: params.id,
+      roomImg: roomDetail.bgUrl,
+      roomName: roomDetail.homeStayName,
+      status: true,
+      roomProvince: roomDetail.province,
+      roomDistrict: roomDetail.district,
+      roomStreet: roomDetail.street,
+      roomApartNums: roomDetail.apartNumber,
     };
     if (
       newBooking.dateStart == null ||
@@ -105,7 +88,7 @@ export default function RoomDetail() {
             .then((result) => {
               setRoomDetail({ ...result, status: true });
             });
-            console.log("newBooking", newBooking)
+          console.log("newBooking", newBooking);
         })
         //Then with the error genereted...
         .catch((error) => {
@@ -243,14 +226,15 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component={'span'}
+                  component={"span"}
                   sx={{
                     display: "flex",
                     fontWeight: "600",
                     marginBottom: "1rem",
                   }}
                 >
-                  Địa chỉ: {roomDetail.apartNumber} đường {roomDetail.street}, {roomDetail.province} 
+                  Địa chỉ: {roomDetail.apartNumber} đường {roomDetail.street},{" "}
+                  {roomDetail.province}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -265,7 +249,7 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component={'span'}
+                  component={"span"}
                   sx={{ display: "flex", marginBottom: "1rem" }}
                 >
                   Phòng riêng · {roomDetail.bathRooms} phòng ·{" "}
@@ -462,7 +446,7 @@ export default function RoomDetail() {
               <Box
                 sx={{
                   width: "100%",
-                  height: "15rem",
+                  height: "17rem",
                   border: "2px solid #dbd3bd",
                   borderRadius: "10px",
                   padding: "2rem",
@@ -488,6 +472,7 @@ export default function RoomDetail() {
                   <DateRangePicker
                     startText="Check-in"
                     endText="Check-out"
+                    // format = "dd/MM/yyyy"
                     maxDate={maxValue}
                     minDate={minValue}
                     value={value}
@@ -506,7 +491,7 @@ export default function RoomDetail() {
                   />
                 </LocalizationProvider>
                 <Button onClick={handleClickOpen} sx={{ m: "1rem" }}>
-                  Số lượng người tham gia
+                  Số lượng người tham gia: {total_guests}
                 </Button>
                 <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                   <DialogTitle>Vui lòng nhập số lượng</DialogTitle>
@@ -550,6 +535,35 @@ export default function RoomDetail() {
                     <Button onClick={handleClose}>Ok</Button>
                   </DialogActions>
                 </Dialog>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    color: "#06c7bd",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    Người lớn: {adult}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    Trẻ em: {children}
+                  </Typography>
+                </Box>
+
                 <Button variant="outlined" onClick={handleBooking}>
                   Đặt ngay
                 </Button>

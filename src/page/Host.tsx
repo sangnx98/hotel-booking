@@ -31,10 +31,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { useDispatch, useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
+import { Room } from "../types";
+import { removeRoom } from "../services/homestayService";
 
 
 interface TabPanelProps {
@@ -127,32 +132,51 @@ export default function Host() {
     getRooms();
   }, []);
 
-  const handleCancelBooking = async (id: number) => {
-    const room = rooms.find((item: any) => item.id === id);
-    console.log("room", room);
-    console.log("rooms_id", id);
-    await fetch(CONFIG.ApiRoom + id, {
+  const handleCancelBooking = async (room: Room, index: any) => {
+    const { id } = room;
+    const data = { ...room, status: false };
+
+    fetch(`${CONFIG.ApiRooms}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify({ ...room, status: false }),
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((result) => {
-        setRooms({ ...result, status: false });
+        console.log("result", result);
+        const newRooms = [...rooms];
+        newRooms[index] = result;
+        setRooms(newRooms);
       });
   };
 
-  const handleClickDelete = async (id: number) => {
-    console.log("id", `${CONFIG.ApiRooms}/${id}`);
-    try {
-      const data = await fetch(`${CONFIG.ApiRooms}/${id}`, {
-        method: "DELETE",
+  const handleDelete = async (room: Room, index: any) => {
+    const { id } = room;
+
+    fetch(`http://localhost:4000/rooms/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+      // .then((res) => res.json())
+      .then((res) => {
+        getRooms();
+       
       });
-      data ? alert("Xoá thành công") : alert("Xóa thất bại");
-    } catch (error) {
-      console.log(error);
+  };
+
+  const handleClickDelete = (id: number) => {
+    if (window.confirm("Bạn chắc chắn muốn xóa?")) {
+      removeRoom(id)
+        .then((res) => {
+          getRooms();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -337,17 +361,11 @@ export default function Host() {
                 Tạo phòng mới
               </Button>
             </Link>
-            <Typography
-              variant="h5"
-              component="h2"
-              sx={{ display: "flex", fontWeight: "500", m: "2rem 0 2rem 0" }}
-            >
-              2 Chỗ nghỉ
-            </Typography>
             <Box
               component="form"
               sx={{
                 "& .MuiTextField-root": { m: 1, width: "25ch" },
+                m: "2rem 0 2rem 0"
               }}
               noValidate
               autoComplete="off"
@@ -372,11 +390,12 @@ export default function Host() {
                     <StyledTableCell align="center">Tên chỗ ở</StyledTableCell>
                     <StyledTableCell align="center">Địa chỉ</StyledTableCell>
                     <StyledTableCell align="center">Trạng thái</StyledTableCell>
+                    <StyledTableCell align="center">Kiểm duyệt</StyledTableCell>
                     <StyledTableCell align="center">Hành động</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rooms.map((room: any) => (
+                  {rooms.map((room: any, index:any) => (
                     <StyledTableRow key={room.hostId}>
                       <StyledTableCell align="center">
                         {room.id}
@@ -402,34 +421,36 @@ export default function Host() {
                       >
                         {room.status === true ? "Đang thuê" : "Chưa thuê"}
                       </StyledTableCell>
-                      <StyledTableCell align="right">
-                        <Box>
-                          <Button
-                            id="basic-button"
-                            aria-controls={open ? "basic-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
-                          >
-                            Thiết lập
-                          </Button>
-                          <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                              "aria-labelledby": "basic-button",
+                      <StyledTableCell
+                            align="center"
+                            style={{
+                              color: `${
+                                room.isChecked === 0
+                                  ? "orange"
+                                  : room.isChecked === 1
+                                  ? "green"
+                                  : "red"
+                              }`,
                             }}
                           >
-                            <MenuItem onClick={handleClose}>Chỉnh sửa</MenuItem>
-                            <MenuItem
-                              onClick={() => handleClickDelete(room.id)}
-                            >
-                              Xóa chỗ ở
-                            </MenuItem>
-                          </Menu>
-                        </Box>
+                            {room.isChecked === 0
+                              ? "Đang chờ"
+                              : room.isChecked === 1
+                              ? "Đã duyệt"
+                              : "Từ chối"}
+                          </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {(room.status === false)? (
+                            <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
+                              <EditIcon/>
+                              <DeleteIcon onClick={()=>handleDelete(room, index)}/>
+                            </Box>
+                        )
+                        :
+                        (
+                          <Button onClick={()=>handleCancelBooking(room, index)}>Hủy phòng</Button>
+                        )
+                        }
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

@@ -22,7 +22,7 @@ import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getAllRooms } from "../services/homestayService";
 import axios from "axios";
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import { Room } from "../types";
 import { CONFIG } from "../config/config";
@@ -141,6 +141,7 @@ export default function AdminDashboard() {
                         <StyledTableCell align="center">
                           Địa chỉ
                         </StyledTableCell>
+                        <StyledTableCell align="center">Duyệt</StyledTableCell>
                         <StyledTableCell align="center">
                           Trạng thái
                         </StyledTableCell>
@@ -186,13 +187,23 @@ export default function AdminDashboard() {
                               ? "Đã duyệt"
                               : "Từ chối"}
                           </StyledTableCell>
+                          <StyledTableCell
+                            align="center"
+                            style={{
+                              color: `${
+                                room.status === true ? "green" : "red"
+                              }`,
+                            }}
+                          >
+                            {room.status === true ? "Đang thuê" : "Chưa thuê"}
+                          </StyledTableCell>
                           <StyledTableCell align="center">
                             <Box>
                               <CheckCircleIcon
                                 onClick={() => setApprove(room, index)}
                               />
-                              <CancelIcon 
-                              onClick={() => setDennie(room, index)}
+                              <CancelIcon
+                                onClick={() => setDennie(room, index)}
                               />
                             </Box>
                           </StyledTableCell>
