@@ -1,28 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header/Header";
-import { Container, Menu, MenuItem } from "@mui/material";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
+import { Avatar, Container, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import Button from "@mui/material/Button";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { Link } from "react-router-dom";
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -31,16 +16,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WorkIcon from '@mui/icons-material/Work';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { useDispatch, useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
-import { Room } from "../types";
-import { removeRoom } from "../services/homestayService";
-
+import { Booking, Room } from "../types";
+import Footer from "../components/Footer";
+import Contact from '../components/Contact';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -62,7 +50,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
@@ -99,21 +86,26 @@ export default function Host() {
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const selector = useSelector((state: any) => state.user);
-  console.log("============", selector.user.id);
   const [value, setValue] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [bookings, setBookings] = React.useState<Booking[]>([]);
+  console.log("booking", bookings);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   const user = JSON.parse(localStorage.getItem("user") || "");
+
+  const getBooking = () => {
+    fetch(`${CONFIG.ApiBooking}?hostId=${user.id}&status=true`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res: any) => res.json())
+      .then(setBookings);
+  };
 
   const getRooms = () => {
     fetch(`http://localhost:4000/rooms?hostId=${user.id}`, {
@@ -130,13 +122,16 @@ export default function Host() {
   }
   useEffect(() => {
     getRooms();
+    getBooking();
   }, []);
 
-  const handleCancelBooking = async (room: Room, index: any) => {
-    const { id } = room;
-    const data = { ...room, status: false };
+  const cancelBooking = async (booking: Booking, index: number) => {
+    const { id } = booking;
+    console.log("room", booking);
+    const data = { ...booking, status: false };
+    const roomId = data.roomId!;
 
-    fetch(`${CONFIG.ApiRooms}/${id}`, {
+    fetch(`${CONFIG.ApiBooking}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -146,9 +141,18 @@ export default function Host() {
       .then((res) => res.json())
       .then((result) => {
         console.log("result", result);
-        const newRooms = [...rooms];
+        const newRooms = [...bookings];
         newRooms[index] = result;
-        setRooms(newRooms);
+        setBookings(newRooms);
+      })
+      .then(() => {
+        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: false }),
+        });
       });
   };
 
@@ -159,27 +163,12 @@ export default function Host() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-      }
-    })
-      // .then((res) => res.json())
-      .then((res) => {
-        getRooms();
-      });
+      },
+    }).then((res) => {
+      getRooms();
+    });
   };
 
-  const handleClickDelete = (id: number) => {
-    if (window.confirm("Bạn chắc chắn muốn xóa?")) {
-      removeRoom(id)
-        .then((res) => {
-          getRooms();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
-  console.log("rooms", rooms);
   return (
     <>
       <Header />
@@ -196,7 +185,7 @@ export default function Host() {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <Typography
+          <Typography
               variant="h6"
               component="h2"
               sx={{ display: "flex", fontWeight: "500" }}
@@ -266,93 +255,120 @@ export default function Host() {
             <Typography
               variant="h6"
               component="h2"
-              sx={{ display: "flex", fontWeight: "500", m: "1rem 0 1rem 0" }}
+              sx={{ display: "flex", fontWeight: "500", mb: "2rem" }}
             >
               Đặt chỗ gần đây
             </Typography>
-            <Box
-              maxWidth="lg"
-              sx={{
-                height: "30rem",
-                border: "1px solid #dae3dc",
-                borderRadius: "5px",
-                padding: "10px",
-              }}
-            >
-              <Card sx={{ width: "100%", display: "flex", mb: "10px" }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  width="200"
-                  image="https://nghekhachsan.com/upload/NKS-Hong/homestay-la-gi-1.jpg"
-                  alt="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Lizard
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with
-                    over 6,000 species, ranging across all continents except
-                    Antarctica
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Card>
-              <Card sx={{ width: "100%", display: "flex", mb: "10px" }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  width="200"
-                  image="https://vnn-imgs-a1.vgcloud.vn/image2.tienphong.vn/w645/Uploaded/2021/svjsplu/2021_09_01/198754915-2803.jpg"
-                  alt="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Lizard
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with
-                    over 6,000 species, ranging across all continents except
-                    Antarctica
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Card>
+            {bookings.length > 0 ? (
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="center">ID</StyledTableCell>
+                      <StyledTableCell align="center">Ảnh</StyledTableCell>
+                      <StyledTableCell align="center">
+                        Tên chỗ ở
+                      </StyledTableCell>
+                      <StyledTableCell align="center">Địa chỉ</StyledTableCell>
+                      <StyledTableCell align="center">Check in</StyledTableCell>
+                      <StyledTableCell align="center">
+                        Check out
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Số lượng người
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Trạng thái
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Hành động
+                      </StyledTableCell>
+                    </TableRow>
+                  </TableHead>
 
-              <Card sx={{ width: "100%", display: "flex", mb: "10px" }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  width="200"
-                  image="https://tapchidiaoc.com/wp-content/uploads/2022/01/homestay-la-gi-40-760x367-1.jpg"
-                  alt="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Lizard
+                  <TableBody>
+                    {bookings.map((bookings: any, index: any) => (
+                      <StyledTableRow key={index}>
+                        <StyledTableCell align="center">
+                          {bookings.id}
+                        </StyledTableCell>
+                        <StyledTableCell
+                          component="th"
+                          scope="row"
+                          sx={{ textAlign: "center" }}
+                        >
+                          <img src={bookings.roomImg} alt="" width="250px" />
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.roomName}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.roomApartNums}, {bookings.roomStreet},{" "}
+                          {bookings.roomDistrict}, {bookings.roomProvince}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.dateStart}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.endDate}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.total_guests}
+                        </StyledTableCell>
+                        <StyledTableCell
+                          align="center"
+                          style={{
+                            color: `${
+                              bookings.status === true ? "green" : "red"
+                            }`,
+                          }}
+                        >
+                          {bookings.status === true ? "Đã đặt" : "Đã hủy"}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {bookings.status ? (
+                            <Button
+                              onClick={() => cancelBooking(bookings, index)}
+                            >
+                              Hủy phòng
+                            </Button>
+                          ) : (
+                            <Button disabled>Hủy phòng</Button>
+                          )}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "20rem",
+                  border: "1px solid #ccbe99",
+                  borderRadius: "5px",
+                  display: "flex",
+                  textAlign: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", m: "0 auto" }}
+                >
+                  <SentimentVeryDissatisfiedIcon
+                    sx={{ fontSize: "5rem", fontWeight: "300", m: "0 auto" }}
+                  />
+                  <Typography
+                    variant="subtitle1"
+                    component="span"
+                    sx={{ fontWeight: "500" }}
+                  >
+                    Chưa có người đặt chỗ
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with
-                    over 6,000 species, ranging across all continents except
-                    Antarctica
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Card>
-              <Stack spacing={2} alignItems="center">
-                <Pagination count={10} color="secondary" />
-              </Stack>
-            </Box>
+                </Box>
+              </Box>
+            )}
           </TabPanel>
           <TabPanel value={value} index={1}>
             <Link to="/newhomestay">
@@ -364,7 +380,7 @@ export default function Host() {
               component="form"
               sx={{
                 "& .MuiTextField-root": { m: 1, width: "25ch" },
-                m: "2rem 0 2rem 0"
+                m: "2rem 0 2rem 0",
               }}
               noValidate
               autoComplete="off"
@@ -394,7 +410,7 @@ export default function Host() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rooms.map((room: any, index:any) => (
+                  {rooms.map((room: any, index: any) => (
                     <StyledTableRow key={room.hostId}>
                       <StyledTableCell align="center">
                         {room.id}
@@ -421,35 +437,39 @@ export default function Host() {
                         {room.status === true ? "Đang thuê" : "Chưa thuê"}
                       </StyledTableCell>
                       <StyledTableCell
-                            align="center"
-                            style={{
-                              color: `${
-                                room.isChecked === 0
-                                  ? "orange"
-                                  : room.isChecked === 1
-                                  ? "green"
-                                  : "red"
-                              }`,
+                        align="center"
+                        style={{
+                          color: `${
+                            room.isChecked === 0
+                              ? "orange"
+                              : room.isChecked === 1
+                              ? "green"
+                              : "red"
+                          }`,
+                        }}
+                      >
+                        {room.isChecked === 0
+                          ? "Đang chờ"
+                          : room.isChecked === 1
+                          ? "Đã duyệt"
+                          : "Từ chối"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.status === false ? (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-around",
                             }}
                           >
-                            {room.isChecked === 0
-                              ? "Đang chờ"
-                              : room.isChecked === 1
-                              ? "Đã duyệt"
-                              : "Từ chối"}
-                          </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {(room.status === false)? (
-                            <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
-                              <EditIcon/>
-                              <DeleteIcon onClick={()=>handleDelete(room, index)}/>
-                            </Box>
-                        )
-                        :
-                        (
-                          <Button onClick={()=>handleCancelBooking(room, index)}>Hủy phòng</Button>
-                        )
-                        }
+                            <EditIcon />
+                            <DeleteIcon
+                              onClick={() => handleDelete(room, index)}
+                            />
+                          </Box>
+                        ) : (
+                          <Button disabled>Hủy phòng</Button>
+                        )}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -459,6 +479,8 @@ export default function Host() {
           </TabPanel>
         </Box>
       </Container>
+      <Contact/>
+      <Footer/>
     </>
   );
 }

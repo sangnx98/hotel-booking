@@ -15,11 +15,11 @@ import { useDispatch } from 'react-redux';
 import { signUpSuccess } from './store/userSlice';
 
 function App() {
-  const dispatch = useDispatch()
-  React.useEffect(()=>{
-    const userData = JSON.parse(localStorage.getItem('user')|| "")
-    dispatch(signUpSuccess(userData))
-  }, [])
+  // const dispatch = useDispatch()
+  // React.useEffect(()=>{
+  //   const userData = JSON.parse(localStorage.getItem('user')|| "")
+  //   dispatch(signUpSuccess(userData))
+  // }, [])
   
   return (
     <>

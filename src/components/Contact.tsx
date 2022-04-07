@@ -32,15 +32,12 @@ export default function Contact() {
           >
             TOP HOMESTAY ĐƯỢC HIÊU THÍCH
           </Typography>
-          <Typography variant="subtitle2">Homestay Đà Lạt</Typography>
-          <Typography variant="subtitle2">Homestay Hà Nội</Typography>
-          <Typography variant="subtitle2">Homestay HCM</Typography>
-          <Typography variant="subtitle2">Homestay Sapa</Typography>
-          <Typography variant="subtitle2">Homestay Vũng Tàu</Typography>
-          <Typography variant="subtitle2">Homestay Tam Đảo</Typography>
-          <Typography variant="subtitle2">Homestay Hội An</Typography>
-          <Typography variant="subtitle2">Homestay Đà Nẵng</Typography>
-          <Typography variant="subtitle2">Homestay Hạ Long</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Homestay Đà Lạt</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Homestay Hà Nội</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Homestay HCM</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Homestay Sapa</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Homestay Vũng Tàu</Typography>
+
         </Box>
         <Box>
           <Typography
@@ -50,10 +47,10 @@ export default function Contact() {
           >
             KHÔNG GIAN ƯA THÍCH
           </Typography>
-          <Typography variant="subtitle2">Căn hộ dịch vụ</Typography>
-          <Typography variant="subtitle2">Dịch vụ</Typography>
-          <Typography variant="subtitle2">Nhà riêng</Typography>
-          <Typography variant="subtitle2">Studio</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Căn hộ dịch vụ</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Dịch vụ</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Nhà riêng</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Studio</Typography>
           <Typography variant="subtitle2">Travel Guide</Typography>
         </Box>
         <Box>
@@ -64,15 +61,13 @@ export default function Contact() {
           >
             VỀ CHÚNG TÔI
           </Typography>
-          <Typography variant="subtitle2">Blog</Typography>
-          <Typography variant="subtitle2">Điều khoản hoạt động</Typography>
-          <Typography variant="subtitle2">1800 6586</Typography>
-          <Typography variant="subtitle2">+84 8898 66666</Typography>
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Blog</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>Điều khoản hoạt động</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>1800 6586</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>+84 8898 66666</Typography>
+          <Typography variant="subtitle2" sx={{marginBottom: "0.5rem" }}>
             Trang thông tin dành cho chủ nhà
           </Typography>
-          <Typography variant="subtitle2">Cơ hội nghề nghiệp</Typography>
-          <Typography variant="subtitle2">Tạp chí du lịch</Typography>
         </Box>
         <Box sx={{ display: "flex", width: "20rem" }}>
           <Box sx={{ width: "30%", height: "auto" }}>
@@ -95,14 +90,14 @@ export default function Contact() {
                 flexDirection: "column",
               }}
             >
-              <Box sx={{ height: "2rem" }} component="div">
+              <Box sx={{ height: "2rem", mb: '0.5rem' }} component="div">
                 <img
                   src="https://www.luxstay.com/icons/apple-store.svg"
                   alt=""
                   height="100%"
                 />
               </Box>
-              <Box sx={{ height: "2rem" }} component="div">
+              <Box sx={{ height: "2rem", mb: '0.5rem' }} component="div">
                 <img
                   src="https://www.luxstay.com/icons/apple-store.svg"
                   alt=""

@@ -17,6 +17,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import moment from 'moment'
 
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
@@ -50,8 +51,8 @@ export default function RoomDetail() {
 
   const handleBooking = () => {
     const newBooking = {
-      dateStart: value[0],
-      endDate: value[1],
+      dateStart: moment(value[0]).format('DD/MM/YYYY'),
+      endDate: moment(value[1]).format('DD/MM/YYYY'),
       hostId: roomDetail.hostId,
       total_guests: total_guests,
       children: children,
@@ -75,7 +76,6 @@ export default function RoomDetail() {
     } else {
       addNewBooking(newBooking)
         .then((response) => response.json())
-        //Then with the data from the response in JSON...
         .then((data) => {
           fetch(CONFIG.ApiRoom + params.id, {
             method: "PUT",
@@ -90,7 +90,6 @@ export default function RoomDetail() {
             });
           console.log("newBooking", newBooking);
         })
-        //Then with the error genereted...
         .catch((error) => {
           console.error("Error:", error);
         });

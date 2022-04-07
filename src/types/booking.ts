@@ -18,4 +18,5 @@ export interface Booking {
   isChecked: number;
   intro: string;
   bgUrl: string;
+  roomId: string;
 }

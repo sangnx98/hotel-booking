@@ -198,11 +198,13 @@ export default function AdminDashboard() {
                             {room.status === true ? "Đang thuê" : "Chưa thuê"}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            <Box>
+                            <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
                               <CheckCircleIcon
+                                sx={{color: 'green', cursor: 'pointer'}}
                                 onClick={() => setApprove(room, index)}
                               />
                               <CancelIcon
+                                sx={{color: 'red', cursor: 'pointer'}}
                                 onClick={() => setDennie(room, index)}
                               />
                             </Box>

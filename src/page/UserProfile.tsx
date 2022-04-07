@@ -28,11 +28,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import _ from 'lodash'
+import _ from "lodash";
 
 import { Booking, Room } from "../types";
 import { CONFIG } from "../config/config";
 import Header from "../components/Header/Header";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,37 +56,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 type User = {
-  username: string,
-  email: string,
-  password: string
-}
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+};
 
 export default function AdminDashboard() {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [value, setValue] = React.useState<string>("1");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [rooms, setRooms] = React.useState<Room[]>([])
+  // const [rooms, setRooms] = React.useState<Room[]>([]);
+  const [open, setOpen] = React.useState(false);
+
   const [userData, setUserData] = React.useState<User>({
-    username: '',
-    email: '',
-    password: ''
-  })
+    id: 0,
+    name: "",
+    email: "",
+    password: "",
+  });
+  console.log("booking", bookings);
 
   const user = JSON.parse(localStorage.getItem("user") || "");
-  React.useEffect(()=>{
-    if(!_.isEmpty(user) && _.isEmpty(userData.username) && _.isEmpty(userData.email) && _.isEmpty(userData.password)){
-      console.log('abc')
-      setUserData({...userData, username: user.name, password: user.password, email: user.email})
+  React.useEffect(() => {
+    if (
+      !_.isEmpty(user) &&
+      _.isEmpty(userData.id) &&
+      _.isEmpty(userData.name) &&
+      _.isEmpty(userData.email) &&
+      _.isEmpty(userData.password)
+    ) {
+      setUserData({
+        ...userData,
+        id: user.id,
+        name: user.name,
+        password: user.password,
+        email: user.email,
+      });
     }
-  },[user, userData])
+  }, [user, userData]);
 
   React.useEffect(() => {
     getBooking();
-    getRooms();
+    // getRooms();
   }, []);
 
   const getBooking = () => {
-    fetch(`http://localhost:4000/booking?userId=${user.id}`, {
+    fetch(`${CONFIG.ApiBooking}?userId=${user.id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -96,32 +113,31 @@ export default function AdminDashboard() {
   const handleSetValue = (key: any, value: any) => {
     setUserData({ ...userData, [key]: value });
   };
-  const handleNameChange = (event: any ) => {
-    handleSetValue("username", event.target.value);
+  const handleNameChange = (event: any) => {
+    handleSetValue("name", event.target.value);
   };
 
-  const handleEmailChange = (event: any ) => {
+  const handleEmailChange = (event: any) => {
     handleSetValue("email", event.target.value);
   };
 
-  const handlePasswordChange = (event: any ) => {
+  const handlePasswordChange = (event: any) => {
     handleSetValue("password", event.target.value);
   };
 
-  const getRooms = () => {
-    fetch(`http://localhost:4000/rooms?userId=${user.id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res: any) => res.json())
-      .then(setRooms);
+  const handleSubmit = async (id: number) => {
+    const res = await axios.put(`${CONFIG.ApiUser}/${id}`, userData);
+    console.log("res", res.data);
+    setUserData(res.data);
+    setOpen(false);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const cancelBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
     console.log("room", booking);
     const data = { ...booking, status: false };
+    const roomId = data.roomId!;
 
     fetch(`${CONFIG.ApiBooking}/${id}`, {
       method: "PUT",
@@ -136,30 +152,17 @@ export default function AdminDashboard() {
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
-        
+      })
+      .then(() => {
+        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: false }),
+        });
       });
   };
-  // console.log('booking', bookings)
-  // const updateRoomStatus = async (room: Room, index: number) => {
-  //   const { id } = room;
-  //   console.log("room", room);
-  //   const data = { ...room, status: false };
-
-  //   fetch(`${CONFIG.ApiRooms}/${id}`, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((result) => {
-  //       console.log("result", result);
-  //       const newRooms = [...rooms];
-  //       newRooms[index] = result;
-  //       setRooms(newRooms);
-  //     });
-  // };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -172,23 +175,22 @@ export default function AdminDashboard() {
     setValue(newValue);
   };
 
-  const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
-    console.log("handleClickOpen")
+    console.log("handleClickOpen");
     setOpen(true);
   };
 
   const handleCloseDialog = () => {
-    console.log("handleCloseDialog")
+    console.log("handleCloseDialog");
     setUserData({
-      email: '',
-      username: '',
-      password: ''
-    })
+      id: 0,
+      email: "",
+      name: "",
+      password: "",
+    });
     setOpen(false);
   };
-  console.log("user", userData, user)
+  console.log("user", userData, user);
   return (
     <>
       <Header />
@@ -201,11 +203,11 @@ export default function AdminDashboard() {
                   onChange={handleChange}
                   aria-label="lab API tabs example"
                 >
-                  <Tab label="CÀI ĐẶT TÀI KHOẢN" value="1" />
-                  <Tab label="DANH SÁCH ĐẶT PHÒNG" value="2" />
+                  <Tab label="danh sách đặt phòng" value="1" />
+                  <Tab label="cài đặt tài khoản" value="2" />
                 </TabList>
               </Box>
-              <TabPanel value="1">
+              <TabPanel value="2">
                 <Box sx={{ width: "100%", position: "relative" }}>
                   <Box
                     sx={{
@@ -241,13 +243,13 @@ export default function AdminDashboard() {
                         alignItems: "center",
                         width: "70%",
                         padding: "1rem",
-                        bgcolor: "#c6daf5",
+                        bgcolor: "aliceblue",
                       }}
                     >
                       <Box
                         component="form"
                         noValidate
-                        // onSubmit={handleSubmit}
+                        onSubmit={() => handleSubmit(user.id)}
                         sx={{ mt: 3 }}
                       >
                         <Grid container spacing={2}>
@@ -311,7 +313,7 @@ export default function AdminDashboard() {
                         border: "1px solid white",
                         textAlign: "center",
                         borderRadius: "10px",
-                        bgcolor: "#c6daf5",
+                        bgcolor: "aliceblue",
                         display: "flex",
                         flexDirection: "column",
                       }}
@@ -353,13 +355,13 @@ export default function AdminDashboard() {
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      padding: '1rem'
+                      padding: "1rem",
                     }}
                   >
                     <Box
                       component="form"
                       noValidate
-                      // onSubmit={handleSubmit}
+                      onSubmit={() => handleSubmit}
                       sx={{ mt: 3 }}
                     >
                       <Grid container spacing={2}>
@@ -367,7 +369,7 @@ export default function AdminDashboard() {
                           <TextField
                             autoComplete="given-name"
                             name="firstName"
-                            value={userData?.username}
+                            value={userData?.name}
                             onChange={handleNameChange}
                             required
                             fullWidth
@@ -402,19 +404,22 @@ export default function AdminDashboard() {
                           />
                         </Grid>
                       </Grid>
-  
                     </Box>
                   </Box>
                   <DialogActions>
                     <Button onClick={handleCloseDialog}>Hủy bỏ</Button>
-                    <Button type="submit" onClick={handleCloseDialog} autoFocus>
+                    <Button
+                      type="submit"
+                      onClick={() => handleSubmit(user.id)}
+                      autoFocus
+                    >
                       Cập nhật
                     </Button>
                   </DialogActions>
                 </Dialog>
               </TabPanel>
 
-              <TabPanel value="2">
+              <TabPanel value="1">
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
