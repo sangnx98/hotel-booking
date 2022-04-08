@@ -25,9 +25,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import _ from "lodash";
 
 import { Booking, Room } from "../types";
@@ -62,7 +59,7 @@ type User = {
   password: string;
 };
 
-export default function AdminDashboard() {
+export default function UserProfile() {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [value, setValue] = React.useState<string>("1");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

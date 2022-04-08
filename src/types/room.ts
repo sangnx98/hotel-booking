@@ -18,6 +18,8 @@ export interface Room {
     price: string;
     guestNums: number;
     status: boolean,
-    isChecked: boolean,
+    isChecked: number,
     intro: string;
+    bgUrl: string;
+    
 }

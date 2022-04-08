@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -100,6 +100,12 @@ export default function Login() {
       alert("Sai tài khoản hoặc mật khẩu");
     }
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem('user')){
+      navigate('/')
+    }
+  },[])
 
   return (
     <ThemeProvider theme={theme}>
