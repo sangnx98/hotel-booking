@@ -32,6 +32,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import _ from "lodash";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
@@ -102,6 +103,7 @@ const provinces = [
 ];
 
 export default function HostHomeStay() {
+  const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const initialState: Room = {
@@ -137,6 +139,7 @@ export default function HostHomeStay() {
     const res = await axios.put(`${CONFIG.ApiRooms}/${id}`, roomData);
     setRoomData(res.data);
     setOpen(false);
+    getRooms()
   };
 
   const handleSetValue = (key: any, value: any) => {
@@ -212,11 +215,9 @@ export default function HostHomeStay() {
   useEffect(() => {
     setRoomData(initialState);
   }, [open]);
-
-  const user = JSON.parse(localStorage.getItem("user") || "");
-
+  
   const getRooms = () => {
-    fetch(`${CONFIG.ApiRooms}?hostId=${user.id}`, {
+    fetch(`${CONFIG.ApiRooms}?hostId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },

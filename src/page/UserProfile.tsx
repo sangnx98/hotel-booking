@@ -31,6 +31,8 @@ import { Booking, Room } from "../types";
 import { CONFIG } from "../config/config";
 import Header from "../components/Header/Header";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { signUpSuccess } from "../store/userSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -60,6 +62,7 @@ type User = {
 };
 
 export default function UserProfile() {
+  const dispatch = useDispatch()
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [value, setValue] = React.useState<string>("1");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -96,7 +99,7 @@ export default function UserProfile() {
   React.useEffect(() => {
     getBooking();
     // getRooms();
-  }, []);
+  }, [userData]);
 
   const getBooking = () => {
     fetch(`${CONFIG.ApiBooking}?userId=${user.id}`, {
@@ -128,6 +131,7 @@ export default function UserProfile() {
     setUserData(res.data);
     setOpen(false);
     localStorage.setItem("user", JSON.stringify(userData));
+    dispatch(signUpSuccess(userData))
   };
 
   const cancelBooking = async (booking: Booking, index: number) => {

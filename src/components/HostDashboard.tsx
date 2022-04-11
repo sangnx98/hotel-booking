@@ -23,6 +23,7 @@ import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
+import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
@@ -48,13 +49,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function HostDashBoard() {
+  const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const [bookings, setBookings] = React.useState<Booking[]>([]);
-  const user = JSON.parse(localStorage.getItem("user") || "");
 
   const getBooking = () => {
-    fetch(`${CONFIG.ApiBooking}?hostId=${user.id}&status=true`, {
+    fetch(`${CONFIG.ApiBooking}?hostId=${userAuth.id}&status=true`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -64,7 +65,7 @@ export default function HostDashBoard() {
   };
 
   const getRooms = () => {
-    fetch(`${CONFIG.ApiRooms}?hostId=${user.id}`, {
+    fetch(`${CONFIG.ApiRooms}?hostId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },

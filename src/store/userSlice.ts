@@ -29,10 +29,15 @@ export const userSlice = createSlice({
             state.user.email =action.payload.email;
             state.user.password =action.payload.password;
         },
+        logoutRequest: (state, action) =>{
+            state.user.id = '';
+            state.user.name = '';
+            state.user.password = '';
+        },
         getRoomsById: (state, action) =>{
             state.roomById = action.payload
         }
     }
 })
-export const {signUpStart, signUpError, signUpSuccess, getRoomsById} = userSlice.actions
+export const {signUpStart, signUpError, signUpSuccess, getRoomsById, logoutRequest} = userSlice.actions
 export default userSlice.reducer

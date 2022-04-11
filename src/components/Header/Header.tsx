@@ -15,9 +15,11 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import { Link } from "react-router-dom";
+import _ from 'lodash'
 
 import "./Header.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutRequest } from "../../store/userSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -82,29 +84,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const getUserData = () => {
-  const storedValues = localStorage.getItem("user");
-  if (!storedValues)
-    return {
-      name: "",
-    };
-  return JSON.parse(storedValues);
-};
-
-type UserSubmitForm = {
-  // email: string;
-  // password: string;
-  // name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  name: string;
-};
-
 export default function Header() {
-  const username = useSelector((state: any) => state.user.user);
+  const userAuth = useSelector((state: any) => state.user);
+  const dispatch = useDispatch()
   const navigate = useNavigate();
-  const [values, setValues] = useState<UserSubmitForm>(getUserData);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -118,6 +101,7 @@ export default function Header() {
 
   const removeData = () => {
     localStorage.removeItem("user");
+    dispatch(logoutRequest(userAuth))
     navigate("/login");
   };
 
@@ -152,8 +136,8 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to='/profile'>
-        <MenuItem sx={{color: 'black'}}>Trang Cá Nhân</MenuItem>
+      <Link to="/profile">
+        <MenuItem sx={{ color: "black" }}>Trang Cá Nhân</MenuItem>
       </Link>
       <MenuItem onClick={removeData}>Logout</MenuItem>
     </Menu>
@@ -281,7 +265,7 @@ export default function Header() {
                     color: "black",
                   }}
                 >
-                  {values.name}
+                  {userAuth.name}
                 </Typography>
                 <IconButton
                   size="large"

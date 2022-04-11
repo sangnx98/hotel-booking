@@ -88,7 +88,7 @@ export default function Signup() {
       .then((res) => res.json())
       .then(setListUser);
   }, []);
-  console.log('user', userData)
+  // console.log('user', userData)
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

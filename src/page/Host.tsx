@@ -14,6 +14,7 @@ import Footer from "../components/Footer";
 import Contact from "../components/Contact";
 import HostDashBoard from "../components/HostDashboard";
 import HostHomeStay from "../components/HostHomstay";
+import { useSelector } from "react-redux";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -49,6 +50,7 @@ function a11yProps(index: number) {
 }
 
 export default function Host() {
+  const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const [value, setValue] = useState(0);
@@ -56,10 +58,8 @@ export default function Host() {
     setValue(newValue);
   };
 
-  const user = JSON.parse(localStorage.getItem("user") || "");
-
   const getRooms = () => {
-    fetch(`http://localhost:4000/rooms?hostId=${user.id}`, {
+    fetch(`http://localhost:4000/rooms?hostId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },
