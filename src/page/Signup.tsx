@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,6 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { CONFIG } from "../config/config";
-import { signUp } from "../services/userService";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../store/apiRequest";
 import { signUpSuccess } from "../store/userSlice";
@@ -47,11 +45,7 @@ export default function Signup() {
   const userData = useSelector((state: any)=> state.user.user)
   const navigate = useNavigate();
   const [listUser, setListUser] = useState<any>([]);
-  const [values, setValues] = useState({
-    email: userData.email,
-    password: userData.password,
-    name: userData.name,
-  });
+  const user = useRef({});
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -72,23 +66,42 @@ export default function Signup() {
     handleSubmit,
     formState: { errors },
   } = useForm<any>({ resolver: yupResolver(validationSchema) });
-  const onSubmit = (data: any) => {
-    const emailExist = listUser.find((user: any) => user.email === data.email);
-    if (emailExist) {
+  const onSubmit = async (data: any) => {
+    const signupUser = await handleUser(data.email);
+    if (signupUser) {
       alert("Tài khoản đã tồn tại");
     } else {
       signUpUser(data, dispatch(signUpSuccess(data)))
       alert("Đăng kí thành công, vui lòng đăng nhập")
       navigate('/login')
-      console.log('data', data)
     }
   };
-  useEffect(() => {
-    fetch(CONFIG.ApiUser)
-      .then((res) => res.json())
-      .then(setListUser);
-  }, []);
-  // console.log('user', userData)
+
+  const handleUser = async (email: String) => {
+    const settings = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+    try {
+      const response = await fetch(
+        `http://localhost:4000/users?email=${email}`,
+        settings
+      );
+
+      const data = await response.json();
+      if (data) {
+        user.current = data[0];
+        return user.current;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

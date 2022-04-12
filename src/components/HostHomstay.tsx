@@ -36,7 +36,7 @@ import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
-import { Booking, Room } from "../types";
+import { Room } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -65,13 +65,6 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -132,14 +125,14 @@ export default function HostHomeStay() {
   };
 
   const [room, setRoom] = useState<any>([]);
-  const [open, setOpen] = React.useState(false);
-  const [roomData, setRoomData] = React.useState<Room>(initialState);
+  const [open, setOpen] = useState(false);
+  const [roomData, setRoomData] = useState<Room>(initialState);
 
   const handleSubmit = async (id: number) => {
     const res = await axios.put(`${CONFIG.ApiRooms}/${id}`, roomData);
     setRoomData(res.data);
     setOpen(false);
-    getRooms()
+    getRooms();
   };
 
   const handleSetValue = (key: any, value: any) => {
@@ -154,7 +147,7 @@ export default function HostHomeStay() {
     handleSetValue("homeStayType", event.target.value);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       !_.isEmpty(room) &&
       _.isEmpty(roomData.id) &&
@@ -215,7 +208,7 @@ export default function HostHomeStay() {
   useEffect(() => {
     setRoomData(initialState);
   }, [open]);
-  
+
   const getRooms = () => {
     fetch(`${CONFIG.ApiRooms}?hostId=${userAuth.id}`, {
       headers: {
@@ -259,6 +252,8 @@ export default function HostHomeStay() {
       getRooms();
     });
   };
+
+  console.log("rooms", rooms);
   return (
     <>
       <Link to="/newhomestay">
@@ -286,82 +281,115 @@ export default function HostHomeStay() {
           />
         </div>
       </Box>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">ID</StyledTableCell>
-              <StyledTableCell align="center">Ảnh</StyledTableCell>
-              <StyledTableCell align="center">Tên chỗ ở</StyledTableCell>
-              <StyledTableCell align="center">Địa chỉ</StyledTableCell>
-              <StyledTableCell align="center">Trạng thái</StyledTableCell>
-              <StyledTableCell align="center">Kiểm duyệt</StyledTableCell>
-              <StyledTableCell align="center">Hành động</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rooms.map((room: any, index: any) => (
-              <StyledTableRow key={room.hostId}>
-                <StyledTableCell align="center">{room.id}</StyledTableCell>
-                <StyledTableCell
-                  component="th"
-                  scope="row"
-                  sx={{ textAlign: "center" }}
-                >
-                  <img src={room.bgUrl} alt="" width="250px" />
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {room.homeStayName}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {room.street}, {room.province}
-                </StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  style={{
-                    color: `${room.status === true ? "green" : "red"}`,
-                  }}
-                >
-                  {room.status === true ? "Đang thuê" : "Chưa thuê"}
-                </StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  style={{
-                    color: `${
-                      room.isChecked === 0
-                        ? "orange"
-                        : room.isChecked === 1
-                        ? "green"
-                        : "red"
-                    }`,
-                  }}
-                >
-                  {room.isChecked === 0
-                    ? "Đang chờ"
-                    : room.isChecked === 1
-                    ? "Đã duyệt"
-                    : "Từ chối"}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {room.status === false ? (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                      }}
-                    >
-                      <EditIcon onClick={() => getRoom(room, index)} />
-                      <DeleteIcon onClick={() => handleDelete(room, index)} />
-                    </Box>
-                  ) : (
-                    <Button disabled>Hủy phòng</Button>
-                  )}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {rooms.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center">ID</StyledTableCell>
+                <StyledTableCell align="center">Ảnh</StyledTableCell>
+                <StyledTableCell align="center">Tên chỗ ở</StyledTableCell>
+                <StyledTableCell align="center">Địa chỉ</StyledTableCell>
+                <StyledTableCell align="center">Trạng thái</StyledTableCell>
+                <StyledTableCell align="center">Kiểm duyệt</StyledTableCell>
+                <StyledTableCell align="center">Hành động</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rooms.map((room: any, index: any) => (
+                <StyledTableRow key={room.hostId}>
+                  <StyledTableCell align="center">{room.id}</StyledTableCell>
+                  <StyledTableCell
+                    component="th"
+                    scope="row"
+                    sx={{ textAlign: "center" }}
+                  >
+                    <img src={room.bgUrl} alt="" width="250px" />
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {room.homeStayName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {room.street}, {room.province}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    align="center"
+                    style={{
+                      color: `${room.status === true ? "green" : "red"}`,
+                    }}
+                  >
+                    {room.status === true ? "Đang thuê" : "Chưa thuê"}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    align="center"
+                    style={{
+                      color: `${
+                        room.isChecked === 0
+                          ? "orange"
+                          : room.isChecked === 1
+                          ? "green"
+                          : "red"
+                      }`,
+                    }}
+                  >
+                    {room.isChecked === 0
+                      ? "Đang chờ"
+                      : room.isChecked === 1
+                      ? "Đã duyệt"
+                      : "Từ chối"}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {room.status === false ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        <EditIcon
+                          sx={{ cursor: "pointer", color: "green" }}
+                          onClick={() => getRoom(room, index)}
+                        />
+                        <DeleteIcon
+                          sx={{ cursor: "pointer", color: "red" }}
+                          onClick={() => handleDelete(room, index)}
+                        />
+                      </Box>
+                    ) : (
+                      <Button disabled>Hủy phòng</Button>
+                    )}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            height: "20rem",
+            border: "1px solid #ccbe99",
+            borderRadius: "5px",
+            display: "flex",
+            textAlign: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "column", m: "0 auto" }}>
+            <Typography
+              variant="subtitle1"
+              component="span"
+              sx={{ fontWeight: "500" }}
+            >
+              Hiện chưa có chỗ ở nào
+            </Typography>
+            <Link to="/newhomestay">
+              <Button>Tạo mới ngay</Button>
+            </Link>
+          </Box>
+        </Box>
+      )}
 
       <Dialog
         className="sss"

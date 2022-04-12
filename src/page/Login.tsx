@@ -15,10 +15,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 import SocialLogin from "../components/SocialLogin";
 import { signUpSuccess } from "../store/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Copyright(props: any) {
   return (
@@ -45,11 +47,32 @@ type OneUser = {
   name: string;
 };
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Login() {
   const dispatch = useDispatch();
+  const snackbarOpen = useSelector((state: any) => state.snackbarOpen )
+  const snackbarType = useSelector((state: any) => state.snackbarType )
+  const snackbarMessage = useSelector((state: any) => state.snackbarMessage )
   const user = useRef({});
   const navigate = useNavigate();
-  const [listUser, setListUser] = useState<any>([]);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleUser = async (email: String, password: String) => {
     const settings = {
@@ -97,15 +120,15 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user.current));
       dispatch(signUpSuccess(user.current));
     } else {
-      alert("Sai tài khoản hoặc mật khẩu");
+      setOpen(true);
     }
   };
 
-  useEffect(()=>{
-    if(localStorage.getItem('user')){
-      navigate('/')
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/");
     }
-  },[])
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -200,6 +223,11 @@ export default function Login() {
           </Box>
         </Grid>
       </Grid>
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          Sai thông tin Email hoặc Mật khẩu. Vui lòng thử lại !!!
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

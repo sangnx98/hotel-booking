@@ -139,7 +139,7 @@ export default function Header() {
       <Link to="/profile">
         <MenuItem sx={{ color: "black" }}>Trang Cá Nhân</MenuItem>
       </Link>
-      <MenuItem onClick={removeData}>Logout</MenuItem>
+      <MenuItem onClick={removeData}>Đăng xuất</MenuItem>
     </Menu>
   );
 

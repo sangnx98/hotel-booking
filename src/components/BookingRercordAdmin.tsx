@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Button, Container, Table, TableContainer } from "@mui/material";
-import { Box } from "@mui/system";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import TableBody from "@mui/material/TableBody";
+import React, { useEffect, useState } from "react";
+import {
+    Button,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-
-import { Booking } from "../types";
-import { CONFIG } from "../config/config";
-import Header from "../components/Header/Header";
-import ProfileAccount from "../components/ProfileAccount";
+import Paper from "@mui/material/Paper";
+import { getAllUser } from "../services/userService";
+import { User } from "../types";
+import { getAllBookings } from "../services/homestayService";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -38,82 +34,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function UserProfile() {
-  const userAuth = useSelector((state: any) => state.user);
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [value, setValue] = useState<string>("1");
+export default function BookingRecordAdmin() {
+  const [bookings, setBookings] = useState<User[]>([]);
 
   useEffect(() => {
-    getBooking();
-  }, []);
-
-  const getBooking = () => {
-    fetch(`${CONFIG.ApiBooking}?userId=${userAuth.id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res: any) => res.json())
-      .then(setBookings);
-  };
-
-  const cancelBooking = async (booking: Booking, index: number) => {
-    const { id } = booking;
-    console.log("room", booking);
-    const data = { ...booking, status: false };
-    const roomId = data.roomId!;
-
-    fetch(`${CONFIG.ApiBooking}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
+    getAllBookings()
       .then((res) => res.json())
-      .then((result) => {
-        console.log("result", result);
-        const newRooms = [...bookings];
-        newRooms[index] = result;
-        setBookings(newRooms);
-      })
-      .then(() => {
-        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: false }),
-        });
-      });
-  };
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
+      .then(setBookings);
+  }, []);
   return (
-    <>
-      <Header />
-      <Container maxWidth="xl">
-        <Box sx={{ mt: "4rem" }}>
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab label="danh sách đặt phòng" value="1" />
-                  <Tab label="cài đặt tài khoản" value="2" />
-                </TabList>
-              </Box>
-              <TabPanel value="2">
-                <ProfileAccount/>
-              </TabPanel>
-
-              <TabPanel value="1">
-                <TableContainer component={Paper}>
+    <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                       <TableRow>
@@ -136,9 +66,6 @@ export default function UserProfile() {
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           Trạng thái
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Hành động
                         </StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -181,27 +108,10 @@ export default function UserProfile() {
                           >
                             {bookings.status === true ? "Đã đặt" : "Đã hủy"}
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.status ? (
-                              <Button
-                                onClick={() => cancelBooking(bookings, index)}
-                              >
-                                Hủy phòng
-                              </Button>
-                            ) : (
-                              <Button disabled>Hủy phòng</Button>
-                            )}
-                          </StyledTableCell>
                         </StyledTableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </Box>
-      </Container>
-    </>
   );
 }

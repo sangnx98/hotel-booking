@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Home from "./page/Home";
 import Login from "./page/Login";
 import Signup from "./page/Signup";
@@ -8,19 +8,11 @@ import RoomDetail from "./page/RoomDetail";
 import Host from "./page/Host";
 import NewHomeStay from "./page/NewHomeStay";
 import UserProfile from "./page/UserProfile";
-// import Header from './components/Header/Header';
 import Layout from "./page/Layout";
 import AdminDashboard from "./page/AdminDashboard";
-import { useDispatch } from "react-redux";
-import { signUpSuccess } from "./store/userSlice";
 import ProtectedRoutes from "./components/protectedRoutes";
 
 function App() {
-  // const dispatch = useDispatch()
-  // React.useEffect(()=>{
-  //   const userData = JSON.parse(localStorage.getItem('user')|| "")
-  //   dispatch(signUpSuccess(userData))
-  // }, [])
 
   return (
     <>

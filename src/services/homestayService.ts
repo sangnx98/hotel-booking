@@ -27,6 +27,14 @@ export const addNewBooking = (body: any) => {
     })
 }
 
+export const getAllBookings = () => {
+    return fetch(CONFIG.ApiBooking, {
+        headers: {
+            "Content-Type": "application/json",
+          },
+    })
+}
+
 export const removeRoom = async (id: number) => {
     return await axios.delete(`${CONFIG.ApiRooms}/${id}`);
   };

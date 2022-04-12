@@ -11,7 +11,10 @@ export const userSlice = createSlice({
             pending: false,
             error: false,
         },
-        roomById: []
+        roomById: [],
+        snackbarOpen: false,
+        snackbarType: "",
+        snackbarMessage: ""
     },
     reducers:{
         signUpStart:(state) => {
@@ -36,8 +39,13 @@ export const userSlice = createSlice({
         },
         getRoomsById: (state, action) =>{
             state.roomById = action.payload
+        },
+        setSnackbar: (state, action) => {
+            state.snackbarOpen = action.payload
+            state.snackbarType = action.payload
+            state.snackbarMessage = action.payload
         }
     }
 })
-export const {signUpStart, signUpError, signUpSuccess, getRoomsById, logoutRequest} = userSlice.actions
+export const {signUpStart, signUpError, signUpSuccess, getRoomsById, logoutRequest, setSnackbar} = userSlice.actions
 export default userSlice.reducer

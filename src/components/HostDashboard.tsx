@@ -22,7 +22,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { useDispatch } from "react-redux";
-import _ from "lodash";
 import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
@@ -52,10 +51,10 @@ export default function HostDashBoard() {
   const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
-  const [bookings, setBookings] = React.useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   const getBooking = () => {
-    fetch(`${CONFIG.ApiBooking}?hostId=${userAuth.id}&status=true`, {
+    fetch(`${CONFIG.ApiBooking}?hostId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },

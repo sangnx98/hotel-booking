@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Button,
   Container,
-  Menu,
-  MenuItem,
   Table,
   TableContainer,
 } from "@mui/material";
@@ -21,11 +18,12 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getAllRooms } from "../services/homestayService";
-import axios from "axios";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 import { Room } from "../types";
 import { CONFIG } from "../config/config";
+import UserRecordAdmin from "../components/UserRecordAdmin";
+import BookingRecordAdmin from "../components/BookingRercordAdmin";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,11 +46,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AdminDashboard() {
-  const [rooms, setRooms] = React.useState<Room[]>([]);
-  const [value, setValue] = React.useState<string>("1");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [value, setValue] = useState<string>("1");
 
-  React.useEffect(() => {
+  useEffect(() => {
     getAllRooms()
       .then((res) => res.json())
       .then(setRooms);
@@ -98,13 +95,6 @@ export default function AdminDashboard() {
       });
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -126,8 +116,12 @@ export default function AdminDashboard() {
                   <Tab label="CHỖ Ở" value="3" />
                 </TabList>
               </Box>
-              <TabPanel value="1">KHÁCH HÀNG</TabPanel>
-              <TabPanel value="2">ĐƠN ĐẶT LỊCH</TabPanel>
+              <TabPanel value="1">
+                <UserRecordAdmin/>
+              </TabPanel>
+              <TabPanel value="2">
+                <BookingRecordAdmin/>
+              </TabPanel>
               <TabPanel value="3">
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -198,13 +192,18 @@ export default function AdminDashboard() {
                             {room.status === true ? "Đang thuê" : "Chưa thuê"}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-evenly",
+                              }}
+                            >
                               <CheckCircleIcon
-                                sx={{color: 'green', cursor: 'pointer'}}
+                                sx={{ color: "green", cursor: "pointer" }}
                                 onClick={() => setApprove(room, index)}
                               />
                               <CancelIcon
-                                sx={{color: 'red', cursor: 'pointer'}}
+                                sx={{ color: "red", cursor: "pointer" }}
                                 onClick={() => setDennie(room, index)}
                               />
                             </Box>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -17,31 +17,34 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import moment from 'moment'
+import moment from "moment";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 
 import { Pagination, FreeMode, Navigation } from "swiper";
 import Header from "../components/Header/Header";
+import { Snackbar } from "@mui/material";
 
-const getUserData = () => {
-  const storedValues = localStorage.getItem("user");
-  if (!storedValues)
-    return {
-      name: "",
-    };
-  return JSON.parse(storedValues);
-};
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function RoomDetail() {
-  const [user, setUser] = useState(getUserData);
+  const navigate = useNavigate();
+  const userAuth = useSelector((state: any) => state.user);
   const [open, setOpen] = useState(false);
   const [children, setChildren] = useState<number>(0);
   const [adult, setAdult] = useState<number>(0);
   const [roomDetail, setRoomDetail] = useState<any>({});
   const total_guests = children + adult;
   let params = useParams();
+  const [openSnack, setOpenSnack] = useState(false);
   const minValue: Date = new Date(new Date());
   const maxValue: Date = new Date(
     new Date().getFullYear(),
@@ -51,13 +54,13 @@ export default function RoomDetail() {
 
   const handleBooking = () => {
     const newBooking = {
-      dateStart: moment(value[0]).format('DD/MM/YYYY'),
-      endDate: moment(value[1]).format('DD/MM/YYYY'),
+      dateStart: moment(value[0]).format("DD/MM/YYYY"),
+      endDate: moment(value[1]).format("DD/MM/YYYY"),
       hostId: roomDetail.hostId,
       total_guests: total_guests,
       children: children,
       adult: adult,
-      userId: user.id,
+      userId: userAuth.id,
       roomId: params.id,
       roomImg: roomDetail.bgUrl,
       roomName: roomDetail.homeStayName,
@@ -67,12 +70,14 @@ export default function RoomDetail() {
       roomStreet: roomDetail.street,
       roomApartNums: roomDetail.apartNumber,
     };
-    if (
+    if (userAuth.name == "") {
+      navigate("/login");
+    } else if (
       newBooking.dateStart == null ||
       newBooking.endDate == null ||
       newBooking.total_guests === 0
     ) {
-      alert("Please fill all the blank");
+      setOpenSnack(true);
     } else {
       addNewBooking(newBooking)
         .then((response) => response.json())
@@ -88,11 +93,10 @@ export default function RoomDetail() {
             .then((result) => {
               setRoomDetail({ ...result, status: true });
             });
-          console.log("newBooking", newBooking);
         })
         .catch((error) => {
           console.error("Error:", error);
-        });
+        }).then(()=>navigate('/profile'));
     }
   };
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +119,18 @@ export default function RoomDetail() {
       setOpen(false);
     }
   };
+
+  const handleCloseSnack = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
   const [value, setValue] = useState<DateRange<Date>>([null, null]);
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/">
@@ -441,6 +457,7 @@ export default function RoomDetail() {
                 </Grid>
               </Box>
             </Grid>
+
             <Grid item xs={0} sm={4} md={4}>
               <Box
                 sx={{
@@ -530,8 +547,8 @@ export default function RoomDetail() {
                     </Box>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Ok</Button>
+                    <Button onClick={handleClose}>Hủy bỏ</Button>
+                    <Button onClick={handleClose}>Lưu</Button>
                   </DialogActions>
                 </Dialog>
                 <Box
@@ -607,6 +624,19 @@ export default function RoomDetail() {
                   Nhận tư vấn miễn phí
                 </Button>
               </Box>
+              <Snackbar
+                open={openSnack}
+                autoHideDuration={3000}
+                onClose={handleCloseSnack}
+              >
+                <Alert
+                  onClose={handleCloseSnack}
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  Vui lòng nhập đầy đủ thông tin
+                </Alert>
+              </Snackbar>
             </Grid>
           </Grid>
         </Box>

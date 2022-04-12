@@ -10,7 +10,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import Header from "../components/Header/Header";
 import {
-  Chip,
   Container,
   FormControl,
   InputLabel,
@@ -39,7 +38,7 @@ const names = [
   "Biệt Thự",
   "Duplex",
   "Căn hộ",
-  "Khách sạn"
+  "Khách sạn",
 ];
 
 const provinces = [
@@ -48,9 +47,8 @@ const provinces = [
   "Hồ Chí Minh",
   "Quảng Ninh",
   "Nha Trang",
-  "Phú Quốc"
+  "Phú Quốc",
 ];
-
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -59,12 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-  return [
-    "Thông tin cơ bản",
-    "Địa chỉ",
-    "Phòng",
-    "Giới thiệu",
-  ];
+  return ["Thông tin cơ bản", "Địa chỉ", "Phòng", "Giới thiệu"];
 }
 
 function getStyles(name: string, personName: string[], theme: Theme) {
@@ -99,6 +92,7 @@ const GetStepContent = (props: any): JSX.Element => {
         </FormControl>
         <TextField
           variant="outlined"
+          required
           placeholder="Tên chỗ nghỉ"
           fullWidth
           margin="normal"
@@ -113,7 +107,9 @@ const GetStepContent = (props: any): JSX.Element => {
     return (
       <>
         <FormControl sx={{ width: "100%" }}>
-          <InputLabel id="demo-multiple-ptovinces-label">Tỉnh/Thành phố</InputLabel>
+          <InputLabel id="demo-multiple-ptovinces-label">
+            Tỉnh/Thành phố
+          </InputLabel>
           <Select
             labelId="demo-multiple-provinces-label"
             id="demo-multiple-provinces"
@@ -130,6 +126,7 @@ const GetStepContent = (props: any): JSX.Element => {
           </Select>
         </FormControl>
         <TextField
+          required
           variant="outlined"
           placeholder="Quận/Huyện"
           fullWidth
@@ -243,7 +240,7 @@ const GetStepContent = (props: any): JSX.Element => {
 
 const NewHomeStay = () => {
   const classes = useStyles();
-  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [personName, setPersonName] = useState<string[]>([]);
   const [activeStep, setActiveStep] = useState(0);
   const [skippedSteps, setSkippedSteps] = useState<any[]>([]);
   const steps = getSteps();
@@ -266,7 +263,7 @@ const NewHomeStay = () => {
     status: false,
     isChecked: 0,
     intro: "",
-    bgUrl: ""
+    bgUrl: "",
   });
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");
@@ -283,14 +280,6 @@ const NewHomeStay = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     handleSetValue("homeStayType", event.target.value);
-  };
-
-  const isStepOptional = (step: any) => {
-    return step === 1 || step === 2;
-  };
-
-  const isStepSkipped = (step: any) => {
-    return skippedSteps.includes(step);
   };
 
   const handleNext = () => {
@@ -318,14 +307,6 @@ const NewHomeStay = () => {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepSkipped(activeStep)) {
-      setSkippedSteps([...skippedSteps, activeStep]);
-    }
-    setActiveStep(activeStep + 1);
-  };
-  const handleSubmit = () => {};
-  console.log("ahihi", values);
   return (
     <>
       <Header />
