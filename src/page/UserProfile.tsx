@@ -17,6 +17,7 @@ import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import Header from "../components/Header/Header";
 import ProfileAccount from "../components/ProfileAccount";
+import { BookingStatus } from "../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -88,6 +89,37 @@ export default function UserProfile() {
       });
   };
 
+  const completedBooking = async (booking: Booking, index: number) => {
+    const { id } = booking;
+    console.log("room", booking);
+    const data = { ...booking, status: BookingStatus.Completed };
+    const roomId = data.roomId!;
+
+    fetch(`${CONFIG.ApiBooking}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log("result", result);
+        const newRooms = [...bookings];
+        newRooms[index] = result;
+        setBookings(newRooms);
+      })
+      .then(() => {
+        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: false }),
+        });
+      });
+  };
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -109,7 +141,7 @@ export default function UserProfile() {
                 </TabList>
               </Box>
               <TabPanel value="2">
-                <ProfileAccount/>
+                <ProfileAccount />
               </TabPanel>
 
               <TabPanel value="1">
@@ -175,19 +207,38 @@ export default function UserProfile() {
                             align="center"
                             style={{
                               color: `${
-                                bookings.status === true ? "green" : "red"
+                                bookings.status === BookingStatus.Processing
+                                  ? "blue"
+                                  : bookings.status === BookingStatus.Booked
+                                  ? "green"
+                                  : bookings.status === BookingStatus.Canceled
+                                  ? "red"
+                                  : "orange"
                               }`,
                             }}
                           >
-                            {bookings.status === true ? "Đã đặt" : "Đã hủy"}
+                            {bookings.status === BookingStatus.Processing
+                              ? "Đang chờ"
+                              : bookings.status === BookingStatus.Booked
+                              ? "Đặt thành công"
+                              : bookings.status === BookingStatus.Canceled
+                              ? "Đã hủy"
+                              : "Hoàn thành"}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {bookings.status ? (
-                              <Button
-                                onClick={() => cancelBooking(bookings, index)}
-                              >
-                                Hủy phòng
-                              </Button>
+                            {bookings.status === BookingStatus.Booked ? (
+                              <>
+                                <Button
+                                  onClick={() => cancelBooking(bookings, index)}
+                                >
+                                  Hủy phòng
+                                </Button>
+                                <Button
+                                  onClick={() => completedBooking(bookings, index)}
+                                >
+                                  Trả phòng
+                                </Button>
+                              </>
                             ) : (
                               <Button disabled>Hủy phòng</Button>
                             )}

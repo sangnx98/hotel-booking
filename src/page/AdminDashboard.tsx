@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Table,
-  TableContainer,
-} from "@mui/material";
+import { Container, Table, TableContainer } from "@mui/material";
 import { Box } from "@mui/system";
 import AdminHeader from "../components/AdminHeader";
 import Tab from "@mui/material/Tab";
@@ -24,6 +20,7 @@ import { Room } from "../types";
 import { CONFIG } from "../config/config";
 import UserRecordAdmin from "../components/UserRecordAdmin";
 import BookingRecordAdmin from "../components/BookingRercordAdmin";
+import { RoomApprovement, RoomsStatus } from "../enum";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,7 +54,7 @@ export default function AdminDashboard() {
 
   const setApprove = async (room: Room, index: number) => {
     const { id } = room;
-    const data = { ...room, isChecked: 1 };
+    const data = { ...room, isChecked: RoomApprovement.Approved };
 
     fetch(`${CONFIG.ApiRooms}/${id}`, {
       method: "PUT",
@@ -77,7 +74,7 @@ export default function AdminDashboard() {
 
   const setDennie = async (room: Room, index: number) => {
     const { id } = room;
-    const data = { ...room, isChecked: 2 };
+    const data = { ...room, isChecked: RoomApprovement.Dinied };
 
     fetch(`${CONFIG.ApiRooms}/${id}`, {
       method: "PUT",
@@ -117,10 +114,10 @@ export default function AdminDashboard() {
                 </TabList>
               </Box>
               <TabPanel value="1">
-                <UserRecordAdmin/>
+                <UserRecordAdmin />
               </TabPanel>
               <TabPanel value="2">
-                <BookingRecordAdmin/>
+                <BookingRecordAdmin />
               </TabPanel>
               <TabPanel value="3">
                 <TableContainer component={Paper}>
@@ -167,17 +164,17 @@ export default function AdminDashboard() {
                             align="center"
                             style={{
                               color: `${
-                                room.isChecked === 0
+                                room.isChecked === RoomApprovement.Processing
                                   ? "orange"
-                                  : room.isChecked === 1
+                                  : room.isChecked === RoomApprovement.Approved
                                   ? "green"
                                   : "red"
                               }`,
                             }}
                           >
-                            {room.isChecked === 0
+                            {room.isChecked === RoomApprovement.Processing
                               ? "Đang chờ"
-                              : room.isChecked === 1
+                              : room.isChecked === RoomApprovement.Approved
                               ? "Đã duyệt"
                               : "Từ chối"}
                           </StyledTableCell>
@@ -185,11 +182,19 @@ export default function AdminDashboard() {
                             align="center"
                             style={{
                               color: `${
-                                room.status === true ? "green" : "red"
+                                room.status === RoomsStatus.Renting
+                                  ? "green"
+                                  : room.status === RoomsStatus.Processing
+                                  ? "blue"
+                                  : "red"
                               }`,
                             }}
                           >
-                            {room.status === true ? "Đang thuê" : "Chưa thuê"}
+                            {room.status === RoomsStatus.Renting
+                              ? "Đang thuê"
+                              : room.status === RoomsStatus.Processing
+                              ? "Chờ duyệt"
+                              : "Còn trống"}
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             <Box

@@ -14,7 +14,7 @@ export interface Booking {
   kitchens: number;
   price: string;
   guestNums: number;
-  status: false;
+  status: number;
   isChecked: number;
   intro: string;
   bgUrl: string;

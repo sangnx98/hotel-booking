@@ -20,13 +20,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import moment from "moment";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { useSelector } from "react-redux";
+import { Pagination, FreeMode, Navigation } from "swiper";
+import { Snackbar } from "@mui/material";
 
+import Header from "../components/Header/Header";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
-
-import { Pagination, FreeMode, Navigation } from "swiper";
-import Header from "../components/Header/Header";
-import { Snackbar } from "@mui/material";
+import { BookingStatus, RoomsStatus } from "../enum/index";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -64,7 +64,7 @@ export default function RoomDetail() {
       roomId: params.id,
       roomImg: roomDetail.bgUrl,
       roomName: roomDetail.homeStayName,
-      status: true,
+      status: BookingStatus.Processing,
       roomProvince: roomDetail.province,
       roomDistrict: roomDetail.district,
       roomStreet: roomDetail.street,
@@ -87,16 +87,17 @@ export default function RoomDetail() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...roomDetail, status: true }),
+            body: JSON.stringify({ ...roomDetail, status: RoomsStatus.Processing }),
           })
             .then((res) => res.json())
             .then((result) => {
-              setRoomDetail({ ...result, status: true });
+              setRoomDetail({ ...result, status: RoomsStatus.Processing });
             });
         })
         .catch((error) => {
           console.error("Error:", error);
-        }).then(()=>navigate('/profile'));
+        })
+        .then(() => navigate("/profile"));
     }
   };
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {

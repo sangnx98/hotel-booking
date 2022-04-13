@@ -37,6 +37,7 @@ import { useSelector } from "react-redux";
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
 import { Room } from "../types";
+import { RoomsStatus } from "../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -118,7 +119,7 @@ export default function HostHomeStay() {
     bedNums: 0,
     price: "",
     guestNums: 0,
-    status: false,
+    status: 0,
     isChecked: 0,
     intro: "",
     bgUrl: "",
@@ -315,10 +316,20 @@ export default function HostHomeStay() {
                   <StyledTableCell
                     align="center"
                     style={{
-                      color: `${room.status === true ? "green" : "red"}`,
+                      color: `${
+                        room.status === RoomsStatus.Renting
+                         ? "green" 
+                         : room.status === RoomsStatus.Processing
+                         ? "blue"
+                         : "red"
+                      }`,
                     }}
                   >
-                    {room.status === true ? "Đang thuê" : "Chưa thuê"}
+                    {room.status === RoomsStatus.Renting
+                         ? "Đang thuê" 
+                         : room.status === RoomsStatus.Processing
+                         ? "Chờ duyệt"
+                         : "Còn trống"}
                   </StyledTableCell>
                   <StyledTableCell
                     align="center"
@@ -339,7 +350,7 @@ export default function HostHomeStay() {
                       : "Từ chối"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {room.status === false ? (
+                    {room.status === RoomsStatus.Available ? (
                       <Box
                         sx={{
                           display: "flex",

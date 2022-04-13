@@ -16,6 +16,8 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import { RoomsStatus } from "../enum";
+
 import "../App.css";
 
 const ITEM_HEIGHT = 48;
@@ -58,6 +60,7 @@ type Rooms = {
   status: boolean;
   is_checked: boolean;
 };
+console.log('first', RoomsStatus.Available)
 
 export default function Rooms() {
   const theme = useTheme();
@@ -71,7 +74,7 @@ export default function Rooms() {
     setPersonName(typeof value === "string" ? value.split(",") : value);
   };
   useEffect(() => {
-    fetch('http://localhost:4000/rooms?status=false&isChecked=1', {
+    fetch(`http://localhost:4000/rooms?status=${RoomsStatus.Available}&isChecked=1`, {
       headers: {
           "Content-Type": "application/json",
         },

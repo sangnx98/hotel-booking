@@ -17,7 +17,7 @@ export interface Room {
     bedNums: number,
     price: string;
     guestNums: number;
-    status: boolean,
+    status: number,
     isChecked: number,
     intro: string;
     bgUrl: string;

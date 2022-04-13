@@ -23,10 +23,13 @@ import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById } from "../store/userSlice";
 import { Booking } from "../types";
+import { BookingStatus, RoomsStatus } from "../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,6 +49,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+console.log("first", BookingStatus.Booked);
 
 export default function HostDashBoard() {
   const userAuth = useSelector((state: any) => state.user);
@@ -73,17 +78,9 @@ export default function HostDashBoard() {
       .then(setRooms);
   };
 
-  if (rooms) {
-    dispatch(getRoomsById(rooms));
-  }
-  useEffect(() => {
-    getRooms();
-    getBooking();
-  }, []);
-
-  const cancelBooking = async (booking: Booking, index: number) => {
+  const approveBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
-    const data = { ...booking, status: false };
+    const data = { ...booking, status: BookingStatus.Booked };
     const roomId = data.roomId!;
 
     fetch(`${CONFIG.ApiBooking}/${id}`, {
@@ -105,7 +102,43 @@ export default function HostDashBoard() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ status: false }),
+          body: JSON.stringify({ status: RoomsStatus.Renting }),
+        });
+      });
+  };
+  if (rooms) {
+    dispatch(getRoomsById(rooms));
+  }
+  useEffect(() => {
+    getRooms();
+    getBooking();
+  }, []);
+
+  const cancelBooking = async (booking: Booking, index: number) => {
+    const { id } = booking;
+    const data = { ...booking, status: BookingStatus.Canceled };
+    const roomId = data.roomId!;
+
+    fetch(`${CONFIG.ApiBooking}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const newRooms = [...bookings];
+        newRooms[index] = result;
+        setBookings(newRooms);
+      })
+      .then(() => {
+        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: RoomsStatus.Available }),
         });
       });
   };
@@ -235,16 +268,35 @@ export default function HostDashBoard() {
                   <StyledTableCell
                     align="center"
                     style={{
-                      color: `${bookings.status === true ? "green" : "red"}`,
+                      color: `${
+                        bookings.status === BookingStatus.Processing
+                          ? "blue"
+                          : bookings.status === BookingStatus.Booked
+                          ? "green"
+                          : bookings.status === BookingStatus.Canceled
+                          ? "red"
+                          : "orange"
+                      }`,
                     }}
                   >
-                    {bookings.status === true ? "Đã đặt" : "Đã hủy"}
+                    {bookings.status === BookingStatus.Processing
+                      ? "Đang chờ"
+                      : bookings.status === BookingStatus.Booked
+                      ? "Đặt thành công"
+                      : bookings.status === BookingStatus.Canceled
+                      ? "Đã hủy"
+                      : "Hoàn thành"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {bookings.status ? (
-                      <Button onClick={() => cancelBooking(bookings, index)}>
-                        Hủy phòng
-                      </Button>
+                    {bookings.status === BookingStatus.Processing ? (
+                      <>
+                        <CheckIcon
+                          onClick={() => approveBooking(bookings, index)}
+                        />
+                        <ClearIcon
+                          onClick={() => cancelBooking(bookings, index)}
+                        />
+                      </>
                     ) : (
                       <Button disabled>Hủy phòng</Button>
                     )}
