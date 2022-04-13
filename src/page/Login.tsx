@@ -21,6 +21,7 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import SocialLogin from "../components/SocialLogin";
 import { signUpSuccess } from "../store/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { CONFIG } from "../config/config";
 
 function Copyright(props: any) {
   return (
@@ -83,7 +84,7 @@ export default function Login() {
     };
     try {
       const response = await fetch(
-        `http://localhost:4000/users?email=${email}&password=${password}`,
+        `${CONFIG.ApiUser}?email=${email}&password=${password}`,
         settings
       );
 
@@ -114,7 +115,6 @@ export default function Login() {
 
   const onSubmit = async (data: OneUser) => {
     const loginUser = await handleUser(data.email, data.password);
-    console.log("loginUser", loginUser);
     if (loginUser) {
       navigate("/");
       localStorage.setItem("user", JSON.stringify(user.current));

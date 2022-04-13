@@ -73,9 +73,9 @@ export default function RoomDetail() {
     if (userAuth.name == "") {
       navigate("/login");
     } else if (
-      newBooking.dateStart == null ||
-      newBooking.endDate == null ||
-      newBooking.total_guests === 0
+      newBooking.dateStart == '' ||
+      newBooking.endDate == '' ||
+      newBooking.total_guests == 0
     ) {
       setOpenSnack(true);
     } else {

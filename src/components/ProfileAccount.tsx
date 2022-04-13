@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -16,7 +14,6 @@ import { CONFIG } from "../config/config";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { signUpSuccess } from "../store/userSlice";
-import { useForm } from "react-hook-form";
 
 type User = {
   id: number;
@@ -40,30 +37,6 @@ export default function ProfileAccount() {
     address: "",
     phoneNumber: "",
   });
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required("Username is required")
-      .min(6, "Username must be at least 6 characters")
-      .max(20, "Username must not exceed 20 characters"),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
-    address: Yup.string()
-      .required("Confirm Password is required")
-      .min(6, "Address must be at least 6 characters"),
-    phoneNumber: Yup.string()
-      .required("Confirm Password is required")
-      .min(6, "Address must be at least 6 characters"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<any>({ resolver: yupResolver(validationSchema) });
 
   const user = JSON.parse(localStorage.getItem("user") || "");
   useEffect(() => {
@@ -329,12 +302,7 @@ export default function ProfileAccount() {
             padding: "1rem",
           }}
         >
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit(handleSubmitUser)}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -348,6 +316,7 @@ export default function ProfileAccount() {
                   label="First Name"
                   autoFocus
                 />
+                <Typography variant="subtitle1" component="span"></Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -357,15 +326,6 @@ export default function ProfileAccount() {
                   id="email"
                   label="Email Address"
                   autoComplete="email"
-                  {...register("email", {
-                    required: "Email must be filled",
-                    pattern: {
-                      value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                      message: "Invalid email",
-                    },
-                  })}
-                  error={!!errors.email}
-                  helperText={errors?.email ? errors.email.message : null}
                   onChange={handleEmailChange}
                   name="email"
                 />

@@ -3,6 +3,10 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   Grid,
   MenuItem,
@@ -127,6 +131,7 @@ export default function HostHomeStay() {
 
   const [room, setRoom] = useState<any>([]);
   const [open, setOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [roomData, setRoomData] = useState<Room>(initialState);
 
   const handleSubmit = async (id: number) => {
@@ -134,6 +139,14 @@ export default function HostHomeStay() {
     setRoomData(res.data);
     setOpen(false);
     getRooms();
+  };
+
+  const handleClickOpen = () => {
+    setDeleteConfirm(true);
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setDeleteConfirm(false);
   };
 
   const handleSetValue = (key: any, value: any) => {
@@ -251,6 +264,7 @@ export default function HostHomeStay() {
       },
     }).then((res) => {
       getRooms();
+      setDeleteConfirm(false);
     });
   };
 
@@ -298,79 +312,108 @@ export default function HostHomeStay() {
             </TableHead>
             <TableBody>
               {rooms.map((room: any, index: any) => (
-                <StyledTableRow key={room.hostId}>
-                  <StyledTableCell align="center">{room.id}</StyledTableCell>
-                  <StyledTableCell
-                    component="th"
-                    scope="row"
+                <>
+                  <StyledTableRow key={room.hostId}>
+                    <StyledTableCell align="center">{room.id}</StyledTableCell>
+                    <StyledTableCell
+                      component="th"
+                      scope="row"
+                      sx={{ textAlign: "center" }}
+                    >
+                      <img src={room.bgUrl} alt="" width="250px" />
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {room.homeStayName}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {room.street}, {room.province}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        color: `${
+                          room.status === RoomsStatus.Renting
+                            ? "green"
+                            : room.status === RoomsStatus.Processing
+                            ? "blue"
+                            : "red"
+                        }`,
+                      }}
+                    >
+                      {room.status === RoomsStatus.Renting
+                        ? "Đang thuê"
+                        : room.status === RoomsStatus.Processing
+                        ? "Chờ duyệt"
+                        : "Còn trống"}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        color: `${
+                          room.isChecked === 0
+                            ? "orange"
+                            : room.isChecked === 1
+                            ? "green"
+                            : "red"
+                        }`,
+                      }}
+                    >
+                      {room.isChecked === 0
+                        ? "Đang chờ"
+                        : room.isChecked === 1
+                        ? "Đã duyệt"
+                        : "Từ chối"}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {room.status === RoomsStatus.Available ? (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                          }}
+                        >
+                          <EditIcon
+                            sx={{ cursor: "pointer", color: "green" }}
+                            onClick={() => getRoom(room, index)}
+                          />
+                          <DeleteIcon
+                            sx={{ cursor: "pointer", color: "red" }}
+                            // onClick={handleClickOpen}
+                            onClick={() => handleDelete(room, index)}
+                          />
+                        </Box>
+                      ) : (
+                        <Button disabled>Hủy phòng</Button>
+                      )}
+                    </StyledTableCell>
+                    <Dialog
+                    open={deleteConfirm}
+                    onClose={handleCloseDeleteConfirm}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                     sx={{ textAlign: "center" }}
                   >
-                    <img src={room.bgUrl} alt="" width="250px" />
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {room.homeStayName}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {room.street}, {room.province}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="center"
-                    style={{
-                      color: `${
-                        room.status === RoomsStatus.Renting
-                         ? "green" 
-                         : room.status === RoomsStatus.Processing
-                         ? "blue"
-                         : "red"
-                      }`,
-                    }}
-                  >
-                    {room.status === RoomsStatus.Renting
-                         ? "Đang thuê" 
-                         : room.status === RoomsStatus.Processing
-                         ? "Chờ duyệt"
-                         : "Còn trống"}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="center"
-                    style={{
-                      color: `${
-                        room.isChecked === 0
-                          ? "orange"
-                          : room.isChecked === 1
-                          ? "green"
-                          : "red"
-                      }`,
-                    }}
-                  >
-                    {room.isChecked === 0
-                      ? "Đang chờ"
-                      : room.isChecked === 1
-                      ? "Đã duyệt"
-                      : "Từ chối"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {room.status === RoomsStatus.Available ? (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                        }}
+                    <DialogTitle id="alert-dialog-title">
+                      {"Xác nhận xóa"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        Chỗ ở sẽ bị xóa vĩnh viễn. Vui lòng xác nhận
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions sx={{ justifyContent: "space-evenly" }}>
+                      <Button onClick={handleCloseDeleteConfirm}>Hủy bỏ</Button>
+                      <Button
+                         onClick={() => handleDelete(room, index)}
+                        autoFocus
                       >
-                        <EditIcon
-                          sx={{ cursor: "pointer", color: "green" }}
-                          onClick={() => getRoom(room, index)}
-                        />
-                        <DeleteIcon
-                          sx={{ cursor: "pointer", color: "red" }}
-                          onClick={() => handleDelete(room, index)}
-                        />
-                      </Box>
-                    ) : (
-                      <Button disabled>Hủy phòng</Button>
-                    )}
-                  </StyledTableCell>
-                </StyledTableRow>
+                        Xác nhận
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  </StyledTableRow>
+                  
+                </>
               ))}
             </TableBody>
           </Table>

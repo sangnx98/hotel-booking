@@ -50,8 +50,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-console.log("first", BookingStatus.Booked);
-
 export default function HostDashBoard() {
   const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
@@ -117,6 +115,35 @@ export default function HostDashBoard() {
   const cancelBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
     const data = { ...booking, status: BookingStatus.Canceled };
+    const roomId = data.roomId!;
+
+    fetch(`${CONFIG.ApiBooking}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const newRooms = [...bookings];
+        newRooms[index] = result;
+        setBookings(newRooms);
+      })
+      .then(() => {
+        fetch(`${CONFIG.ApiRooms}/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: RoomsStatus.Available }),
+        });
+      });
+  };
+
+  const completeBooking = async (booking: Booking, index: number) => {
+    const { id } = booking;
+    const data = { ...booking, status: BookingStatus.Completed };
     const roomId = data.roomId!;
 
     fetch(`${CONFIG.ApiBooking}/${id}`, {
@@ -297,8 +324,15 @@ export default function HostDashBoard() {
                           onClick={() => cancelBooking(bookings, index)}
                         />
                       </>
+                    ) : bookings.status === BookingStatus.Booked ? (
+                      <Button onClick={() => completeBooking(bookings, index)}>
+                        Trả phòng
+                      </Button>
                     ) : (
-                      <Button disabled>Hủy phòng</Button>
+                      <>
+                        {/* <Button disabled>Hủy phòng</Button>
+                        <Button disabled>Trả phòng</Button> */}
+                      </>
                     )}
                   </StyledTableCell>
                 </StyledTableRow>
