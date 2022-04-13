@@ -17,7 +17,7 @@ import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import Header from "../components/Header/Header";
 import ProfileAccount from "../components/ProfileAccount";
-import { BookingStatus } from "../enum/index";
+import { BookingStatus, RoomsStatus } from "../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -61,7 +61,7 @@ export default function UserProfile() {
   const cancelBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
     console.log("room", booking);
-    const data = { ...booking, status: false };
+    const data = { ...booking, status: BookingStatus.Canceled };
     const roomId = data.roomId!;
 
     fetch(`${CONFIG.ApiBooking}/${id}`, {
@@ -84,7 +84,7 @@ export default function UserProfile() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ status: false }),
+          body: JSON.stringify({ status: RoomsStatus.Available }),
         });
       });
   };

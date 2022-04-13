@@ -260,7 +260,7 @@ const NewHomeStay = () => {
     kitchens: "",
     price: "",
     guestNums: "",
-    status: false,
+    status: 2,
     isChecked: 0,
     intro: "",
     bgUrl: "",

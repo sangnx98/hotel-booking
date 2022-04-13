@@ -60,7 +60,7 @@ type Rooms = {
   status: boolean;
   is_checked: boolean;
 };
-console.log('first', RoomsStatus.Available)
+console.log("first", RoomsStatus.Available);
 
 export default function Rooms() {
   const theme = useTheme();
@@ -74,11 +74,14 @@ export default function Rooms() {
     setPersonName(typeof value === "string" ? value.split(",") : value);
   };
   useEffect(() => {
-    fetch(`http://localhost:4000/rooms?status=${RoomsStatus.Available}&isChecked=1`, {
-      headers: {
+    fetch(
+      `http://localhost:4000/rooms?status=${RoomsStatus.Available}&isChecked=1`,
+      {
+        headers: {
           "Content-Type": "application/json",
         },
-      })
+      }
+    )
       .then((res) => res.json())
       .then(setRooms);
   }, []);
@@ -168,13 +171,15 @@ export default function Rooms() {
                         image={item.bgUrl}
                         alt="green iguana"
                       />
-                      <CardContent sx={{ padding: "1rem 0 1rem 0" }}>
+                      <CardContent sx={{ padding: "1rem" }}>
                         <Typography
                           gutterBottom
                           variant="subtitle1"
                           component="div"
                         >
-                          {item.homeStayType} - {item.bedRooms} phòng ngủ
+                          <b>
+                            {item.homeStayType} - {item.bedRooms} phòng ngủ
+                          </b>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           {item.homeStayName} - {item.bedRooms} phòng ngủ
