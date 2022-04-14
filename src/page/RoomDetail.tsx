@@ -44,7 +44,6 @@ export default function RoomDetail() {
   const [roomDetail, setRoomDetail] = useState<any>({});
   const total_guests = children + adult;
   let params = useParams();
-  console.log('===============params', params)
   const [openSnack, setOpenSnack] = useState(false);
   const minValue: Date = new Date(new Date());
   const maxValue: Date = new Date(
@@ -110,7 +109,6 @@ export default function RoomDetail() {
           console.error("Error:", error);
         })
         .then(() => navigate("/profile"));
-        console.log('booking', newBooking)
     }
   };
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,7 +164,7 @@ export default function RoomDetail() {
       .then((res) => res.json())
       .then(setRoomDetail);
   }, [params]);
-  console.log("roomDetail", roomDetail);
+
   return (
     <>
       <Box sx={{ backgroundColor: "black" }}>

@@ -64,7 +64,7 @@ export default function Slider() {
         >
           Chào mừng đến với Luxstay
         </Typography>
-        <Typography variant="subtitle2" component="h2" sx={{ display: "flex" }}>
+        <Typography variant="subtitle2" component="span" sx={{ display: "flex" }}>
           Đặt chỗ ở, homestay, cho thuê xe, trải nghiệm và nhiều hơn nữa trên
           Luxstay
         </Typography>

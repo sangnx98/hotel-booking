@@ -17,7 +17,6 @@ export default function SocialLogin() {
     localStorage.setItem('user', JSON.stringify(res.profileObj))
     navigate("/");
     signUpUser(res.profileObj, dispatch(signUpSuccess(res.profileObj)))
-    console.log(res.profileObj)
   };
   const handleFailure = (res: any) => {};
   

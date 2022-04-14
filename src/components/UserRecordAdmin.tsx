@@ -44,8 +44,6 @@ export default function UserRecordAdmin() {
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
   const pageNumbers = Math.ceil(users.length / postPerPage);
 
-  console.log('pageNumbers...', pageNumbers)
-
   const paginate = (pageNumbers: any) => {
     setCurrentPage(pageNumbers);
   };

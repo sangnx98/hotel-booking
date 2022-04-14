@@ -60,7 +60,6 @@ export default function UserProfile() {
 
   const cancelBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
-    console.log("room", booking);
     const data = { ...booking, status: BookingStatus.Canceled };
     const roomId = data.roomId!;
 
@@ -73,7 +72,6 @@ export default function UserProfile() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log("result", result);
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
@@ -91,7 +89,6 @@ export default function UserProfile() {
 
   const completedBooking = async (booking: Booking, index: number) => {
     const { id } = booking;
-    console.log("room", booking);
     const data = { ...booking, status: BookingStatus.Completed };
     const roomId = data.roomId!;
 
@@ -104,7 +101,6 @@ export default function UserProfile() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log("result", result);
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);

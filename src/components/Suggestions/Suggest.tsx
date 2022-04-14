@@ -22,14 +22,14 @@ export default function Suggest() {
       <Container maxWidth="xl">
         <Typography
           variant="h5"
-          component="h2"
+          component="span"
           sx={{ display: "flex", fontWeight: "600", margin: "2rem 0 1rem 0" }}
         >
           Gợi ý từ Luxstay
         </Typography>
         <Typography
           variant="subtitle2"
-          component="h2"
+          component="span"
           sx={{ display: "flex", marginBottom: "2rem" }}
         >
           Những địa điểm thường đến mà Luxstay gợi ý dành cho bạn
@@ -75,7 +75,7 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       VI VU NGOẠI THÀNH
                     </Typography>
@@ -100,11 +100,15 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       VŨNG TÀU BIỆT THỰ HỒ BƠI
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      color="text.secondary"
+                    >
                       Những căn biệt thự có hồ bơi dành cho kỳ nghỉ của bạn tại
                       Vũng Tàu
                     </Typography>
@@ -125,11 +129,15 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       Hà Nội nội thành lãng mạn
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      color="text.secondary"
+                    >
                       Không gian lãng mạn dành cho cặp đôi tại trung tâm Hà Nội
                     </Typography>
                   </CardContent>
@@ -149,11 +157,15 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       Sài Gòn cần là có ngay
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      color="text.secondary"
+                    >
                       Những căn homestay có 01 phòng ngủ tại Sài Gòn có thể đặt
                       nhanh chóng
                     </Typography>
@@ -174,11 +186,15 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       Bể bơi và BBQ
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      color="text.secondary"
+                    >
                       Trải nghiệm đẳng cấp tại những căn homestay có bể bơi đẹp
                       và khu vực BBQ ấm cúng.
                     </Typography>
@@ -199,11 +215,15 @@ export default function Suggest() {
                     <Typography
                       gutterBottom
                       variant="subtitle1"
-                      component="div"
+                      component="span"
                     >
                       Siêu giảm giá!
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      color="text.secondary"
+                    >
                       Top chỗ ở giảm giá đến 50% từ các chủ nhà thân thiện trên
                       Luxstay.
                     </Typography>

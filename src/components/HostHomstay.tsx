@@ -268,7 +268,6 @@ export default function HostHomeStay() {
     });
   };
 
-  console.log("rooms", rooms);
   return (
     <>
       <Link to="/newhomestay">
@@ -313,7 +312,7 @@ export default function HostHomeStay() {
             <TableBody>
               {rooms.map((room: any, index: any) => (
                 <>
-                  <StyledTableRow key={room.hostId}>
+                  <StyledTableRow key={index}>
                     <StyledTableCell align="center">{room.id}</StyledTableCell>
                     <StyledTableCell
                       component="th"

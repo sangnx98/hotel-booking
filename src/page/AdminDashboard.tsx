@@ -65,7 +65,6 @@ export default function AdminDashboard() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log("result", result);
         const newRooms = [...rooms];
         newRooms[index] = result;
         setRooms(newRooms);
@@ -85,7 +84,6 @@ export default function AdminDashboard() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log("result", result);
         const newRooms = [...rooms];
         newRooms[index] = result;
         setRooms(newRooms);

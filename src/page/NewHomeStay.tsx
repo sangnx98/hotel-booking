@@ -60,15 +60,6 @@ function getSteps() {
   return ["Thông tin cơ bản", "Địa chỉ", "Phòng", "Giới thiệu"];
 }
 
-function getStyles(name: string, personName: string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const GetStepContent = (props: any): JSX.Element => {
   if (props.step === 0) {
     return (
@@ -240,9 +231,7 @@ const GetStepContent = (props: any): JSX.Element => {
 
 const NewHomeStay = () => {
   const classes = useStyles();
-  const [personName, setPersonName] = useState<string[]>([]);
   const [activeStep, setActiveStep] = useState(0);
-  const [skippedSteps, setSkippedSteps] = useState<any[]>([]);
   const steps = getSteps();
   const theme = useTheme();
   const [values, setValues] = useState<{}>({
@@ -268,7 +257,7 @@ const NewHomeStay = () => {
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");
     setValues({ ...values, hostId: userValues.id });
-  }, []);
+  }, [activeStep]);
 
   const handleSetValue = (key: any, value: any) => {
     setValues({ ...values, [key]: value });
@@ -284,7 +273,6 @@ const NewHomeStay = () => {
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
-    setSkippedSteps(skippedSteps.filter((skipItem) => skipItem !== activeStep));
     if (activeStep === steps.length - 1) {
       fetch(CONFIG.ApiRooms, {
         method: "POST",
@@ -310,8 +298,8 @@ const NewHomeStay = () => {
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
-        <Box sx={{ marginTop: "8rem" }}>
+      <Container maxWidth="xl">
+        <Box sx={{ marginTop: "2rem" }}>
           <Stepper alternativeLabel activeStep={activeStep}>
             {steps.map((step, index) => {
               const labelProps: any = {};

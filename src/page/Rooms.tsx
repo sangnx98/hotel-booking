@@ -60,7 +60,6 @@ type Rooms = {
   status: boolean;
   is_checked: boolean;
 };
-console.log("first", RoomsStatus.Available);
 
 export default function Rooms() {
   const theme = useTheme();

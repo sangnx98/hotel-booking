@@ -102,7 +102,6 @@ export default function Header() {
   useEffect(() => {
     getRooms();
   }, []);
-  console.log("rooms", rooms);
 
   const getRooms = () => {
     fetch(`${CONFIG.ApiRooms}`, {
@@ -153,8 +152,6 @@ export default function Header() {
     // window.location.href = `/home/rooms/${room.id}` as string
     setRoomSeacrhing([])
   }
-
-  console.log('============', roomSeacrhing)
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
