@@ -39,7 +39,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById } from "../store/userSlice";
+import { getRoomsById, setSnackbar } from "../store/userSlice";
 import { Room } from "../types";
 import { RoomsStatus } from "../enum/index";
 
@@ -265,6 +265,11 @@ export default function HostHomeStay() {
     }).then((res) => {
       getRooms();
       setDeleteConfirm(false);
+      dispatch(setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "success",
+        snackMessage: "Xoa thanh cong"
+      }))
     });
   };
 

@@ -66,6 +66,7 @@ export default function Signup() {
     handleSubmit,
     formState: { errors },
   } = useForm<any>({ resolver: yupResolver(validationSchema) });
+  
   const onSubmit = async (data: any) => {
     const signupUser = await handleUser(data.email);
     if (signupUser) {

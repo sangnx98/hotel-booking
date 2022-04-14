@@ -150,8 +150,8 @@ export default function Header() {
 
   const onGoToRoomPage = (room: any) => {
     // window.location.href = `/home/rooms/${room.id}` as string
-    setRoomSeacrhing([])
-  }
+    setRoomSeacrhing([]);
+  };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -170,11 +170,12 @@ export default function Header() {
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      style={{ padding: '1rem'}}
     >
       <Link to="/profile">
-        <MenuItem sx={{ color: "black" }}>Trang Cá Nhân</MenuItem>
+        <div style={{ color: "black", margin: '0.8rem'}}>Trang Cá Nhân</div>
       </Link>
-      <MenuItem onClick={removeData}>Đăng xuất</MenuItem>
+      <div onClick={removeData} style={{ color: "black", margin: '0.8rem', cursor: 'pointer'}}>Đăng xuất</div>
     </Menu>
   );
 
@@ -196,101 +197,114 @@ export default function Header() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
         <p>Trang cá nhân</p>
       </MenuItem>
 
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
         <p>Đăng xuất</p>
       </MenuItem>
     </Menu>
   );
   return (
-      <AppBar
-        sx={{
-          backgroundColor: "white",
-          position: "sticky",
-          zIndex: "1000",
-          top: "0",
-        }}
-        position="static"
-      >
-        <Toolbar>
-          <Link to="/">
+    <AppBar
+      sx={{
+        backgroundColor: "white",
+        position: "sticky",
+        zIndex: "1000",
+        top: "0",
+      }}
+      position="static"
+    >
+      <Toolbar>
+        <Link to="/">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: "none", sm: "block" }, color: "black" }}
+          >
+            LUXSTAY
+          </Typography>
+        </Link>
+        <Search
+          sx={{
+            border: "1px solid #b9c9be",
+            boxShadow: "2px -1px 5px 1px rgba(0,0,0,0.26)",
+          }}
+        >
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+            onChange={handleSearch}
+          />
+          <CalendarIconWrapper>
+            <CalendarMonthIcon sx={{ width: "50%", cursor: "pointer" }} />
+          </CalendarIconWrapper>
+          <PreviewIconWrapper>
+            <PageviewIcon sx={{ width: "50%", cursor: "pointer" }} />
+          </PreviewIconWrapper>
+        </Search>
+
+        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
+          <Link to="/host">
             <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" }, color: "black" }}
+              variant="subtitle2"
+              component="span"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "black",
+                marginRight: "2rem",
+              }}
             >
-              LUXSTAY
+              Host
             </Typography>
           </Link>
-          <Search
-            sx={{
-              border: "1px solid #b9c9be",
-              boxShadow: "2px -1px 5px 1px rgba(0,0,0,0.26)",
-            }}
-          >
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              onChange={handleSearch}
-            />
-            <CalendarIconWrapper>
-              <CalendarMonthIcon sx={{ width: "50%", cursor: "pointer" }} />
-            </CalendarIconWrapper>
-            <PreviewIconWrapper>
-              <PageviewIcon sx={{ width: "50%", cursor: "pointer" }} />
-            </PreviewIconWrapper>
-          </Search>
-
-          <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
-          >
-            <Link to="/host">
+          {localStorage.getItem("user") ? (
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: "center",
+              }}
+            >
               <Typography
                 variant="subtitle2"
-                component="h2"
-                sx={{
+                component="span"
+                style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   color: "black",
-                  mr: "2rem",
+                  marginRight: '1rem'
                 }}
               >
-                Host
+                {userAuth.name}
               </Typography>
-            </Link>
-            {localStorage.getItem("user") ? (
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  alignItems: "center",
-                }}
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
               >
+                <AccountCircle sx={{ color: "black" }} />
+              </IconButton>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+              }}
+            >
+              <Link to="/login">
                 <Typography
                   variant="subtitle2"
                   component="h2"
@@ -301,64 +315,32 @@ export default function Header() {
                     color: "black",
                   }}
                 >
-                  {userAuth.name}
+                  Login
                 </Typography>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <AccountCircle sx={{ color: "black" }} />
-                </IconButton>
-              </Box>
-            ) : (
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  alignItems: "center",
-                }}
-              >
-                <Link to="/login">
-                  <Typography
-                    variant="subtitle2"
-                    component="h2"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "black",
-                    }}
-                  >
-                    Login
-                  </Typography>
-                </Link>
-              </Box>
-            )}
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none", color: "black" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-        {roomSeacrhing.length !== 0 && (
+              </Link>
+            </Box>
+          )}
+        </Box>
+        <Box sx={{ display: { xs: "flex", md: "none", color: "black" } }}>
+          <IconButton
+            size="large"
+            aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+            color="inherit"
+          >
+            <MoreIcon />
+          </IconButton>
+        </Box>
+      </Toolbar>
+      {roomSeacrhing.length !== 0 && (
         <Box
           sx={{
             width: "25rem",
             height: "auto",
             mt: "4.5rem",
-            position: "fixed",
+            position: "absolute",
             left: "8.2rem",
             zIndex: "100",
             bgcolor: "white",
@@ -369,7 +351,10 @@ export default function Header() {
         >
           {roomSeacrhing.map((room: any, key: any) => {
             return (
-              <Link to={`/home/rooms/${room.id}`} onClick={() => onGoToRoomPage(room)}>
+              <Link
+                to={`/home/rooms/${room.id}`}
+                onClick={() => onGoToRoomPage(room)}
+              >
                 <Box
                   sx={{
                     color: "black",
@@ -400,6 +385,6 @@ export default function Header() {
       )}
       {renderMobileMenu}
       {renderMenu}
-      </AppBar>
+    </AppBar>
   );
 }

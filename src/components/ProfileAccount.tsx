@@ -8,12 +8,15 @@ import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import _ from "lodash";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signUpSuccess } from "../store/userSlice";
+import { useForm } from "react-hook-form";
 
 type User = {
   id: number;
@@ -25,6 +28,7 @@ type User = {
 };
 
 export default function ProfileAccount() {
+  const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,35 +42,46 @@ export default function ProfileAccount() {
     phoneNumber: "",
   });
 
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required("Username is required")
+      .min(6, "Username must be at least 6 characters")
+      .max(20, "Username must not exceed 20 characters"),
+    email: Yup.string().required("Email is required").email("Email is invalid"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .max(40, "Password must not exceed 40 characters"),
+    address: Yup.string().required("Address is required"),
+    phoneNumber: Yup.string().required("Phone is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<any>({ resolver: yupResolver(validationSchema) });
+
   useEffect(() => {
-    if (
-      !_.isEmpty(user) &&
-      _.isEmpty(userData.id) &&
-      _.isEmpty(userData.name) &&
-      _.isEmpty(userData.email) &&
-      _.isEmpty(userData.password) &&
-      _.isEmpty(userData.address) &&
-      _.isEmpty(userData.phoneNumber)
-    ) {
-      setUserData({
-        ...userData,
-        id: user.id,
-        name: user.name,
-        password: user.password,
-        email: user.email,
-        address: user.address,
-        phoneNumber: user.phoneNumber,
+    if (!_.isEmpty(userAuth) && open) {
+      reset({
+        id: userAuth.id,
+        name: userAuth.name,
+        password: userAuth.password,
+        email: userAuth.email,
+        address: userAuth.address,
+        phoneNumber: userAuth.phoneNumber,
       });
     }
-  }, [user, userData]);
+  }, [userAuth, open]);
 
   useEffect(() => {
     getBooking();
-  }, [userData]);
+  }, []);
 
   const getBooking = () => {
-    fetch(`${CONFIG.ApiBooking}?userId=${user.id}`, {
+    fetch(`${CONFIG.ApiBooking}?userId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -74,33 +89,13 @@ export default function ProfileAccount() {
       .then((res: any) => res.json())
       .then(setBookings);
   };
-  const handleSetValue = (key: any, value: any) => {
-    setUserData({ ...userData, [key]: value });
-  };
-  const handleNameChange = (event: any) => {
-    handleSetValue("name", event.target.value);
-  };
 
-  const handleEmailChange = (event: any) => {
-    handleSetValue("email", event.target.value);
-  };
-
-  const handlePasswordChange = (event: any) => {
-    handleSetValue("password", event.target.value);
-  };
-  const handleAddressChange = (event: any) => {
-    handleSetValue("address", event.target.value);
-  };
-  const handlePhoneChange = (event: any) => {
-    handleSetValue("phoneNumber", event.target.value);
-  };
-
-  const handleSubmitUser = async (id: number) => {
-    const res = await axios.put(`${CONFIG.ApiUser}/${id}`, userData);
+  const onSubmit = async (data: any) => {
+    console.log("data", data);
+    const res = await axios.put(`${CONFIG.ApiUser}/${userAuth.id}`, data);
     setUserData(res.data);
     setOpen(false);
-    localStorage.setItem("user", JSON.stringify(userData));
-    dispatch(signUpSuccess(userData));
+    dispatch(signUpSuccess(data));
   };
 
   const handleClose = () => {
@@ -122,7 +117,7 @@ export default function ProfileAccount() {
     });
     setOpen(false);
   };
-
+  console.log("errors", errors);
   return (
     <>
       <Box sx={{ width: "100%", position: "relative" }}>
@@ -175,7 +170,7 @@ export default function ProfileAccount() {
                     required
                     fullWidth
                     id="firstName"
-                    value={user.name}
+                    value={userAuth.name}
                     autoFocus
                     InputProps={{
                       readOnly: true,
@@ -190,7 +185,7 @@ export default function ProfileAccount() {
                     required
                     fullWidth
                     id="email"
-                    value={user.email}
+                    value={userAuth.email}
                     name="email"
                     autoComplete="email"
                     InputProps={{
@@ -206,7 +201,7 @@ export default function ProfileAccount() {
                     required
                     fullWidth
                     name="password"
-                    value={user.password}
+                    value={userAuth.password}
                     type="password"
                     id="password"
                     autoComplete="new-password"
@@ -223,7 +218,7 @@ export default function ProfileAccount() {
                     required
                     fullWidth
                     id="address"
-                    value={user.address}
+                    value={userAuth.address}
                     name="address"
                     autoComplete="address"
                     InputProps={{
@@ -239,7 +234,7 @@ export default function ProfileAccount() {
                     required
                     fullWidth
                     id="phoneNumber"
-                    value={user.phoneNumber}
+                    value={userAuth.phoneNumber}
                     name="phoneNumber"
                     autoComplete="phoneNumber"
                     InputProps={{
@@ -272,7 +267,7 @@ export default function ProfileAccount() {
             </Box>
             <Box sx={{ width: "100%", textAlign: "center" }}>
               <Typography variant="h5" component="h5">
-                {user.name}
+                {userAuth.name}
               </Typography>
             </Box>
             <Box sx={{ width: "100%", textAlign: "center", mt: 2 }}>
@@ -294,6 +289,7 @@ export default function ProfileAccount() {
         aria-describedby="alert-dialog-description"
       >
         <Box
+          component="form"
           sx={{
             marginTop: 2,
             display: "flex",
@@ -307,14 +303,15 @@ export default function ProfileAccount() {
               <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
-                  value={userData?.name}
-                  onChange={handleNameChange}
                   required
                   fullWidth
                   id="name"
                   label="First Name"
                   autoFocus
+                  {...register("name")}
+                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                  error={!!errors.name}
+                  helperText={errors?.name ? errors.name.message : null}
                 />
                 <Typography variant="subtitle1" component="span"></Typography>
               </Grid>
@@ -322,61 +319,69 @@ export default function ProfileAccount() {
                 <TextField
                   required
                   fullWidth
-                  value={userData?.email}
                   id="email"
                   label="Email Address"
                   autoComplete="email"
-                  onChange={handleEmailChange}
-                  name="email"
+                  {...register("email")}
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                  error={!!errors.email}
+                  helperText={errors?.email ? errors.email.message : null}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  value={userData?.password}
-                  onChange={handlePasswordChange}
-                  name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  {...register("password")}
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
+                  error={!!errors.password}
+                  helperText={errors?.password ? errors.password.message : null}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   required
                   fullWidth
-                  value={userData?.address}
-                  onChange={handleAddressChange}
                   id="address"
                   label="Địa chỉ"
-                  name="address"
                   autoComplete="address"
+                  {...register("address")}
+                  className={`form-control ${
+                    errors.address ? "is-invalid" : ""
+                  }`}
+                  error={!!errors.address}
+                  helperText={errors?.address ? errors.address.message : null}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   required
                   fullWidth
-                  value={userData?.phoneNumber}
-                  onChange={handlePhoneChange}
                   id="phoneNumber"
                   label="Số điện thoại"
-                  name="phoneNumber"
                   autoComplete="phoneNumber"
+                  {...register("phoneNumber")}
+                  className={`form-control ${
+                    errors.phoneNumber ? "is-invalid" : ""
+                  }`}
+                  error={!!errors.phoneNumber}
+                  helperText={
+                    errors?.phoneNumber ? errors.phoneNumber.message : null
+                  }
                 />
               </Grid>
             </Grid>
           </Box>
         </Box>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Hủy bỏ</Button>
-          <Button
-            type="submit"
-            onClick={() => handleSubmitUser(user.id)}
-            autoFocus
-          >
+          <Button onClick={() => handleCloseDialog()}>Hủy bỏ</Button>
+          <Button onClick={handleSubmit(onSubmit)} autoFocus>
             Cập nhật
           </Button>
         </DialogActions>

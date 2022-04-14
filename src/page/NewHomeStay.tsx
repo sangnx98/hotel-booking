@@ -71,13 +71,14 @@ const GetStepContent = (props: any): JSX.Element => {
             id="demo-multiple-name"
             // value={props.params.homeType}
             onChange={props.handleSelectValue}
-            input={<OutlinedInput label="Name" />}
+            input={<OutlinedInput label="Loại căn hộ" />}
             MenuProps={MenuProps}
+            native
           >
             {names.map((name) => (
-              <MenuItem key={name} value={name}>
+              <option key={name} value={name}>
                 {name}
-              </MenuItem>
+              </option>
             ))}
           </Select>
         </FormControl>
@@ -299,14 +300,12 @@ const NewHomeStay = () => {
     <>
       <Header />
       <Container maxWidth="xl">
-        <Box sx={{ marginTop: "2rem" }}>
+        <Box sx={{ marginTop: "2rem", width: '100%' }}>
           <Stepper alternativeLabel activeStep={activeStep}>
             {steps.map((step, index) => {
-              const labelProps: any = {};
-              const stepProps: any = {};
               return (
-                <Step {...stepProps} key={index}>
-                  <StepLabel {...labelProps}>{step}</StepLabel>
+                <Step key={index}>
+                  <StepLabel>{step}</StepLabel>
                 </Step>
               );
             })}
