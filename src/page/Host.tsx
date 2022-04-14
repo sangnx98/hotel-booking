@@ -79,7 +79,7 @@ export default function Host() {
     <>
       <Header />
       <Container maxWidth="lg">
-        <Box sx={{ width: "100%", mt: "4rem" }}>
+        <Box sx={{ width: "100%", mt: "1rem" }}>
           <Box sx={{ borderColor: "divider" }}>
             <Tabs
               value={value}

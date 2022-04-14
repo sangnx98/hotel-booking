@@ -127,8 +127,8 @@ export default function UserProfile() {
   return (
     <>
       <Header />
-      <Container maxWidth="xl">
-        <Box sx={{ mt: "4rem" }}>
+      
+        <Box sx={{ mt: "1rem" }}>
           <Box sx={{ width: "100%", typography: "body1" }}>
             <TabContext value={value}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -167,6 +167,12 @@ export default function UserProfile() {
                           Số lượng người
                         </StyledTableCell>
                         <StyledTableCell align="center">
+                          Tổng số ngày
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Tổng giá tiền
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
                           Trạng thái
                         </StyledTableCell>
                         <StyledTableCell align="center">
@@ -191,7 +197,7 @@ export default function UserProfile() {
                             {bookings.roomName}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {bookings.roomApartNums}, {bookings.roomStreet},{" "}
+                            {bookings.roomApartNums}, {bookings.roomStreet}, 
                             {bookings.roomDistrict}, {bookings.roomProvince}
                           </StyledTableCell>
                           <StyledTableCell align="center">
@@ -201,7 +207,13 @@ export default function UserProfile() {
                             {bookings.endDate}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {bookings.total_guests}
+                            {bookings.total_guests} người
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {bookings.duration} ngày
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {bookings.totalPrice}đ
                           </StyledTableCell>
                           <StyledTableCell
                             align="center"
@@ -252,7 +264,6 @@ export default function UserProfile() {
             </TabContext>
           </Box>
         </Box>
-      </Container>
     </>
   );
 }

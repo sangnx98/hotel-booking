@@ -90,7 +90,7 @@ export default function Rooms() {
       {/* <Header/> */}
       <CssBaseline />
       <Container maxWidth="xl">
-        <Box sx={{ marginTop: "5rem", color: "black !important" }}>
+        <Box sx={{ marginTop: "1rem", color: "black !important" }}>
           <Box sx={{ display: "flex", flexWrap: "wrap" }}>
             <button className="rooms-button">Hủy phòng linh hoạt</button>
             <button className="rooms-button">Đặt phòng nhanh</button>

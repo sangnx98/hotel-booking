@@ -24,7 +24,7 @@ export default function Slider() {
       <Container maxWidth="xl">
         <Grid container>
           <Grid xs={12} sm={12} md={12}>
-            <Box sx={{ marginTop: "8rem" }}>
+            <Box sx={{ marginTop: "4rem" }}>
               <Swiper
                 slidesPerView={1}
                 spaceBetween={30}

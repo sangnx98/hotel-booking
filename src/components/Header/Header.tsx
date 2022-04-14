@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -15,11 +15,13 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import { Link } from "react-router-dom";
-import _ from 'lodash'
+import _ from "lodash";
 
 import "./Header.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutRequest } from "../../store/userSlice";
+import { Room } from "../../types";
+import { CONFIG } from "../../config/config";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -86,14 +88,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header() {
   const userAuth = useSelector((state: any) => state.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
+  const [roomSeacrhing, setRoomSeacrhing] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  useEffect(() => {
+    getRooms();
+  }, []);
+  console.log("rooms", rooms);
+
+  const getRooms = () => {
+    fetch(`${CONFIG.ApiRooms}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res: any) => res.json())
+      .then(setRooms);
+  };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -101,7 +120,7 @@ export default function Header() {
 
   const removeData = () => {
     localStorage.removeItem("user");
-    dispatch(logoutRequest(userAuth))
+    dispatch(logoutRequest(userAuth));
     navigate("/login");
   };
 
@@ -117,6 +136,25 @@ export default function Header() {
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleSearch = (event: any) => {
+    const searchWord = event.target.value;
+    const newFilter = rooms.filter((room: any) => {
+      return room.homeStayName.toLowerCase().includes(searchWord);
+    });
+    if (searchWord === "") {
+      setRoomSeacrhing([]);
+    } else {
+      setRoomSeacrhing(newFilter);
+    }
+  };
+
+  const onGoToRoomPage = (room: any) => {
+    // window.location.href = `/home/rooms/${room.id}` as string
+    setRoomSeacrhing([])
+  }
+
+  console.log('============', roomSeacrhing)
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -188,11 +226,10 @@ export default function Header() {
     </Menu>
   );
   return (
-    <Box sx={{ flexGrow: 1 }}>
       <AppBar
         sx={{
           backgroundColor: "white",
-          position: "fixed",
+          position: "sticky",
           zIndex: "1000",
           top: "0",
         }}
@@ -221,6 +258,7 @@ export default function Header() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={handleSearch}
             />
             <CalendarIconWrapper>
               <CalendarMonthIcon sx={{ width: "50%", cursor: "pointer" }} />
@@ -229,6 +267,7 @@ export default function Header() {
               <PageviewIcon sx={{ width: "50%", cursor: "pointer" }} />
             </PreviewIconWrapper>
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
@@ -316,9 +355,54 @@ export default function Header() {
             </IconButton>
           </Box>
         </Toolbar>
-      </AppBar>
+        {roomSeacrhing.length !== 0 && (
+        <Box
+          sx={{
+            width: "25rem",
+            height: "auto",
+            mt: "4.5rem",
+            position: "fixed",
+            left: "8.2rem",
+            zIndex: "100",
+            bgcolor: "white",
+            padding: "1rem",
+            borderRadius: "5px",
+            boxShadow: "-1px 3px 16px -4px #000000",
+          }}
+        >
+          {roomSeacrhing.map((room: any, key: any) => {
+            return (
+              <Link to={`/home/rooms/${room.id}`} onClick={() => onGoToRoomPage(room)}>
+                <Box
+                  sx={{
+                    color: "black",
+                    mb: "1rem",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "#e6e6e6",
+                      opacity: [0.8, 0.7, 0.9],
+                    },
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <img src={room.bgUrl} alt="" width="100px" />
+                    <Box sx={{ ml: "1rem" }}>
+                      <Typography sx={{ fontSize: "15px", fontWeight: "700" }}>
+                        {room.homeStayName}
+                      </Typography>
+                      <Typography sx={{ fontSize: "13px" }}>
+                        {room.district}, {room.province}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Link>
+            );
+          })}
+        </Box>
+      )}
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+      </AppBar>
   );
 }

@@ -6,11 +6,14 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { getAllUser } from "../services/userService";
 import { User } from "../types";
+import { Box } from "@mui/system";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,13 +37,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function UserRecordAdmin() {
   const [users, setUsers] = useState<User[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage, setPostPerPage] = useState(6);
+  const indexOfLastUser = currentPage * postPerPage;
+  const indexOfFirstUser = indexOfLastUser - postPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const pageNumbers = Math.ceil(users.length / postPerPage);
+
+  console.log('pageNumbers...', pageNumbers)
+
+  const paginate = (pageNumbers: any) => {
+    setCurrentPage(pageNumbers);
+  };
 
   useEffect(() => {
     getAllUser()
       .then((res) => res.json())
       .then(setUsers);
   }, []);
-  console.log('users', users)
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -55,26 +70,23 @@ export default function UserRecordAdmin() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user: any, index: any) => (
+          {currentUsers.map((user: any, index: any) => (
             <StyledTableRow key={index}>
               <StyledTableCell align="center">{user.id}</StyledTableCell>
               <StyledTableCell align="center">{user.name}</StyledTableCell>
-              <StyledTableCell align="center">
-                {user.email}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {user.address}
-              </StyledTableCell>
+              <StyledTableCell align="center">{user.email}</StyledTableCell>
+              <StyledTableCell align="center">{user.address}</StyledTableCell>
               <StyledTableCell align="center">
                 {user.phoneNumber}
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {user.password}
-              </StyledTableCell>
+              <StyledTableCell align="center">{user.password}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
+      <Stack spacing={2}>
+      <Pagination count={pageNumbers} color="primary" onChange={(e :any, page :number)=> setCurrentPage(page)}/>
+      </Stack>
     </TableContainer>
   );
 }

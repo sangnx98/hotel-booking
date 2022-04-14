@@ -44,6 +44,7 @@ export default function RoomDetail() {
   const [roomDetail, setRoomDetail] = useState<any>({});
   const total_guests = children + adult;
   let params = useParams();
+  console.log('===============params', params)
   const [openSnack, setOpenSnack] = useState(false);
   const minValue: Date = new Date(new Date());
   const maxValue: Date = new Date(
@@ -51,8 +52,14 @@ export default function RoomDetail() {
     new Date().getMonth() + 1,
     90
   );
+  
 
   const handleBooking = () => {
+    const dayCheckIn = moment(value[0]);
+    const dayCheckOut = moment(value[1]);
+    const guestLimit = roomDetail.guestNums
+    const duration = dayCheckOut.diff(dayCheckIn, 'days')
+    const total_price = roomDetail.price * duration
     const newBooking = {
       dateStart: moment(value[0]).format("DD/MM/YYYY"),
       endDate: moment(value[1]).format("DD/MM/YYYY"),
@@ -69,15 +76,20 @@ export default function RoomDetail() {
       roomDistrict: roomDetail.district,
       roomStreet: roomDetail.street,
       roomApartNums: roomDetail.apartNumber,
+      totalPrice: total_price,
+      userName: userAuth.name,
+      duration: duration
     };
     if (userAuth.name == "") {
       navigate("/login");
     } else if (
-      newBooking.dateStart == '' ||
-      newBooking.endDate == '' ||
+      newBooking.dateStart == null ||
+      newBooking.endDate == null ||
       newBooking.total_guests == 0
     ) {
       setOpenSnack(true);
+    }else if(guestLimit < total_guests){
+      alert(`Số lượng khách tối đa là ${guestLimit}. Bao gồm cả trẻ em và ngời lớn` )
     } else {
       addNewBooking(newBooking)
         .then((response) => response.json())
@@ -98,6 +110,7 @@ export default function RoomDetail() {
           console.error("Error:", error);
         })
         .then(() => navigate("/profile"));
+        console.log('booking', newBooking)
     }
   };
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,12 +165,11 @@ export default function RoomDetail() {
     })
       .then((res) => res.json())
       .then(setRoomDetail);
-  }, []);
+  }, [params]);
   console.log("roomDetail", roomDetail);
   return (
     <>
-      <Header />
-      <Box sx={{ marginTop: "4rem", backgroundColor: "black" }}>
+      <Box sx={{ backgroundColor: "black" }}>
         <Swiper
           slidesPerView={3}
           spaceBetween={5}
