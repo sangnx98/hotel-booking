@@ -19,7 +19,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 import SocialLogin from "../components/SocialLogin";
-import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar, signUpSuccess } from "../store/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { CONFIG } from "../config/config";
 
@@ -119,6 +119,11 @@ export default function Login() {
       navigate("/");
       localStorage.setItem("user", JSON.stringify(user.current));
       dispatch(signUpSuccess(user.current));
+      dispatch(setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "success",
+        snackbarMessage: "Đăng nhập thành công !!"
+      }))
     } else {
       setOpen(true);
     }
@@ -210,9 +215,9 @@ export default function Login() {
               >
                 Sign In
               </Button>
-              <Button type="submit" fullWidth sx={{ mt: 1, mb: 2 }}>
+              {/* <Button type="submit" fullWidth sx={{ mt: 1, mb: 2 }}>
                 <SocialLogin />
-              </Button>
+              </Button> */}
               <Grid item>
                 <Link href="/signup" variant="body2">
                   {"Do you have account? Sign up"}

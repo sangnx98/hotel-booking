@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
+import { CONFIG } from "../../config/config";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -13,6 +14,22 @@ import "./Location.css";
 import { Autoplay, Pagination, Navigation } from "swiper";
 
 export default function Locations() {
+  const [locations, setLocations] = useState([]);
+  console.log('first', locations)
+
+  const getLocations = () => {
+    fetch(`${CONFIG.ApiLocation}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res: any) => res.json())
+      .then(setLocations);
+  };
+
+  useEffect(() => {
+    getLocations();
+  }, []);
   return (
     <>
       <CssBaseline />
@@ -67,136 +84,29 @@ export default function Locations() {
               },
             }}
           >
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Hà Nội
-              </Typography>
-              <Link to="/home/rooms">
-                <img
-                  src="http://hanoimoi.com.vn/Uploads/images/tuandiep/2020/08/20/ho-hoan-kiem.jpg"
-                  alt=""
-                />
-              </Link>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Hạ Long
-              </Typography>
-              <Link to="/home/rooms">
-                <img
-                  src="https://media.vneconomy.vn/w800/images/upload/2021/06/19/halong.jpg"
-                  alt=""
-                />
-              </Link>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Phú Quốc
-              </Typography>
-              <img
-                src="https://file1.dangcongsan.vn/data/0/images/2021/10/22/havtcd/ve-dep.jpg?dpi=150&quality=100&w=780"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Hồ Chí Minh
-              </Typography>
-              <img
-                src="https://photo-cms-baodauthau.zadn.vn/w730/Uploaded/2022/qjmfn/2021_04_29/03-3055.jpg"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Đà Nẵng
-              </Typography>
-              <img
-                src="https://img.cand.com.vn/resize/800x800/NewFiles/Images/2021/10/16/7_du-1634353732500.jpg"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Nha Trang
-              </Typography>
-              <img
-                src="https://media.tacdn.com/media/attractions-splice-spp-674x446/07/12/61/e5.jpg"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Typography
-                sx={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "center",
-                  fontSize: "25px",
-                  color: "white",
-                  fontWeight: "700",
-                }}
-              >
-                Quảng Bình
-              </Typography>
-              <img
-                src="https://vtv1.mediacdn.vn/thumb_w/650/2020/6/8/dulich-15916342537561871046635-crop-1591634265163746853772.jpg"
-                alt=""
-              />
-            </SwiperSlide>
+            {locations.map((location: any) => (
+                <SwiperSlide>
+                  <Typography
+                    sx={{
+                      position: "absolute",
+                      bottom: "1rem",
+                      left: "center",
+                      fontSize: "25px",
+                      color: "white",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {location.address}
+                  </Typography>
+                  <Link to={`/home/rooms/${location.address}`}>
+                    <img
+                      src={location.bgUrl}
+                      alt=""
+                    />
+                  </Link>
+                </SwiperSlide>
+
+            ))}
           </Swiper>
         </Box>
       </Container>

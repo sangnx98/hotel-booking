@@ -21,6 +21,8 @@ import { CONFIG } from "../config/config";
 import UserRecordAdmin from "../components/UserRecordAdmin";
 import BookingRecordAdmin from "../components/BookingRercordAdmin";
 import { RoomApprovement, RoomsStatus } from "../enum";
+import { useDispatch } from "react-redux";
+import { setSnackbar } from "../store/userSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,6 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function AdminDashboard() {
+  const dispatch = useDispatch();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [value, setValue] = useState<string>("1");
 
@@ -68,6 +71,13 @@ export default function AdminDashboard() {
         const newRooms = [...rooms];
         newRooms[index] = result;
         setRooms(newRooms);
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: `Đã phê duyệt thành công`,
+          })
+        );
       });
   };
 
@@ -87,6 +97,24 @@ export default function AdminDashboard() {
         const newRooms = [...rooms];
         newRooms[index] = result;
         setRooms(newRooms);
+      })
+      .then(() =>
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: `Đã  từ chối xét duyệt chỗ ở`,
+          })
+        )
+      )
+      .catch((err) => {
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: `Có gì đó không ổn :( ${err})`,
+          })
+        );
       });
   };
 

@@ -139,7 +139,7 @@ export default function Header() {
   const handleSearch = (event: any) => {
     const searchWord = event.target.value;
     const newFilter = rooms.filter((room: any) => {
-      return room.homeStayName.toLowerCase().includes(searchWord);
+      return room.homeStayName.toLowerCase().includes(searchWord.toLowerCase());
     });
     if (searchWord === "") {
       setRoomSeacrhing([]);
@@ -352,7 +352,7 @@ export default function Header() {
           {roomSeacrhing.map((room: any, key: any) => {
             return (
               <Link
-                to={`/home/rooms/${room.id}`}
+                to={`/home/roomsDetail/${room.id}`}
                 onClick={() => onGoToRoomPage(room)}
               >
                 <Box

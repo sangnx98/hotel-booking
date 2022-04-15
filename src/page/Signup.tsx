@@ -18,7 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../store/apiRequest";
-import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar, signUpSuccess } from "../store/userSlice";
 
 function Copyright(props: any) {
   return (
@@ -73,7 +73,11 @@ export default function Signup() {
       alert("Tài khoản đã tồn tại");
     } else {
       signUpUser(data, dispatch(signUpSuccess(data)))
-      alert("Đăng kí thành công, vui lòng đăng nhập")
+      dispatch(setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "success",
+        snackbarMessage: "Đăng kí thành công, vui lòng đăng nhập !!"
+      }))
       navigate('/login')
     }
   };

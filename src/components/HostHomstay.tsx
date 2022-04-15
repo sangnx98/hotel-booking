@@ -37,6 +37,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import _ from "lodash";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
 import { getRoomsById, setSnackbar } from "../store/userSlice";
@@ -102,6 +103,7 @@ const provinces = [
 
 export default function HostHomeStay() {
   const userAuth = useSelector((state: any) => state.user);
+  const snackBar = useSelector((state: any) => state.noticationBar);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const initialState: Room = {
@@ -133,12 +135,20 @@ export default function HostHomeStay() {
   const [open, setOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [roomData, setRoomData] = useState<Room>(initialState);
+  const [searchRoomName, setSearchRoomName] = useState("")
 
   const handleSubmit = async (id: number) => {
     const res = await axios.put(`${CONFIG.ApiRooms}/${id}`, roomData);
     setRoomData(res.data);
     setOpen(false);
     getRooms();
+    dispatch(
+      setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "success",
+        snackbarMessage: "Cập nhật chỗ ở thành công",
+      })
+    );
   };
 
   const handleClickOpen = () => {
@@ -171,7 +181,6 @@ export default function HostHomeStay() {
       _.isEmpty(roomData.country) &&
       _.isEmpty(roomData.province) &&
       _.isEmpty(roomData.district) &&
-      _.isEmpty(roomData.subDistrict) &&
       _.isEmpty(roomData.street) &&
       _.isEmpty(roomData.apartNumber) &&
       _.isEmpty(roomData.addressDetail) &&
@@ -196,7 +205,6 @@ export default function HostHomeStay() {
         country: room.country,
         province: room.province,
         district: room.district,
-        subDistrict: room.subDistrict,
         street: room.street,
         apartNumber: room.apartNumber,
         addressDetail: room.addressDetail,
@@ -256,7 +264,6 @@ export default function HostHomeStay() {
 
   const handleDelete = async (room: Room, index: any) => {
     const { id } = room;
-
     fetch(`${CONFIG.ApiRooms}/${id}`, {
       method: "DELETE",
       headers: {
@@ -264,12 +271,13 @@ export default function HostHomeStay() {
       },
     }).then((res) => {
       getRooms();
-      setDeleteConfirm(false);
-      dispatch(setSnackbar({
-        snackbarOpen: true,
-        snackbarType: "success",
-        snackMessage: "Xoa thanh cong"
-      }))
+      dispatch(
+        setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "Xóa chỗ ở thành công !!",
+        })
+      );
     });
   };
 
@@ -293,10 +301,10 @@ export default function HostHomeStay() {
           <TextField
             id="outlined-number"
             label="Tìm kiếm theo mã phòng"
-            type="number"
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={(e) => setSearchRoomName(e.target.value)}
           />
         </div>
       </Box>
@@ -309,116 +317,140 @@ export default function HostHomeStay() {
                 <StyledTableCell align="center">Ảnh</StyledTableCell>
                 <StyledTableCell align="center">Tên chỗ ở</StyledTableCell>
                 <StyledTableCell align="center">Địa chỉ</StyledTableCell>
+                <StyledTableCell align="center">Giá tiền</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 <StyledTableCell align="center">Kiểm duyệt</StyledTableCell>
                 <StyledTableCell align="center">Hành động</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rooms.map((room: any, index: any) => (
-                <>
-                  <StyledTableRow key={index}>
-                    <StyledTableCell align="center">{room.id}</StyledTableCell>
-                    <StyledTableCell
-                      component="th"
-                      scope="row"
-                      sx={{ textAlign: "center" }}
-                    >
-                      <img src={room.bgUrl} alt="" width="250px" />
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {room.homeStayName}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {room.street}, {room.province}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      align="center"
-                      style={{
-                        color: `${
-                          room.status === RoomsStatus.Renting
-                            ? "green"
-                            : room.status === RoomsStatus.Processing
-                            ? "blue"
-                            : "red"
-                        }`,
-                      }}
-                    >
-                      {room.status === RoomsStatus.Renting
-                        ? "Đang thuê"
-                        : room.status === RoomsStatus.Processing
-                        ? "Chờ duyệt"
-                        : "Còn trống"}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      align="center"
-                      style={{
-                        color: `${
-                          room.isChecked === 0
-                            ? "orange"
-                            : room.isChecked === 1
-                            ? "green"
-                            : "red"
-                        }`,
-                      }}
-                    >
-                      {room.isChecked === 0
-                        ? "Đang chờ"
-                        : room.isChecked === 1
-                        ? "Đã duyệt"
-                        : "Từ chối"}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {room.status === RoomsStatus.Available ? (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                          }}
-                        >
-                          <EditIcon
-                            sx={{ cursor: "pointer", color: "green" }}
-                            onClick={() => getRoom(room, index)}
-                          />
-                          <DeleteIcon
-                            sx={{ cursor: "pointer", color: "red" }}
-                            // onClick={handleClickOpen}
-                            onClick={() => handleDelete(room, index)}
-                          />
-                        </Box>
-                      ) : (
-                        <Button disabled>Hủy phòng</Button>
-                      )}
-                    </StyledTableCell>
-                    <Dialog
-                    open={deleteConfirm}
-                    onClose={handleCloseDeleteConfirm}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    sx={{ textAlign: "center" }}
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {"Xác nhận xóa"}
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        Chỗ ở sẽ bị xóa vĩnh viễn. Vui lòng xác nhận
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions sx={{ justifyContent: "space-evenly" }}>
-                      <Button onClick={handleCloseDeleteConfirm}>Hủy bỏ</Button>
-                      <Button
-                         onClick={() => handleDelete(room, index)}
-                        autoFocus
+              {rooms
+                .filter((value) => {
+                  if (searchRoomName == "") {
+                    return value;
+                  } else if (
+                    value.homeStayName
+                      .toLowerCase()
+                      .includes(searchRoomName.toLowerCase())
+                  ) {
+                    return value;
+                  }
+                })
+                .map((room: any, index: any) => (
+                  <>
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="center">
+                        {room.id}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        component="th"
+                        scope="row"
+                        sx={{ textAlign: "center" }}
                       >
-                        Xác nhận
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                  </StyledTableRow>
-                  
-                </>
-              ))}
+                        <img src={room.bgUrl} alt="" width="250px" />
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.homeStayName}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.street}, {room.province}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <NumberFormat
+                          value={room.price}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          suffix={"₫"}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          color: `${
+                            room.status === RoomsStatus.Renting
+                              ? "green"
+                              : room.status === RoomsStatus.Processing
+                              ? "blue"
+                              : "red"
+                          }`,
+                        }}
+                      >
+                        {room.status === RoomsStatus.Renting
+                          ? "Đang thuê"
+                          : room.status === RoomsStatus.Processing
+                          ? "Chờ duyệt"
+                          : "Còn trống"}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          color: `${
+                            room.isChecked === 0
+                              ? "orange"
+                              : room.isChecked === 1
+                              ? "green"
+                              : "red"
+                          }`,
+                        }}
+                      >
+                        {room.isChecked === 0
+                          ? "Đang chờ"
+                          : room.isChecked === 1
+                          ? "Đã duyệt"
+                          : "Từ chối"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {room.status === RoomsStatus.Available ? (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            <EditIcon
+                              sx={{ cursor: "pointer", color: "green" }}
+                              onClick={() => getRoom(room, index)}
+                            />
+                            <DeleteIcon
+                              sx={{ cursor: "pointer", color: "red" }}
+                              // onClick={handleClickOpen}
+                              onClick={() => handleDelete(room, index)}
+                            />
+                          </Box>
+                        ) : (
+                          <Button disabled>Hủy phòng</Button>
+                        )}
+                      </StyledTableCell>
+                      <Dialog
+                        open={deleteConfirm}
+                        onClose={handleCloseDeleteConfirm}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        sx={{ textAlign: "center" }}
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          {"Xác nhận xóa"}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Chỗ ở sẽ bị xóa vĩnh viễn. Vui lòng xác nhận
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions sx={{ justifyContent: "space-evenly" }}>
+                          <Button onClick={handleCloseDeleteConfirm}>
+                            Hủy bỏ
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(room, index)}
+                            autoFocus
+                          >
+                            Xác nhận
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </StyledTableRow>
+                  </>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

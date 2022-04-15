@@ -13,38 +13,13 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { CardActionArea } from "@mui/material";
-import { Link } from "react-router-dom";
+import { CardActionArea, InputLabel } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import NumberFormat from "react-number-format";
 
 import { RoomsStatus } from "../enum";
 
 import "../App.css";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const choices = ["Giá tăng dần", "Giá giảm dần"];
-
-function getStyles(
-  choices: string,
-  personName: readonly string[],
-  theme: Theme
-) {
-  return {
-    fontWeight:
-      personName.indexOf(choices) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 type Rooms = {
   host_id: string;
@@ -65,6 +40,9 @@ export default function Rooms() {
   const theme = useTheme();
   const [personName, setPersonName] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any>([]);
+  const params = useParams();
+  const { address } = params;
+  const homestayNums = rooms.length
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {
@@ -86,7 +64,6 @@ export default function Rooms() {
   }, []);
   return (
     <>
-      {/* <Header/> */}
       <CssBaseline />
       <Container maxWidth="xl">
         <Box sx={{ marginTop: "1rem", color: "black !important" }}>
@@ -114,88 +91,83 @@ export default function Rooms() {
             component="h2"
             sx={{ display: "flex", fontWeight: "600", marginBottom: "1rem" }}
           >
-            1698 homestay tại Hà Nội
+            Các homestay tại {address}
           </Typography>
-          <FormControl sx={{ m: 1, width: 300, mb: 5 }}>
+          <FormControl variant="standard" sx={{ mb: "2rem", minWidth: 120 }}>
+            <InputLabel id="demo-simple-select-standard-label">
+              Sắp xếp
+            </InputLabel>
             <Select
-              multiple
-              displayEmpty
-              value={personName}
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
               onChange={handleChange}
-              input={<OutlinedInput />}
-              renderValue={(selected) => {
-                if (selected.length === 0) {
-                  return <em>Sắp xếp</em>;
-                }
-
-                return selected.join(", ");
-              }}
-              MenuProps={MenuProps}
-              inputProps={{ "aria-label": "Without label" }}
+              label="Age"
             >
-              {choices.map((choices) => (
-                <MenuItem
-                  key={choices}
-                  value={choices}
-                  style={getStyles(choices, personName, theme)}
-                >
-                  {choices}
-                </MenuItem>
-              ))}
+              33
+              <MenuItem>Tăng dần</MenuItem>
+              <MenuItem>Giảm dần</MenuItem>
             </Select>
           </FormControl>
           <Grid container spacing={2}>
-            {rooms.map((item: any) => (
-              <Grid
-                item
-                xs={6}
-                sm={6}
-                md={2}
-                justifyContent="center"
-                key={item.id}
-              >
-                <Link to={`/home/rooms/${item.id}`}>
-                  <Card
-                    sx={{
-                      maxWidth: 300,
-                      borderRadius: "10px",
-                      boxShadow: "none",
-                      marginBottom: "2rem",
-                    }}
-                  >
-                    <CardActionArea>
-                      <CardMedia
-                        component="img"
-                        height="140"
-                        image={item.bgUrl}
-                        alt="green iguana"
-                      />
-                      <CardContent sx={{ padding: "1rem" }}>
-                        <Typography
-                          gutterBottom
-                          variant="subtitle1"
-                          component="div"
-                        >
-                          <b>
-                            {item.homeStayType} - {item.bedRooms} phòng ngủ
-                          </b>
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {item.homeStayName} - {item.bedRooms} phòng ngủ
-                        </Typography>
-                        <Typography
-                          gutterBottom
-                          variant="subtitle1"
-                          component="div"
-                        >
-                          <b>{item.price}đ</b>
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Link>
-              </Grid>
-            ))}
+            {rooms
+              .filter((item: any) => item.province === address)
+              .map((item: any) => (
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={2}
+                  justifyContent="center"
+                  key={item.id}
+                >
+                  <Link to={`/home/roomsDetail/${item.id}`}>
+                    <Card
+                      sx={{
+                        maxWidth: 300,
+                        borderRadius: "10px",
+                        boxShadow: "none",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <CardActionArea>
+                        <CardMedia
+                          component="img"
+                          height="140"
+                          image={item.bgUrl}
+                          alt="green iguana"
+                        />
+                        <CardContent sx={{ padding: "1rem" }}>
+                          <Typography
+                            gutterBottom
+                            variant="subtitle1"
+                            component="div"
+                          >
+                            <b>
+                              {item.homeStayType} - {item.bedRooms} phòng ngủ
+                            </b>
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {item.homeStayName} - {item.bedRooms} phòng ngủ
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="subtitle1"
+                            component="div"
+                            fontWeight="700"
+                          >
+                            <NumberFormat
+                              value={item.price}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              suffix={"₫"}
+                            />
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Link>
+                </Grid>
+              ))}
           </Grid>
         </Box>
       </Container>

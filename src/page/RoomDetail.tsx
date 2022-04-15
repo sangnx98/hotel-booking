@@ -19,11 +19,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import moment from "moment";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Pagination, FreeMode, Navigation } from "swiper";
 import { Snackbar } from "@mui/material";
+import NumberFormat from "react-number-format";
 
-import Header from "../components/Header/Header";
+import { setSnackbar } from "../store/userSlice";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 import { BookingStatus, RoomsStatus } from "../enum/index";
@@ -37,6 +38,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export default function RoomDetail() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const userAuth = useSelector((state: any) => state.user);
   const [open, setOpen] = useState(false);
   const [children, setChildren] = useState<number>(0);
@@ -51,14 +53,13 @@ export default function RoomDetail() {
     new Date().getMonth() + 1,
     90
   );
-  
 
   const handleBooking = () => {
     const dayCheckIn = moment(value[0]);
     const dayCheckOut = moment(value[1]);
-    const guestLimit = roomDetail.guestNums
-    const duration = dayCheckOut.diff(dayCheckIn, 'days')
-    const total_price = roomDetail.price * duration
+    const guestLimit = roomDetail.guestNums;
+    const duration = dayCheckOut.diff(dayCheckIn, "days");
+    const total_price = roomDetail.price * duration;
     const newBooking = {
       dateStart: moment(value[0]).format("DD/MM/YYYY"),
       endDate: moment(value[1]).format("DD/MM/YYYY"),
@@ -77,28 +78,50 @@ export default function RoomDetail() {
       roomApartNums: roomDetail.apartNumber,
       totalPrice: total_price,
       userName: userAuth.name,
-      duration: duration
+      duration: duration,
     };
     if (userAuth.name == "") {
       navigate("/login");
     } else if (
-      newBooking.dateStart == null ||
-      newBooking.endDate == null ||
+      // !newBooking.dateStart ||
+      // !newBooking.endDate ||
       newBooking.total_guests == 0
-    ) {
-      setOpenSnack(true);
-    }else if(guestLimit < total_guests){
-      alert(`Số lượng khách tối đa là ${guestLimit}. Bao gồm cả trẻ em và ngời lớn` )
+      
+    ) 
+    {
+      dispatch(setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "error",
+        snackbarMessage: "Vui lòng nhập đầy đủ thông tin !!"
+      }))
+    } else if (guestLimit < total_guests) {
+      dispatch(setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "error",
+        snackbarMessage:  `Số lượng khách tối đa là ${guestLimit}. Bao gồm cả trẻ em và ngời lớn`
+      }))
     } else {
       addNewBooking(newBooking)
         .then((response) => response.json())
+        .then(() =>
+          dispatch(
+            setSnackbar({
+              snackbarOpen: true,
+              snackbarType: "success",
+              snackbarMessage: "Đặt chỗ thành công, vui lòng đợi xác nhận !!",
+            })
+          )
+        )
         .then((data) => {
           fetch(CONFIG.ApiRoom + params.id, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...roomDetail, status: RoomsStatus.Processing }),
+            body: JSON.stringify({
+              ...roomDetail,
+              status: RoomsStatus.Processing,
+            }),
           })
             .then((res) => res.json())
             .then((result) => {
@@ -111,6 +134,7 @@ export default function RoomDetail() {
         .then(() => navigate("/profile"));
     }
   };
+  console.log('+++++++++++++',total_guests == 0)
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAdult(Number(event.target.value));
   };
@@ -148,7 +172,7 @@ export default function RoomDetail() {
     <Link underline="hover" key="1" color="inherit" href="/">
       Home
     </Link>,
-    <Link underline="hover" key="2" color="inherit" href="/rooms">
+    <Link underline="hover" key="2" color="inherit" href="/home/rooms">
       Rooms
     </Link>,
     <Typography key="3" color="text.primary">
@@ -490,7 +514,12 @@ export default function RoomDetail() {
                     marginBottom: "2rem",
                   }}
                 >
-                  {roomDetail.price}đ/đêm
+                  <NumberFormat
+                    value={roomDetail.price}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={"₫"}
+                  />/ đêm
                 </Typography>
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
@@ -503,10 +532,10 @@ export default function RoomDetail() {
                     maxDate={maxValue}
                     minDate={minValue}
                     value={value}
-                    onChange={(newValue) => {
+                    onChange={(newValue: any) => {
                       setValue(newValue);
                     }}
-                    renderInput={(startProps, endProps) => {
+                    renderInput={(startProps: any, endProps: any) => {
                       return (
                         <React.Fragment>
                           <TextField {...startProps} />

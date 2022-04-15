@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
+import NumberFormat from "react-number-format";
 
 import { Booking } from "../types";
 import { CONFIG } from "../config/config";
@@ -123,143 +124,145 @@ export default function UserProfile() {
   return (
     <>
       <Header />
-      
-        <Box sx={{ mt: "1rem" }}>
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab label="danh sách đặt phòng" value="1" />
-                  <Tab label="cài đặt tài khoản" value="2" />
-                </TabList>
-              </Box>
-              <TabPanel value="2">
-                <ProfileAccount />
-              </TabPanel>
+      <Box sx={{ mt: "1rem" }}>
+        <Box sx={{ width: "100%", typography: "body1" }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="danh sách đặt phòng" value="1" />
+                <Tab label="cài đặt tài khoản" value="2" />
+              </TabList>
+            </Box>
+            <TabPanel value="2">
+              <ProfileAccount />
+            </TabPanel>
 
-              <TabPanel value="1">
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell align="center">ID</StyledTableCell>
-                        <StyledTableCell align="center">Ảnh</StyledTableCell>
+            <TabPanel value="1">
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="center">ID</StyledTableCell>
+                      <StyledTableCell align="center">Ảnh</StyledTableCell>
+                      <StyledTableCell align="center">
+                        Tên chỗ ở
+                      </StyledTableCell>
+                      <StyledTableCell align="center">Địa chỉ</StyledTableCell>
+                      <StyledTableCell align="center">Check in</StyledTableCell>
+                      <StyledTableCell align="center">
+                        Check out
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Số lượng người
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Tổng số ngày
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Tổng giá tiền
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Trạng thái
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Hành động
+                      </StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookings.map((bookings: any, index: any) => (
+                      <StyledTableRow key={index}>
                         <StyledTableCell align="center">
-                          Tên chỗ ở
+                          {bookings.id}
+                        </StyledTableCell>
+                        <StyledTableCell
+                          component="th"
+                          scope="row"
+                          sx={{ textAlign: "center" }}
+                        >
+                          <img src={bookings.roomImg} alt="" width="250px" />
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Địa chỉ
+                          {bookings.roomName}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Check in
+                          {bookings.roomApartNums}, {bookings.roomStreet},
+                          {bookings.roomDistrict}, {bookings.roomProvince}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Check out
+                          {bookings.dateStart}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Số lượng người
+                          {bookings.endDate}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Tổng số ngày
+                          {bookings.total_guests} người
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Tổng giá tiền
+                          {bookings.duration} ngày
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Trạng thái
+                          <NumberFormat
+                            value={bookings.totalPrice}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            suffix={"₫"}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell
+                          align="center"
+                          style={{
+                            color: `${
+                              bookings.status === BookingStatus.Processing
+                                ? "blue"
+                                : bookings.status === BookingStatus.Booked
+                                ? "green"
+                                : bookings.status === BookingStatus.Canceled
+                                ? "red"
+                                : "orange"
+                            }`,
+                          }}
+                        >
+                          {bookings.status === BookingStatus.Processing
+                            ? "Đang chờ"
+                            : bookings.status === BookingStatus.Booked
+                            ? "Đặt thành công"
+                            : bookings.status === BookingStatus.Canceled
+                            ? "Đã hủy"
+                            : "Hoàn thành"}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Hành động
+                          {bookings.status === BookingStatus.Booked ? (
+                            <>
+                              <Button
+                                onClick={() => cancelBooking(bookings, index)}
+                              >
+                                Hủy phòng
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  completedBooking(bookings, index)
+                                }
+                              >
+                                Trả phòng
+                              </Button>
+                            </>
+                          ) : (
+                            <Button disabled>Hủy phòng</Button>
+                          )}
                         </StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {bookings.map((bookings: any, index: any) => (
-                        <StyledTableRow key={index}>
-                          <StyledTableCell align="center">
-                            {bookings.id}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            component="th"
-                            scope="row"
-                            sx={{ textAlign: "center" }}
-                          >
-                            <img src={bookings.roomImg} alt="" width="250px" />
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.roomName}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.roomApartNums}, {bookings.roomStreet}, 
-                            {bookings.roomDistrict}, {bookings.roomProvince}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.dateStart}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.endDate}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.total_guests} người
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.duration} ngày
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.totalPrice}đ
-                          </StyledTableCell>
-                          <StyledTableCell
-                            align="center"
-                            style={{
-                              color: `${
-                                bookings.status === BookingStatus.Processing
-                                  ? "blue"
-                                  : bookings.status === BookingStatus.Booked
-                                  ? "green"
-                                  : bookings.status === BookingStatus.Canceled
-                                  ? "red"
-                                  : "orange"
-                              }`,
-                            }}
-                          >
-                            {bookings.status === BookingStatus.Processing
-                              ? "Đang chờ"
-                              : bookings.status === BookingStatus.Booked
-                              ? "Đặt thành công"
-                              : bookings.status === BookingStatus.Canceled
-                              ? "Đã hủy"
-                              : "Hoàn thành"}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {bookings.status === BookingStatus.Booked ? (
-                              <>
-                                <Button
-                                  onClick={() => cancelBooking(bookings, index)}
-                                >
-                                  Hủy phòng
-                                </Button>
-                                <Button
-                                  onClick={() => completedBooking(bookings, index)}
-                                >
-                                  Trả phòng
-                                </Button>
-                              </>
-                            ) : (
-                              <Button disabled>Hủy phòng</Button>
-                            )}
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
-            </TabContext>
-          </Box>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+          </TabContext>
         </Box>
+      </Box>
     </>
   );
 }

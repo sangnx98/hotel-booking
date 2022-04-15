@@ -20,6 +20,9 @@ import { Box } from "@mui/system";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
 import { CONFIG } from "../config/config";
+import { setSnackbar } from "../store/userSlice";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -224,6 +227,7 @@ const GetStepContent = (props: any): JSX.Element => {
           value={props.params.bgUrl}
           onChange={(e) => props.handleSetParams("bgUrl", e.target.value)}
         />
+        
       </>
     );
   }
@@ -235,6 +239,7 @@ const NewHomeStay = () => {
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [values, setValues] = useState<{}>({
     hostId: "",
     homeStayType: "",
@@ -284,7 +289,15 @@ const NewHomeStay = () => {
       })
         .then((response) => response.json())
         //Then with the data from the response in JSON...
-        .then((data) => {})
+        .then((data) => {
+          dispatch(
+            setSnackbar({
+              snackbarOpen: true,
+              snackbarType: "success",
+              snackbarMessage: "Tạo mới chỗ ở thành công !!",
+            })
+          );
+        })
         //Then with the error genereted...
         .catch((error) => {
           console.error("Error:", error);
@@ -300,7 +313,7 @@ const NewHomeStay = () => {
     <>
       <Header />
       <Container maxWidth="xl">
-        <Box sx={{ marginTop: "2rem", width: '100%' }}>
+        <Box sx={{ marginTop: "2rem", width: "100%" }}>
           <Stepper alternativeLabel activeStep={activeStep}>
             {steps.map((step, index) => {
               return (
@@ -312,9 +325,16 @@ const NewHomeStay = () => {
           </Stepper>
 
           {activeStep === steps.length ? (
-            <Typography variant="h3" align="center">
-              Đã thêm mới homestay
-            </Typography>
+            <Box sx={{ textAlign: "center" }}>
+              <Typography variant="h3" align="center">
+                Đã thêm mới homestay
+              </Typography>
+              <Link to={'/host'}>
+                <Button variant="contained" style={{ marginTop: "1rem" }}>
+                  Trở về danh sách chỗ ở
+                </Button>
+              </Link>
+            </Box>
           ) : (
             <>
               <form>

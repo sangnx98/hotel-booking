@@ -25,9 +25,10 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById } from "../store/userSlice";
+import { getRoomsById, setSnackbar } from "../store/userSlice";
 import { Booking } from "../types";
 import { BookingStatus, RoomsStatus } from "../enum/index";
 
@@ -93,6 +94,13 @@ export default function HostDashBoard() {
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: "Đã xác nhận đặt chỗ thành công !!",
+          })
+        );
       })
       .then(() => {
         fetch(`${CONFIG.ApiRooms}/${roomId}`, {
@@ -129,6 +137,13 @@ export default function HostDashBoard() {
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: "Đã từ chối đơn đặt chỗ !!",
+          })
+        );
       })
       .then(() => {
         fetch(`${CONFIG.ApiRooms}/${roomId}`, {
@@ -158,6 +173,11 @@ export default function HostDashBoard() {
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
+        dispatch(setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "Trả phòng thành công !!"
+        }))
       })
       .then(() => {
         fetch(`${CONFIG.ApiRooms}/${roomId}`, {
@@ -248,7 +268,7 @@ export default function HostDashBoard() {
       </Typography>
       {bookings.length > 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <Table aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell align="center">ID</StyledTableCell>
@@ -257,7 +277,9 @@ export default function HostDashBoard() {
                 <StyledTableCell align="center">Địa chỉ</StyledTableCell>
                 <StyledTableCell align="center">Check in</StyledTableCell>
                 <StyledTableCell align="center">Check out</StyledTableCell>
+                <StyledTableCell align="center">Người đặt</StyledTableCell>
                 <StyledTableCell align="center">Số lượng người</StyledTableCell>
+                <StyledTableCell align="center">Tổng tiền</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 <StyledTableCell align="center">Hành động</StyledTableCell>
               </TableRow>
@@ -290,7 +312,18 @@ export default function HostDashBoard() {
                     {bookings.endDate}
                   </StyledTableCell>
                   <StyledTableCell align="center">
+                    {bookings.userName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
                     {bookings.total_guests}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <NumberFormat
+                      value={bookings.totalPrice}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      suffix={"₫"}
+                    />
                   </StyledTableCell>
                   <StyledTableCell
                     align="center"
@@ -318,9 +351,11 @@ export default function HostDashBoard() {
                     {bookings.status === BookingStatus.Processing ? (
                       <>
                         <CheckIcon
+                          sx={{ cursor: "pointer", mr: '1rem', color: 'green' }}
                           onClick={() => approveBooking(bookings, index)}
                         />
                         <ClearIcon
+                          sx={{ cursor: "pointer", color: 'red' }}
                           onClick={() => cancelBooking(bookings, index)}
                         />
                       </>

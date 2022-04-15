@@ -15,7 +15,7 @@ import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar, signUpSuccess } from "../store/userSlice";
 import { useForm } from "react-hook-form";
 
 type User = {
@@ -96,6 +96,11 @@ export default function ProfileAccount() {
     setUserData(res.data);
     setOpen(false);
     dispatch(signUpSuccess(data));
+    dispatch(setSnackbar({
+      snackbarOpen: true,
+      snackbarType: "success",
+      snackbarMessage: "Cập nhật thành công !!"
+    }))
   };
 
   const handleClose = () => {
