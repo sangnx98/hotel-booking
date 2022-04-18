@@ -203,16 +203,14 @@ export default function HostDashBoard() {
         sx={{
           width: "auto",
           bgcolor: "background.paper",
-          display: "flex",
+          display: {md:"flex", sm:'flex'},
           flexDirection: "row",
           margin: "1rem 0 1rem 0",
         }}
       >
         <ListItem
           sx={{
-            borderTop: "1px solid #dae3dc",
-            borderBottom: "1px solid #dae3dc",
-            borderLeft: "1px solid #dae3dc",
+            border: "1px solid #dae3dc"
           }}
         >
           <ListItemAvatar>
@@ -224,9 +222,7 @@ export default function HostDashBoard() {
         </ListItem>
         <ListItem
           sx={{
-            borderTop: "1px solid #dae3dc",
-            borderBottom: "1px solid #dae3dc",
-            borderLeft: "1px solid #dae3dc",
+            border: "1px solid #dae3dc"
           }}
         >
           <ListItemAvatar>
@@ -238,9 +234,7 @@ export default function HostDashBoard() {
         </ListItem>
         <ListItem
           sx={{
-            borderTop: "1px solid #dae3dc",
-            borderBottom: "1px solid #dae3dc",
-            borderLeft: "1px solid #dae3dc",
+            border: "1px solid #dae3dc"
           }}
         >
           <ListItemAvatar>

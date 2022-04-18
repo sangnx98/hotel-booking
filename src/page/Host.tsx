@@ -100,7 +100,6 @@ export default function Host() {
           </TabPanel>
         </Box>
       </Container>
-      <Contact />
       <Footer />
     </>
   );

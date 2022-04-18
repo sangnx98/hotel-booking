@@ -352,11 +352,11 @@ export default function Header() {
       {roomSeacrhing.length !== 0 && (
         <Box
           sx={{
-            width: "25rem",
+            width: "23rem",
             height: "auto",
             mt: "4.5rem",
             position: "absolute",
-            left: "8.2rem",
+            left: "7%",
             zIndex: "100",
             bgcolor: "white",
             padding: "1rem",
