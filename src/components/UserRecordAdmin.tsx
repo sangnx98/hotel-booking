@@ -13,7 +13,6 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { getAllUser } from "../services/userService";
 import { User } from "../types";
-import { Box } from "@mui/system";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,10 +42,6 @@ export default function UserRecordAdmin() {
   const indexOfFirstUser = indexOfLastUser - postPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
   const pageNumbers = Math.ceil(users.length / postPerPage);
-
-  const paginate = (pageNumbers: any) => {
-    setCurrentPage(pageNumbers);
-  };
 
   useEffect(() => {
     getAllUser()
@@ -82,8 +77,8 @@ export default function UserRecordAdmin() {
           ))}
         </TableBody>
       </Table>
-      <Stack spacing={2}>
-      <Pagination count={pageNumbers} color="primary" onChange={(e :any, page :number)=> setCurrentPage(page)}/>
+      <Stack spacing={2} >
+      <Pagination count={pageNumbers} sx={{display: 'flex', justifyContent: 'center', padding: '0.3rem', borderTop: '1px solid #ebedeb'}} color="primary" onChange={(e :any, page :number)=> setCurrentPage(page)}/>
       </Stack>
     </TableContainer>
   );

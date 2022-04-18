@@ -112,11 +112,12 @@ const GetStepContent = (props: any): JSX.Element => {
             onChange={props.handleSelecProvincestValue}
             input={<OutlinedInput label="Tỉnh/Thành phố" />}
             MenuProps={MenuProps}
+            native
           >
             {provinces.map((province) => (
-              <MenuItem key={province} value={province}>
+              <option key={province} value={province}>
                 {province}
-              </MenuItem>
+              </option>
             ))}
           </Select>
         </FormControl>

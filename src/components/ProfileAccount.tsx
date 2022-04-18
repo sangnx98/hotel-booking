@@ -137,6 +137,7 @@ export default function ProfileAccount() {
             src="https://toigingiuvedep.vn/wp-content/uploads/2021/08/background-banner-dep-doc-dao.jpg"
             alt=""
             width="100%"
+            height='100%'
           />
         </Box>
         <Box
@@ -145,7 +146,7 @@ export default function ProfileAccount() {
             height: "auto",
 
             position: "absolute",
-            top: "20rem",
+            top: "15rem",
             left: "8.5rem",
             display: "flex",
             justifyContent: "space-between",
