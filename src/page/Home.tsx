@@ -14,7 +14,7 @@ export default function Home(){
       <Suggest/>
       <UserManual/>
       <Application/>
-      <Contact/>
+      {/* <Contact/> */}
     </>
   );
 }

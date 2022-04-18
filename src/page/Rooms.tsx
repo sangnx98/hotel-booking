@@ -39,15 +39,8 @@ type Rooms = {
 export default function Rooms() {
   const [personName, setPersonName] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any>([]);
-  const params = useParams();
-  const { address } = params;
+  const { address } = useParams();
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
-  };
   useEffect(() => {
     fetch(`${CONFIG.ApiRooms}?status=${RoomsStatus.Available}&isChecked=1`, {
       headers: {
@@ -57,6 +50,15 @@ export default function Rooms() {
       .then((res) => res.json())
       .then(setRooms);
   }, []);
+
+
+  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(typeof value === "string" ? value.split(",") : value);
+  };
+  
   return (
     <>
       <CssBaseline />

@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header/Header";
-import {Container} from "@mui/material";
+import { Container } from "@mui/material";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
 import axios from "axios";
@@ -55,6 +55,10 @@ export default function Host() {
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const [value, setValue] = useState(0);
+  
+  useEffect(() => {
+    getRooms();
+  }, []);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -72,9 +76,6 @@ export default function Host() {
   if (rooms) {
     dispatch(getRoomsById(rooms));
   }
-  useEffect(() => {
-    getRooms();
-  }, []);
 
   return (
     <>
@@ -92,10 +93,10 @@ export default function Host() {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <HostDashBoard/>
+            <HostDashBoard />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <HostHomeStay/>
+            <HostHomeStay />
           </TabPanel>
         </Box>
       </Container>

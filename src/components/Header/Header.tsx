@@ -55,7 +55,7 @@ const CalendarIconWrapper = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   color: "black",
-  width: "10rem",
+  width: "5rem",
   borderLeft: "1px solid #b9c9be",
   borderRight: "1px solid #b9c9be",
 }));
@@ -170,12 +170,17 @@ export default function Header() {
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
-      style={{ padding: '1rem'}}
+      style={{ padding: "1rem" }}
     >
       <Link to="/profile">
-        <div style={{ color: "black", margin: '0.8rem'}}>Trang Cá Nhân</div>
+        <div style={{ color: "black", margin: "0.8rem" }}>Trang Cá Nhân</div>
       </Link>
-      <div onClick={removeData} style={{ color: "black", margin: '0.8rem', cursor: 'pointer'}}>Đăng xuất</div>
+      <div
+        onClick={removeData}
+        style={{ color: "black", margin: "0.8rem", cursor: "pointer" }}
+      >
+        Đăng xuất
+      </div>
     </Menu>
   );
 
@@ -191,18 +196,20 @@ export default function Header() {
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "left",
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Trang cá nhân</p>
-      </MenuItem>
-
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Đăng xuất</p>
-      </MenuItem>
+      <Link to="/profile">
+        <div style={{ color: "black", margin: "0.8rem" }}>Trang Cá Nhân</div>
+      </Link>
+      <div
+        onClick={removeData}
+        style={{ color: "black", margin: "0.8rem", cursor: "pointer" }}
+      >
+        Đăng xuất
+      </div>
     </Menu>
   );
   return (
@@ -225,6 +232,18 @@ export default function Header() {
           >
             LUXSTAY
           </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              display: { xs: "block", sm: "none" },
+              color: "black",
+              mr: "1rem",
+            }}
+          >
+            LUX
+          </Typography>
         </Link>
         <Search
           sx={{
@@ -240,7 +259,7 @@ export default function Header() {
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearch}
           />
-          <CalendarIconWrapper>
+          <CalendarIconWrapper className="">
             <CalendarMonthIcon sx={{ width: "50%", cursor: "pointer" }} />
           </CalendarIconWrapper>
           <PreviewIconWrapper>
@@ -268,7 +287,7 @@ export default function Header() {
           {localStorage.getItem("user") ? (
             <Box
               style={{
-                display: 'flex',
+                display: "flex",
                 alignItems: "center",
               }}
             >
@@ -280,22 +299,17 @@ export default function Header() {
                   justifyContent: "center",
                   alignItems: "center",
                   color: "black",
-                  marginRight: '1rem'
+                  marginRight: "1rem",
                 }}
               >
                 {userAuth.name}
               </Typography>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
+              <Box
                 onClick={handleProfileMenuOpen}
-                color="inherit"
+                sx={{cursor: 'pointer', width: '3rem', borderRadius: '10px'}}
               >
-                <AccountCircle sx={{ color: "black" }} />
-              </IconButton>
+                <img src={userAuth.avatar} alt="" width='100%' style={{borderRadius: '50%'}}/>
+              </Box>
             </Box>
           ) : (
             <Box
@@ -333,6 +347,7 @@ export default function Header() {
             <MoreIcon />
           </IconButton>
         </Box>
+        
       </Toolbar>
       {roomSeacrhing.length !== 0 && (
         <Box

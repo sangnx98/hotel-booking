@@ -10,6 +10,7 @@ export const userSlice = createSlice({
       email: "",
       address: "",
       phoneNumber: "",
+      avatar: "",
       pending: false,
       error: false,
     },
@@ -37,6 +38,7 @@ export const userSlice = createSlice({
       state.user.address = action.payload.address;
       state.user.phoneNumber = action.payload.phoneNumber;
       state.user.password = action.payload.password;
+      state.user.avatar = action.payload.avatar;
     },
     logoutRequest: (state, action) => {
       state.user.id = "";
@@ -45,6 +47,7 @@ export const userSlice = createSlice({
       state.user.email = "";
       state.user.address = "";
       state.user.phoneNumber = "";
+      state.user.avatar = "";
     },
     getRoomsById: (state, action) => {
       state.roomById = action.payload;

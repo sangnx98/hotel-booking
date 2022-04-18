@@ -25,6 +25,8 @@ type User = {
   password: string;
   address: string;
   phoneNumber: string;
+  avatar: string
+
 };
 
 export default function ProfileAccount() {
@@ -40,6 +42,7 @@ export default function ProfileAccount() {
     password: "",
     address: "",
     phoneNumber: "",
+    avatar: ""
   });
 
   const validationSchema = Yup.object().shape({
@@ -54,6 +57,7 @@ export default function ProfileAccount() {
       .max(40, "Password must not exceed 40 characters"),
     address: Yup.string().required("Address is required"),
     phoneNumber: Yup.string().required("Phone is required"),
+    avatar: Yup.string().required("Avatar is required"),
   });
 
   const {
@@ -72,6 +76,7 @@ export default function ProfileAccount() {
         email: userAuth.email,
         address: userAuth.address,
         phoneNumber: userAuth.phoneNumber,
+        avatar: userAuth.avatar,
       });
     }
   }, [userAuth, open]);
@@ -121,6 +126,7 @@ export default function ProfileAccount() {
       password: "",
       address: "",
       phoneNumber: "",
+      avatar: ""
     });
     setOpen(false);
   };
@@ -130,9 +136,8 @@ export default function ProfileAccount() {
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
-            width: "80%",
+            width: "100%",
             height: "auto",
-            position: "absolute",
             top: "15rem",
             left: "8.5rem",
             display: "flex",
@@ -146,7 +151,7 @@ export default function ProfileAccount() {
               display: { md: "flex", xs: "flex" },
               flexDirection: "column",
               alignItems: "center",
-              width: "70%",
+              width: "100%",
               padding: "1rem",
               bgcolor: "aliceblue",
             }}
@@ -255,17 +260,14 @@ export default function ProfileAccount() {
               textAlign: "center",
               borderRadius: "10px",
               bgcolor: "aliceblue",
-              display: { md: "flex", xs: "none", sm: "none" },
+              display: { lg: "flex", xs: "none" },
               flexDirection: "column",
             }}
           >
             <Box sx={{ height: "70%" }}>
-              <AccountCircleIcon
-                sx={{
-                  fontSize: "15rem",
-                  right: "1.6rem",
-                }}
-              />
+              <Box sx={{width: '13rem', height: '13rem', margin: '0 auto', mt: '1rem'}}>
+                <img src={userAuth.avatar} alt="" width='100%' height='100%' style={{borderRadius: '50%'}}/>
+              </Box>
             </Box>
             <Box sx={{ width: "100%", textAlign: "center" }}>
               <Typography variant="h5" component="h5">
@@ -375,6 +377,23 @@ export default function ProfileAccount() {
                   error={!!errors.phoneNumber}
                   helperText={
                     errors?.phoneNumber ? errors.phoneNumber.message : null
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="avatar"
+                  label="URL ảnh đại diện"
+                  autoComplete="avatar"
+                  {...register("avatar")}
+                  className={`form-control ${
+                    errors.avatar ? "is-invalid" : ""
+                  }`}
+                  error={!!errors.avatar}
+                  helperText={
+                    errors?.avatar ? errors.avatar.message : null
                   }
                 />
               </Grid>

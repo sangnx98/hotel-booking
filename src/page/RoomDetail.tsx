@@ -44,7 +44,6 @@ export default function RoomDetail() {
   const [children, setChildren] = useState<number>(0);
   const [adult, setAdult] = useState<number>(0);
   const [roomDetail, setRoomDetail] = useState<any>({});
-  const total_guests = children + adult;
   let params = useParams();
   const [openSnack, setOpenSnack] = useState(false);
   const minValue: Date = new Date(new Date());
@@ -54,6 +53,7 @@ export default function RoomDetail() {
     90
   );
 
+  const total_guests = children + adult;
   const handleBooking = () => {
     const dayCheckIn = moment(value[0]);
     const dayCheckOut = moment(value[1]);
@@ -80,26 +80,28 @@ export default function RoomDetail() {
       userName: userAuth.name,
       duration: duration,
     };
-    if (userAuth.name == "") {
+    if (userAuth.name === "") {
       navigate("/login");
     } else if (
       // !newBooking.dateStart ||
       // !newBooking.endDate ||
       newBooking.total_guests == 0
-      
-    ) 
-    {
-      dispatch(setSnackbar({
-        snackbarOpen: true,
-        snackbarType: "error",
-        snackbarMessage: "Vui lòng nhập đầy đủ thông tin !!"
-      }))
+    ) {
+      dispatch(
+        setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: "Vui lòng nhập đầy đủ thông tin !!",
+        })
+      );
     } else if (guestLimit < total_guests) {
-      dispatch(setSnackbar({
-        snackbarOpen: true,
-        snackbarType: "error",
-        snackbarMessage:  `Số lượng khách tối đa là ${guestLimit}. Bao gồm cả trẻ em và ngời lớn`
-      }))
+      dispatch(
+        setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: `Số lượng khách tối đa là ${guestLimit}. Bao gồm cả trẻ em và ngời lớn`,
+        })
+      );
     } else {
       addNewBooking(newBooking)
         .then((response) => response.json())
@@ -134,7 +136,7 @@ export default function RoomDetail() {
         .then(() => navigate("/profile"));
     }
   };
-  console.log('+++++++++++++',total_guests == 0)
+  console.log("+++++++++++++", total_guests == 0);
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAdult(Number(event.target.value));
   };
@@ -191,10 +193,10 @@ export default function RoomDetail() {
 
   return (
     <>
-      <Box sx={{ backgroundColor: "black" }}>
+      <Box sx={{ mt:'0.5rem'}}>
         <Swiper
           slidesPerView={3}
-          spaceBetween={5}
+          spaceBetween={2}
           freeMode={true}
           pagination={{
             clickable: true,
@@ -202,6 +204,26 @@ export default function RoomDetail() {
           navigation={true}
           modules={[FreeMode, Pagination, Navigation]}
           className="mySwiper"
+          breakpoints={{
+            300: {
+              slidesPerView: 1,
+            },
+            500: {
+              slidesPerView: 1,
+            },
+            640: {
+              slidesPerView: 2,
+              spaceBetween: 4,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 4,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 4,
+            },
+          }}
         >
           <SwiperSlide>
             <img
@@ -253,6 +275,7 @@ export default function RoomDetail() {
           </SwiperSlide>
         </Swiper>
       </Box>
+
       <Container maxWidth="lg">
         <Box sx={{ mt: "2rem" }}>
           <Stack spacing={2} sx={{ mb: "2rem" }}>
@@ -261,7 +284,7 @@ export default function RoomDetail() {
             </Breadcrumbs>
           </Stack>
           <Grid container>
-            <Grid item xs={12} sm={6} md={8}>
+            <Grid item xs={12} sm={12} md={7}>
               <Box sx={{ mb: "2rem" }}>
                 <Typography
                   variant="h5"
@@ -362,26 +385,26 @@ export default function RoomDetail() {
                   Tiện nghi
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Wifi
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     TV
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Điều hòa
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Máy giặt
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Dầu gội/xả
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     {" "}
                     Giấy vệ sinh
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Khăn tắm
                   </Grid>
                 </Grid>
@@ -394,16 +417,16 @@ export default function RoomDetail() {
                   Tiện nghi bếp
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Bếp điện
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Tủ lạnh
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Lò nướng
                   </Grid>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Bát đũa
                   </Grid>
                 </Grid>
@@ -493,10 +516,9 @@ export default function RoomDetail() {
               </Box>
             </Grid>
 
-            <Grid item xs={0} sm={4} md={4}>
+            <Grid item xs={12} sm={8} md={5}>
               <Box
                 sx={{
-                  width: "100%",
                   height: "17rem",
                   border: "2px solid #dbd3bd",
                   borderRadius: "10px",
@@ -519,7 +541,8 @@ export default function RoomDetail() {
                     displayType={"text"}
                     thousandSeparator={true}
                     suffix={"₫"}
-                  />/ đêm
+                  />
+                  / đêm
                 </Typography>
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
@@ -532,9 +555,7 @@ export default function RoomDetail() {
                     maxDate={maxValue}
                     minDate={minValue}
                     value={value}
-                    onChange={(newValue: any) => {
-                      setValue(newValue);
-                    }}
+                    onChange={(newValue: any) => setValue(newValue)}
                     renderInput={(startProps: any, endProps: any) => {
                       return (
                         <React.Fragment>
@@ -626,7 +647,6 @@ export default function RoomDetail() {
               </Box>
               <Box
                 sx={{
-                  width: "100%",
                   height: "15rem",
                   border: "2px solid #dbd3bd",
                   borderRadius: "10px",

@@ -326,7 +326,7 @@ export default function HostHomeStay() {
             <TableBody>
               {rooms
                 .filter((value) => {
-                  if (searchRoomName == "") {
+                  if (searchRoomName === "") {
                     return value;
                   } else if (
                     value.homeStayName

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
@@ -364,10 +364,7 @@ export default function HostDashBoard() {
                         Trả phòng
                       </Button>
                     ) : (
-                      <>
-                        {/* <Button disabled>Hủy phòng</Button>
-                        <Button disabled>Trả phòng</Button> */}
-                      </>
+                      <></>
                     )}
                   </StyledTableCell>
                 </StyledTableRow>

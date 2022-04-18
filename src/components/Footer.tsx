@@ -8,7 +8,6 @@ export default function Footer() {
     <Container maxWidth="xl">
       <Box
         sx={{
-          width: "100%",
           borderTop: "1px solid #c2c0bc",
           color: "#c2c0bc",
           textAlign: "center",

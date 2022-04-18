@@ -42,10 +42,8 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function Signup() {
-  const dispatch = useDispatch()
-  const userData = useSelector((state: any)=> state.user.user)
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [listUser, setListUser] = useState<any>([]);
   const user = useRef({});
 
   const validationSchema = Yup.object().shape({
@@ -67,19 +65,21 @@ export default function Signup() {
     handleSubmit,
     formState: { errors },
   } = useForm<any>({ resolver: yupResolver(validationSchema) });
-  
+
   const onSubmit = async (data: any) => {
     const signupUser = await handleUser(data.email);
     if (signupUser) {
       alert("Tài khoản đã tồn tại");
     } else {
-      signUpUser(data, dispatch(signUpSuccess(data)))
-      dispatch(setSnackbar({
-        snackbarOpen: true,
-        snackbarType: "success",
-        snackbarMessage: "Đăng kí thành công, vui lòng đăng nhập !!"
-      }))
-      navigate('/login')
+      signUpUser(data, dispatch(signUpSuccess(data)));
+      dispatch(
+        setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "Đăng kí thành công, vui lòng đăng nhập !!",
+        })
+      );
+      navigate("/login");
     }
   };
 

@@ -16,9 +16,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 export default function SnackBarNotice() {
   const dispatch = useDispatch();
   const snackBar = useSelector((state: any) => state.noticationBar);
-  console.log("====================", snackBar);
-  console.log("snackbar", snackBar);
-
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
