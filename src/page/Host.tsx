@@ -15,6 +15,7 @@ import Contact from "../components/Contact";
 import HostDashBoard from "../components/HostDashboard";
 import HostHomeStay from "../components/HostHomstay";
 import { useSelector } from "react-redux";
+import { CONFIG } from "../config/config";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,7 +60,7 @@ export default function Host() {
   };
 
   const getRooms = () => {
-    fetch(`http://localhost:4000/rooms?hostId=${userAuth.id}`, {
+    fetch(`${CONFIG.ApiRooms}?hostId=${userAuth.id}`, {
       headers: {
         "Content-Type": "application/json",
       },

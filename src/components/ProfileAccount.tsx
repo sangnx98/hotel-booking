@@ -96,11 +96,13 @@ export default function ProfileAccount() {
     setUserData(res.data);
     setOpen(false);
     dispatch(signUpSuccess(data));
-    dispatch(setSnackbar({
-      snackbarOpen: true,
-      snackbarType: "success",
-      snackbarMessage: "Cập nhật thành công !!"
-    }))
+    dispatch(
+      setSnackbar({
+        snackbarOpen: true,
+        snackbarType: "success",
+        snackbarMessage: "Cập nhật thành công !!",
+      })
+    );
   };
 
   const handleClose = () => {
@@ -125,26 +127,11 @@ export default function ProfileAccount() {
   console.log("errors", errors);
   return (
     <>
-      <Box sx={{ width: "100%", position: "relative" }}>
-        <Box
-          sx={{
-            width: "100%",
-            height: "25rem",
-            bgcolor: "#b0e8cb",
-          }}
-        >
-          <img
-            src="https://toigingiuvedep.vn/wp-content/uploads/2021/08/background-banner-dep-doc-dao.jpg"
-            alt=""
-            width="100%"
-            height='100%'
-          />
-        </Box>
+      <Box sx={{ width: "100%" }}>
         <Box
           sx={{
             width: "80%",
             height: "auto",
-
             position: "absolute",
             top: "15rem",
             left: "8.5rem",
@@ -156,7 +143,7 @@ export default function ProfileAccount() {
             sx={{
               border: "1px solid white",
               borderRadius: "10px",
-              display: "flex",
+              display: { md: "flex", xs: "flex" },
               flexDirection: "column",
               alignItems: "center",
               width: "70%",
@@ -248,6 +235,15 @@ export default function ProfileAccount() {
                     }}
                   />
                 </Grid>
+                <Box sx={{ width: "100%", textAlign: "center", mt: 2 , display: {md: 'none', sm: 'block', xs: 'block'}}}>
+                  <Button
+                    onClick={handleClickOpen}
+                    variant="contained"
+                    sx={{ width: "50%", textAlign: "center" }}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                </Box>
               </Grid>
               <Grid container justifyContent="flex-end"></Grid>
             </Box>
@@ -259,7 +255,7 @@ export default function ProfileAccount() {
               textAlign: "center",
               borderRadius: "10px",
               bgcolor: "aliceblue",
-              display: "flex",
+              display: { md: "flex", xs: "none", sm: "none" },
               flexDirection: "column",
             }}
           >

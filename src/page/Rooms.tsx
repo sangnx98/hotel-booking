@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Theme, useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -16,6 +15,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea, InputLabel } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import NumberFormat from "react-number-format";
+import { CONFIG } from "../config/config";
 
 import { RoomsStatus } from "../enum";
 
@@ -37,12 +37,10 @@ type Rooms = {
 };
 
 export default function Rooms() {
-  const theme = useTheme();
   const [personName, setPersonName] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any>([]);
   const params = useParams();
   const { address } = params;
-  const homestayNums = rooms.length
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {
@@ -51,14 +49,11 @@ export default function Rooms() {
     setPersonName(typeof value === "string" ? value.split(",") : value);
   };
   useEffect(() => {
-    fetch(
-      `http://localhost:4000/rooms?status=${RoomsStatus.Available}&isChecked=1`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`${CONFIG.ApiRooms}?status=${RoomsStatus.Available}&isChecked=1`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
       .then(setRooms);
   }, []);

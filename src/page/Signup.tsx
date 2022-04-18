@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../store/apiRequest";
 import { setSnackbar, signUpSuccess } from "../store/userSlice";
+import { CONFIG } from "../config/config";
 
 function Copyright(props: any) {
   return (
@@ -91,7 +92,7 @@ export default function Signup() {
     };
     try {
       const response = await fetch(
-        `http://localhost:4000/users?email=${email}`,
+        `${CONFIG.ApiUser}?email=${email}`,
         settings
       );
 
