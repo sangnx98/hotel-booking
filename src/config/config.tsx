@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000';
+const API_URL = 'https://morning-ravine-49420.herokuapp.com';
 
 export const CONFIG = {
     GOOGLE_API: '520939878663-807sm576rj1ud8k3sq7vuejb6db2ensv.apps.googleusercontent.com',
