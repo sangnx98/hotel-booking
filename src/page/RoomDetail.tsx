@@ -28,6 +28,7 @@ import { setSnackbar } from "../store/userSlice";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 import { BookingStatus, RoomsStatus } from "../enum/index";
+import MapBox from "../components/Map";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -52,6 +53,8 @@ export default function RoomDetail() {
     new Date().getMonth() + 1,
     90
   );
+  const addressDetail = roomDetail.apartNumber + ' ' + roomDetail.street + ' ' + roomDetail.district + ' ' + roomDetail.province  
+  console.log('room', roomDetail)
 
   const total_guests = children + adult;
   const handleBooking = () => {
@@ -136,7 +139,6 @@ export default function RoomDetail() {
         .then(() => navigate("/profile"));
     }
   };
-  console.log("+++++++++++++", total_guests == 0);
   const handleAdultChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAdult(Number(event.target.value));
   };
@@ -700,6 +702,7 @@ export default function RoomDetail() {
             </Grid>
           </Grid>
         </Box>
+        <MapBox addressDetail={addressDetail}/>
       </Container>
     </>
   );
