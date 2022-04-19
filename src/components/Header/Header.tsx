@@ -204,6 +204,9 @@ export default function Header() {
       <Link to="/profile">
         <div style={{ color: "black", margin: "0.8rem" }}>Trang Cá Nhân</div>
       </Link>
+      <Link to="/host">
+        <div style={{ color: "black", margin: "0.8rem" }}>Host</div>
+      </Link>
       <div
         onClick={removeData}
         style={{ color: "black", margin: "0.8rem", cursor: "pointer" }}
@@ -306,9 +309,14 @@ export default function Header() {
               </Typography>
               <Box
                 onClick={handleProfileMenuOpen}
-                sx={{cursor: 'pointer', width: '3rem', borderRadius: '10px'}}
+                sx={{ cursor: "pointer", width: "3rem", borderRadius: "10px" }}
               >
-                <img src={userAuth.avatar} alt="" width='100%' style={{borderRadius: '50%'}}/>
+                <img
+                  src={userAuth.avatar}
+                  alt=""
+                  width="100%"
+                  style={{ borderRadius: "50%" }}
+                />
               </Box>
             </Box>
           ) : (
@@ -347,7 +355,6 @@ export default function Header() {
             <MoreIcon />
           </IconButton>
         </Box>
-        
       </Toolbar>
       {roomSeacrhing.length !== 0 && (
         <Box
