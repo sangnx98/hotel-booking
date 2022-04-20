@@ -28,7 +28,7 @@ import { setSnackbar } from "../store/userSlice";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 import { BookingStatus, RoomsStatus } from "../enum/index";
-import MapBox from "../components/Map";
+import Map from "../components/Map";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -702,7 +702,7 @@ export default function RoomDetail() {
             </Grid>
           </Grid>
         </Box>
-        <MapBox/>
+        <Map lat={roomDetail.lat} lng={roomDetail.lng}/>
       </Container>
     </>
   );

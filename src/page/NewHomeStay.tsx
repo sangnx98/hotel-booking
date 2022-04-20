@@ -21,7 +21,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
 import { CONFIG } from "../config/config";
 import { setSnackbar } from "../store/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Map from "../components/Map";
 
@@ -147,7 +147,23 @@ const GetStepContent = (props: any): JSX.Element => {
           value={props.params.apartNumber}
           onChange={(e) => props.handleSetParams("apartNumber", e.target.value)}
         />
-        <Map/>
+        <TextField
+          variant="outlined"
+          placeholder="Kinh độ"
+          fullWidth
+          margin="normal"
+          value={props.lat}
+          onChange={(e) => props.handleSetParams("lat", e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          placeholder="Vĩ độ"
+          fullWidth
+          margin="normal"
+          value={props.lng}
+          onChange={(e) => props.handleSetParams("lng", e.target.value)}
+        />
+        <Map lat={0} lng={0}/>
       </>
     );
   } else if (props.step === 2) {
@@ -230,7 +246,6 @@ const GetStepContent = (props: any): JSX.Element => {
           value={props.params.bgUrl}
           onChange={(e) => props.handleSetParams("bgUrl", e.target.value)}
         />
-        
       </>
     );
   }
@@ -238,6 +253,9 @@ const GetStepContent = (props: any): JSX.Element => {
 };
 
 const NewHomeStay = () => {
+  const lat = useSelector((state: any) => state.center.lat);
+  const lng = useSelector((state: any) => state.center.lng);
+  console.log("lat", lat);
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
@@ -262,11 +280,19 @@ const NewHomeStay = () => {
     isChecked: 0,
     intro: "",
     bgUrl: "",
+    lat: "",
+    lng: "",
   });
   useEffect(() => {
     const userValues = JSON.parse(localStorage.getItem("user") || "");
     setValues({ ...values, hostId: userValues.id });
   }, [activeStep]);
+
+  useEffect(() => {
+    if (lat && lng) {
+      setValues({ ...values, lat, lng });
+    }
+  }, [lat, lng]);
 
   const handleSetValue = (key: any, value: any) => {
     setValues({ ...values, [key]: value });
@@ -311,7 +337,7 @@ const NewHomeStay = () => {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
+  console.log("vlues", values);
   return (
     <>
       <Header />
@@ -332,7 +358,7 @@ const NewHomeStay = () => {
               <Typography variant="h3" align="center">
                 Đã thêm mới homestay
               </Typography>
-              <Link to={'/host'}>
+              <Link to={"/host"}>
                 <Button variant="contained" style={{ marginTop: "1rem" }}>
                   Trở về danh sách chỗ ở
                 </Button>
@@ -342,6 +368,8 @@ const NewHomeStay = () => {
             <>
               <form>
                 <GetStepContent
+                  lat={lat}
+                  lng={lng}
                   step={activeStep}
                   handleSetParams={handleSetValue}
                   params={values}

@@ -20,6 +20,9 @@ export const userSlice = createSlice({
       snackbarType: "",
       snackbarMessage: "",
     },
+    center:{
+
+    }
   },
   reducers: {
     signUpStart: (state) => {
@@ -62,6 +65,9 @@ export const userSlice = createSlice({
       state.noticationBar.snackbarType = "";
       state.noticationBar.snackbarMessage = "";
     },
+    setCenterLatlng: (state, action) =>{
+      state.center = action.payload
+    }
   },
 });
 export const {
@@ -72,5 +78,6 @@ export const {
   logoutRequest,
   setSnackbar,
   delSnackBar,
+  setCenterLatlng
 } = userSlice.actions;
 export default userSlice.reducer;
