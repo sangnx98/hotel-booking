@@ -23,6 +23,7 @@ import { CONFIG } from "../config/config";
 import { setSnackbar } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import Map from "../components/Map";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -146,6 +147,7 @@ const GetStepContent = (props: any): JSX.Element => {
           value={props.params.apartNumber}
           onChange={(e) => props.handleSetParams("apartNumber", e.target.value)}
         />
+        <Map/>
       </>
     );
   } else if (props.step === 2) {

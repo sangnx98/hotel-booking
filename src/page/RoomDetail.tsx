@@ -702,7 +702,7 @@ export default function RoomDetail() {
             </Grid>
           </Grid>
         </Box>
-        <MapBox addressDetail={addressDetail}/>
+        <MapBox/>
       </Container>
     </>
   );
