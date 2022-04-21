@@ -22,7 +22,8 @@ import UserRecordAdmin from "../components/UserRecordAdmin";
 import BookingRecordAdmin from "../components/BookingRercordAdmin";
 import { RoomApprovement, RoomsStatus } from "../enum";
 import { useDispatch } from "react-redux";
-import { setSnackbar } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
+import HomestayRecord from "../components/HomestayRecord";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -146,104 +147,7 @@ export default function AdminDashboard() {
                 <BookingRecordAdmin />
               </TabPanel>
               <TabPanel value="3">
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell align="center">ID</StyledTableCell>
-                        <StyledTableCell align="center">Ảnh</StyledTableCell>
-                        <StyledTableCell align="center">
-                          Tên chỗ ở
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Địa chỉ
-                        </StyledTableCell>
-                        <StyledTableCell align="center">Duyệt</StyledTableCell>
-                        <StyledTableCell align="center">
-                          Trạng thái
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Hành động
-                        </StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rooms.map((room: any, index: any) => (
-                        <StyledTableRow key={index}>
-                          <StyledTableCell align="center">
-                            {room.id}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            component="th"
-                            scope="row"
-                            sx={{ textAlign: "center" }}
-                          >
-                            <img src={room.bgUrl} alt="" width="250px" />
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {room.homeStayName}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {room.street}, {room.province}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            align="center"
-                            style={{
-                              color: `${
-                                room.isChecked === RoomApprovement.Processing
-                                  ? "orange"
-                                  : room.isChecked === RoomApprovement.Approved
-                                  ? "green"
-                                  : "red"
-                              }`,
-                            }}
-                          >
-                            {room.isChecked === RoomApprovement.Processing
-                              ? "Đang chờ"
-                              : room.isChecked === RoomApprovement.Approved
-                              ? "Đã duyệt"
-                              : "Từ chối"}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            align="center"
-                            style={{
-                              color: `${
-                                room.status === RoomsStatus.Renting
-                                  ? "green"
-                                  : room.status === RoomsStatus.Processing
-                                  ? "blue"
-                                  : "red"
-                              }`,
-                            }}
-                          >
-                            {room.status === RoomsStatus.Renting
-                              ? "Đang thuê"
-                              : room.status === RoomsStatus.Processing
-                              ? "Chờ duyệt"
-                              : "Còn trống"}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-evenly",
-                              }}
-                            >
-                              <CheckCircleIcon
-                                sx={{ color: "green", cursor: "pointer" }}
-                                onClick={() => setApprove(room, index)}
-                              />
-                              <CancelIcon
-                                sx={{ color: "red", cursor: "pointer" }}
-                                onClick={() => setDennie(room, index)}
-                              />
-                            </Box>
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <HomestayRecord/>
               </TabPanel>
             </TabContext>
           </Box>

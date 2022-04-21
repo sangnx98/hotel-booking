@@ -15,7 +15,6 @@ import { Autoplay, Pagination, Navigation } from "swiper";
 
 export default function Locations() {
   const [locations, setLocations] = useState([]);
-  console.log('first', locations)
 
   const getLocations = () => {
     fetch(`${CONFIG.ApiLocation}`, {

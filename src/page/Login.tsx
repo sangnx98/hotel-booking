@@ -19,7 +19,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 import SocialLogin from "../components/SocialLogin";
-import { setSnackbar, signUpSuccess } from "../store/userSlice";
+import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { CONFIG } from "../config/config";
 

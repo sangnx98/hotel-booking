@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { delSnackBar } from "../store/userSlice";
+import { delSnackBar } from "../store/snackBarSlice";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,

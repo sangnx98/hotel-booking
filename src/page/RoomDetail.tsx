@@ -24,11 +24,11 @@ import { Pagination, FreeMode, Navigation } from "swiper";
 import { Snackbar } from "@mui/material";
 import NumberFormat from "react-number-format";
 
-import { setSnackbar } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 import { BookingStatus, RoomsStatus } from "../enum/index";
-import Map from "../components/Map";
+import UserMap from "../components/MapForUser";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -53,8 +53,6 @@ export default function RoomDetail() {
     new Date().getMonth() + 1,
     90
   );
-  const addressDetail = roomDetail.apartNumber + ' ' + roomDetail.street + ' ' + roomDetail.district + ' ' + roomDetail.province  
-  console.log('room', roomDetail)
 
   const total_guests = children + adult;
   const handleBooking = () => {
@@ -84,11 +82,21 @@ export default function RoomDetail() {
       duration: duration,
     };
     if (userAuth.name === "") {
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 500);
+      dispatch(
+        setSnackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: "Vui lòng đăng nhập trước khi đặt phòng !!",
+        })
+      );
+      
     } else if (
-      // !newBooking.dateStart ||
-      // !newBooking.endDate ||
-      newBooking.total_guests == 0
+      !newBooking.dateStart ||
+      !newBooking.endDate ||
+      newBooking.total_guests === 0
     ) {
       dispatch(
         setSnackbar({
@@ -702,7 +710,7 @@ export default function RoomDetail() {
             </Grid>
           </Grid>
         </Box>
-        <Map lat={roomDetail.lat} lng={roomDetail.lng}/>
+        <UserMap lat={roomDetail.lat} lng={roomDetail.lng}/>
       </Container>
     </>
   );

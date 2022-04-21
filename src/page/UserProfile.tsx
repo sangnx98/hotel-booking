@@ -111,7 +111,7 @@ export default function UserProfile() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ status: false }),
+          body: JSON.stringify({ status: RoomsStatus.Available }),
         });
       });
   };
@@ -182,7 +182,7 @@ export default function UserProfile() {
                           scope="row"
                           sx={{ textAlign: "center" }}
                         >
-                          <img src={bookings.roomImg} alt="" width="250px" />
+                          <img src={bookings.roomImg} alt="" width="250px" height='250px'/>
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {bookings.roomName}
@@ -237,11 +237,6 @@ export default function UserProfile() {
                           {bookings.status === BookingStatus.Booked ? (
                             <>
                               <Button
-                                onClick={() => cancelBooking(bookings, index)}
-                              >
-                                Hủy phòng
-                              </Button>
-                              <Button
                                 onClick={() =>
                                   completedBooking(bookings, index)
                                 }
@@ -249,6 +244,12 @@ export default function UserProfile() {
                                 Trả phòng
                               </Button>
                             </>
+                          ) : bookings.status === BookingStatus.Processing ? (
+                            <Button
+                              onClick={() => cancelBooking(bookings, index)}
+                            >
+                              Hủy phòng
+                            </Button>
                           ) : (
                             <Button disabled>Hủy phòng</Button>
                           )}

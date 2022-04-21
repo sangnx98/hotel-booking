@@ -40,7 +40,8 @@ import { useSelector } from "react-redux";
 import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById, setSnackbar } from "../store/userSlice";
+import { getRoomsById} from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { Room } from "../types";
 import { RoomsStatus } from "../enum/index";
 
@@ -347,7 +348,7 @@ export default function HostHomeStay() {
                         scope="row"
                         sx={{ textAlign: "center" }}
                       >
-                        <img src={room.bgUrl} alt="" width="250px" />
+                        <img src={room.bgUrl} alt="" width="250px" height='250px'/>
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {room.homeStayName}

@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
+import snackbarReducer from './snackBarSlice'
+import roomReducer from './roomSlice'
 import {
   persistReducer,
   FLUSH,
@@ -15,7 +17,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['user']
+  whitelist: ['user, snackbar, room']
 }
 
 const persistedReducer = persistReducer(persistConfig, userReducer)

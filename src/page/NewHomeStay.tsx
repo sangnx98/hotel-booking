@@ -20,7 +20,7 @@ import { Box } from "@mui/system";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
 import { CONFIG } from "../config/config";
-import { setSnackbar } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Map from "../components/Map";
@@ -154,6 +154,9 @@ const GetStepContent = (props: any): JSX.Element => {
           margin="normal"
           value={props.lat}
           onChange={(e) => props.handleSetParams("lat", e.target.value)}
+          inputProps={
+            { readOnly: true, }
+          }
         />
         <TextField
           variant="outlined"
@@ -162,6 +165,9 @@ const GetStepContent = (props: any): JSX.Element => {
           margin="normal"
           value={props.lng}
           onChange={(e) => props.handleSetParams("lng", e.target.value)}
+          inputProps={
+            { readOnly: true, }
+          }
         />
         <Map lat={0} lng={0}/>
       </>
@@ -255,11 +261,9 @@ const GetStepContent = (props: any): JSX.Element => {
 const NewHomeStay = () => {
   const lat = useSelector((state: any) => state.center.lat);
   const lng = useSelector((state: any) => state.center.lng);
-  console.log("lat", lat);
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
-  const theme = useTheme();
   const dispatch = useDispatch();
   const [values, setValues] = useState<{}>({
     hostId: "",
@@ -337,7 +341,6 @@ const NewHomeStay = () => {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-  console.log("vlues", values);
   return (
     <>
       <Header />

@@ -28,7 +28,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById, setSnackbar } from "../store/userSlice";
+import { getRoomsById} from "../store/roomSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { Booking } from "../types";
 import { BookingStatus, RoomsStatus } from "../enum/index";
 
@@ -290,7 +291,7 @@ export default function HostDashBoard() {
                     scope="row"
                     sx={{ textAlign: "center" }}
                   >
-                    <img src={bookings.roomImg} alt="" width="250px" />
+                    <img src={bookings.roomImg} alt="" width="250px" height='250px'/>
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {bookings.roomName}

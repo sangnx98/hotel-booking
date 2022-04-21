@@ -18,7 +18,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../store/apiRequest";
-import { setSnackbar, signUpSuccess } from "../store/userSlice";
+import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { CONFIG } from "../config/config";
 
 function Copyright(props: any) {

@@ -3,7 +3,6 @@ import { Button } from "@mui/material";
 import { Box } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,7 +14,8 @@ import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setSnackbar, signUpSuccess } from "../store/userSlice";
+import { signUpSuccess } from "../store/userSlice";
+import { setSnackbar } from "../store/snackBarSlice";
 import { useForm } from "react-hook-form";
 
 type User = {
@@ -96,7 +96,6 @@ export default function ProfileAccount() {
   };
 
   const onSubmit = async (data: any) => {
-    console.log("data", data);
     const res = await axios.put(`${CONFIG.ApiUser}/${userAuth.id}`, data);
     setUserData(res.data);
     setOpen(false);
@@ -130,7 +129,6 @@ export default function ProfileAccount() {
     });
     setOpen(false);
   };
-  console.log("errors", errors);
   return (
     <>
       <Box sx={{ width: "100%" }}>

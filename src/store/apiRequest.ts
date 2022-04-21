@@ -1,4 +1,4 @@
-import {signUpStart, signUpError, signUpSuccess} from './userSlice'
+import {signUpSuccess} from './userSlice'
 import {signUp} from '../services/userService'
 
 export const signUpUser = async (user:{}, dispatch:any) => {
@@ -6,6 +6,5 @@ export const signUpUser = async (user:{}, dispatch:any) => {
         const res = await signUp(user);
         dispatch(signUpSuccess(res))
     }catch(err){
-        dispatch(signUpError())
     }
 }
