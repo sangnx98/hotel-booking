@@ -9,6 +9,7 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { Link } from "react-router-dom";
 
 export default function AdminHeader() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -73,8 +74,7 @@ export default function AdminHeader() {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
-    >
-    </Menu>
+    ></Menu>
   );
 
   return (
@@ -90,13 +90,15 @@ export default function AdminHeader() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            LUXSTAY
-          </Typography>
+          <Link to="/home">
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{ display: { xs: "block", sm: "block" } }}
+            >
+              LUXSTAY
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
