@@ -20,8 +20,8 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 import SocialLogin from "../components/SocialLogin";
 import { signUpSuccess } from "../store/userSlice";
-import { setSnackbar } from "../store/snackBarSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { setSnackbar } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 import { CONFIG } from "../config/config";
 
 function Copyright(props: any) {
@@ -58,9 +58,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export default function Login() {
   const dispatch = useDispatch();
-  const snackbarOpen = useSelector((state: any) => state.snackbarOpen )
-  const snackbarType = useSelector((state: any) => state.snackbarType )
-  const snackbarMessage = useSelector((state: any) => state.snackbarMessage )
   const user = useRef({});
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -169,7 +166,7 @@ export default function Login() {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography variant="h5">
               LUXSTAY
             </Typography>
             <Box

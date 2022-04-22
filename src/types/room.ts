@@ -21,5 +21,6 @@ export interface Room {
     isChecked: number,
     intro: string;
     bgUrl: string;
-    
+    lat: number;
+    lng :number
 }

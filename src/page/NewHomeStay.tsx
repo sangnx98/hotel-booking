@@ -12,13 +12,12 @@ import Header from "../components/Header/Header";
 import {
   Container,
   FormControl,
+  Grid,
   InputLabel,
-  MenuItem,
   OutlinedInput,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Theme, useTheme } from "@mui/material/styles";
 import { CONFIG } from "../config/config";
 import { setSnackbar } from "../store/snackBarSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,169 +67,227 @@ const GetStepContent = (props: any): JSX.Element => {
   if (props.step === 0) {
     return (
       <>
-        <FormControl sx={{ width: "100%" }}>
-          <InputLabel id="demo-multiple-name-label">Loại căn hộ</InputLabel>
-          <Select
-            labelId="demo-multiple-name-label"
-            id="demo-multiple-name"
-            // value={props.params.homeType}
-            onChange={props.handleSelectValue}
-            input={<OutlinedInput label="Loại căn hộ" />}
-            MenuProps={MenuProps}
-            native
-          >
-            {names.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
-          variant="outlined"
-          required
-          placeholder="Tên chỗ nghỉ"
-          fullWidth
-          margin="normal"
-          value={props.params.homeStayName}
-          onChange={(e) =>
-            props.handleSetParams("homeStayName", e.target.value)
-          }
-        />
+        <Grid container>
+          <Grid item sm={12} md={12} xs={12}>
+            <FormControl sx={{ width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Loại căn hộ</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                onChange={props.handleSelectValue}
+                input={<OutlinedInput label="Loại căn hộ" />}
+                MenuProps={MenuProps}
+                native
+              >
+                {names.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={12} xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              placeholder="Tên chỗ nghỉ"
+              label="Tên chỗ nghỉ"
+              fullWidth
+              margin="normal"
+              value={props.params.homeStayName}
+              onChange={(e) =>
+                props.handleSetParams("homeStayName", e.target.value)
+              }
+            />
+          </Grid>
+        </Grid>
       </>
     );
   } else if (props.step === 1) {
     return (
       <>
-        <FormControl sx={{ width: "100%" }}>
-          <InputLabel id="demo-multiple-ptovinces-label">
-            Tỉnh/Thành phố
-          </InputLabel>
-          <Select
-            labelId="demo-multiple-provinces-label"
-            id="demo-multiple-provinces"
-            // value={props.params.homeType}
-            onChange={props.handleSelecProvincestValue}
-            input={<OutlinedInput label="Tỉnh/Thành phố" />}
-            MenuProps={MenuProps}
-            native
-          >
-            {provinces.map((province) => (
-              <option key={province} value={province}>
-                {province}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
-          required
-          variant="outlined"
-          placeholder="Quận/Huyện"
-          fullWidth
-          margin="normal"
-          value={props.params.district}
-          onChange={(e) => props.handleSetParams("district", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Đường"
-          fullWidth
-          margin="normal"
-          value={props.params.street}
-          onChange={(e) => props.handleSetParams("street", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Số nhà"
-          fullWidth
-          margin="normal"
-          value={props.params.apartNumber}
-          onChange={(e) => props.handleSetParams("apartNumber", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Kinh độ"
-          fullWidth
-          margin="normal"
-          value={props.lat}
-          onChange={(e) => props.handleSetParams("lat", e.target.value)}
-          inputProps={
-            { readOnly: true, }
-          }
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Vĩ độ"
-          fullWidth
-          margin="normal"
-          value={props.lng}
-          onChange={(e) => props.handleSetParams("lng", e.target.value)}
-          inputProps={
-            { readOnly: true, }
-          }
-        />
-        <Map lat={0} lng={0}/>
+        <Grid container spacing={1}>
+          <Grid item sm={12} md={12} xs={12}>
+            <FormControl sx={{ width: "100%" }}>
+              <InputLabel id="demo-multiple-ptovinces-label">
+                Tỉnh/Thành phố
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-provinces-label"
+                id="demo-multiple-provinces"
+                // value={props.params.homeType}
+                onChange={props.handleSelecProvincestValue}
+                input={<OutlinedInput label="Tỉnh/Thành phố" />}
+                MenuProps={MenuProps}
+                native
+              >
+                {provinces.map((province) => (
+                  <option key={province} value={province}>
+                    {province}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              required
+              variant="outlined"
+              label="Quận/Huyện"
+              placeholder="Quận/Huyện"
+              fullWidth
+              margin="normal"
+              value={props.params.district}
+              onChange={(e) =>
+                props.handleSetParams("district", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Đường"
+              placeholder="Đường"
+              fullWidth
+              margin="normal"
+              value={props.params.street}
+              onChange={(e) => props.handleSetParams("street", e.target.value)}
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Số nhà"
+              placeholder="Số nhà"
+              fullWidth
+              margin="normal"
+              value={props.params.apartNumber}
+              onChange={(e) =>
+                props.handleSetParams("apartNumber", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={6} xs={12}>
+            <TextField
+              variant="outlined"
+              disabled
+              placeholder="Kinh độ"
+              fullWidth
+              margin="normal"
+              value={props.lat}
+              onChange={(e) => props.handleSetParams("lat", e.target.value)}
+              inputProps={{ readOnly: true }}
+            />
+          </Grid>
+          <Grid item sm={12} md={6} xs={12}>
+            <TextField
+              disabled
+              variant="outlined"
+              placeholder="Vĩ độ"
+              fullWidth
+              margin="normal"
+              value={props.lng}
+              onChange={(e) => props.handleSetParams("lng", e.target.value)}
+              inputProps={{ readOnly: true }}
+            />
+          </Grid>
+          <Grid item sm={12} md={12} xs={12}>
+            <Map lat={0} lng={0} />
+          </Grid>
+        </Grid>
       </>
     );
   } else if (props.step === 2) {
     return (
       <>
-        <TextField
-          variant="outlined"
-          placeholder="Diện tích"
-          fullWidth
-          margin="normal"
-          value={props.params.square}
-          onChange={(e) => props.handleSetParams("square", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Phòng ngủ"
-          fullWidth
-          margin="normal"
-          value={props.params.bedRooms}
-          onChange={(e) => props.handleSetParams("bedRooms", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Số lượng giường ngủ"
-          fullWidth
-          margin="normal"
-          value={props.params.bedNums}
-          onChange={(e) => props.handleSetParams("bedNums", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Số lượng phòng tắm"
-          fullWidth
-          margin="normal"
-          value={props.params.bathRooms}
-          onChange={(e) => props.handleSetParams("bathRooms", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Số lượng nhà bếp"
-          fullWidth
-          margin="normal"
-          value={props.params.kitchens}
-          onChange={(e) => props.handleSetParams("kitchens", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Số lượng khách tối đa"
-          fullWidth
-          margin="normal"
-          value={props.params.guestNums}
-          onChange={(e) => props.handleSetParams("guestNums", e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Giá phòng"
-          fullWidth
-          margin="normal"
-          value={props.params.price}
-          onChange={(e) => props.handleSetParams("price", e.target.value)}
-        />
+        <Grid container spacing={2}>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Diện tích"
+              placeholder="Diện tích"
+              fullWidth
+              margin="normal"
+              value={props.params.square}
+              onChange={(e) => props.handleSetParams("square", e.target.value)}
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Phòng ngủ"
+              placeholder="Phòng ngủ"
+              fullWidth
+              margin="normal"
+              value={props.params.bedRooms}
+              onChange={(e) =>
+                props.handleSetParams("bedRooms", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Số lượng giường ngủ"
+              placeholder="Số lượng giường ngủ"
+              fullWidth
+              margin="normal"
+              value={props.params.bedNums}
+              onChange={(e) => props.handleSetParams("bedNums", e.target.value)}
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Số lượng phòng tắm"
+              placeholder="Số lượng phòng tắm"
+              fullWidth
+              margin="normal"
+              value={props.params.bathRooms}
+              onChange={(e) =>
+                props.handleSetParams("bathRooms", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Số lượng nhà bếp"
+              placeholder="Số lượng nhà bếp"
+              fullWidth
+              margin="normal"
+              value={props.params.kitchens}
+              onChange={(e) =>
+                props.handleSetParams("kitchens", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={4} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Số lượng khách tối đa"
+              placeholder="Số lượng khách tối đa"
+              fullWidth
+              margin="normal"
+              value={props.params.guestNums}
+              onChange={(e) =>
+                props.handleSetParams("guestNums", e.target.value)
+              }
+            />
+          </Grid>
+          <Grid item sm={12} md={12} xs={12}>
+            <TextField
+              variant="outlined"
+              label="Giá phòng"
+              placeholder="Giá phòng"
+              fullWidth
+              margin="normal"
+              value={props.params.price}
+              onChange={(e) => props.handleSetParams("price", e.target.value)}
+            />
+          </Grid>
+        </Grid>
       </>
     );
   } else if (props.step === 3) {
@@ -238,6 +295,7 @@ const GetStepContent = (props: any): JSX.Element => {
       <>
         <TextField
           variant="outlined"
+          label="Tiêu đề"
           placeholder="Tiêu đề"
           fullWidth
           margin="normal"
@@ -246,6 +304,7 @@ const GetStepContent = (props: any): JSX.Element => {
         />
         <TextField
           variant="outlined"
+          label="Ảnh đại diện phòng"
           placeholder="Ảnh đại diện phòng"
           fullWidth
           margin="normal"

@@ -8,13 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { getAllRooms } from "../services/homestayService";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { setSnackbar } from "../store/snackBarSlice";
+import { setSnackbar } from "../store/userSlice";
 
 import { Room } from "../types";
 import { CONFIG } from "../config/config";
@@ -85,7 +84,7 @@ export default function HomestayRecord() {
   };
 
   useEffect(() => {
-    getRooms()
+    getRooms();
   }, []);
   const getRooms = () => {
     fetch(`${CONFIG.ApiRooms}?isChecked=${RoomApprovement.Approved}`, {
@@ -95,7 +94,7 @@ export default function HomestayRecord() {
     })
       .then((res) => res.json())
       .then(setRooms);
-  }
+  };
 
   const setApprove = async (room: Room, index: number) => {
     const { id } = room;
@@ -197,7 +196,12 @@ export default function HomestayRecord() {
                       scope="row"
                       sx={{ textAlign: "center" }}
                     >
-                      <img src={room.bgUrl} alt="" width="250px" height='250px'/>
+                      <img
+                        src={room.bgUrl}
+                        alt=""
+                        width="250px"
+                        height="250px"
+                      />
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {room.homeStayName}
@@ -265,10 +269,10 @@ export default function HomestayRecord() {
           </TableContainer>
         </TabPanel>
         <TabPanel value={value} index={1}>
-         <DeniedHomeStay/>
+          <DeniedHomeStay />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <WaittingHomeStay/>
+          <WaittingHomeStay />
         </TabPanel>
       </Box>
     </>

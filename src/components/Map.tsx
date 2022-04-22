@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-} from "@react-google-maps/api";
+import { useState } from "react";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { Box } from "@mui/material";
 import { useDispatch } from "react-redux";
-// import "./MapPage.css";
 
 import { setCenterLatlng } from "../store/userSlice";
 

@@ -10,12 +10,10 @@ import _ from "lodash";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpSuccess } from "../store/userSlice";
-import { setSnackbar } from "../store/snackBarSlice";
+import { signUpSuccess, setSnackbar } from "../store/userSlice";
 import { useForm } from "react-hook-form";
 
 type User = {
@@ -32,7 +30,6 @@ type User = {
 export default function ProfileAccount() {
   const userAuth = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
-  const [bookings, setBookings] = useState<Booking[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState<User>({
@@ -80,20 +77,6 @@ export default function ProfileAccount() {
       });
     }
   }, [userAuth, open]);
-
-  useEffect(() => {
-    getBooking();
-  }, []);
-
-  const getBooking = () => {
-    fetch(`${CONFIG.ApiBooking}?userId=${userAuth.id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res: any) => res.json())
-      .then(setBookings);
-  };
 
   const onSubmit = async (data: any) => {
     const res = await axios.put(`${CONFIG.ApiUser}/${userAuth.id}`, data);

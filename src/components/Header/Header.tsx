@@ -7,10 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
-import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PageviewIcon from "@mui/icons-material/Pageview";
@@ -20,7 +18,6 @@ import _ from "lodash";
 import "./Header.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutRequest } from "../../store/userSlice";
-import { Room } from "../../types";
 import { CONFIG } from "../../config/config";
 
 const Search = styled("div")(({ theme }) => ({
@@ -230,7 +227,6 @@ export default function Header() {
           <Typography
             variant="h6"
             noWrap
-            component="div"
             sx={{ display: { xs: "none", sm: "block" }, color: "black" }}
           >
             LUXSTAY
@@ -238,7 +234,6 @@ export default function Header() {
           <Typography
             variant="h6"
             noWrap
-            component="div"
             sx={{
               display: { xs: "block", sm: "none" },
               color: "black",
@@ -248,6 +243,7 @@ export default function Header() {
             LUX
           </Typography>
         </Link>
+        <Box sx={{position: "relative"}}>
         <Search
           sx={{
             border: "1px solid #b9c9be",
@@ -258,7 +254,7 @@ export default function Header() {
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase
-            placeholder="Search…"
+            placeholder="Tìm kiếm chỗ ở ..."
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearch}
           />
@@ -269,6 +265,57 @@ export default function Header() {
             <PageviewIcon sx={{ width: "50%", cursor: "pointer" }} />
           </PreviewIconWrapper>
         </Search>
+        {roomSeacrhing.length !== 0 && (
+          <Box
+            sx={{
+              width: "100%",
+              height: "auto",
+              position: "absolute",
+              mt: '0.5rem',
+              zIndex: "100",
+              bgcolor: "white",
+              padding: "1rem",
+              borderRadius: "5px",
+              boxShadow: "-1px 3px 16px -4px #000000",
+            }}
+          >
+            {roomSeacrhing.map((room: any, key: any) => {
+              return (
+                <Link
+                  to={`/home/roomsDetail/${room.id}`}
+                  onClick={() => onGoToRoomPage(room)}
+                >
+                  <Box
+                    sx={{
+                      color: "black",
+                      mb: "1rem",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "#e6e6e6",
+                        opacity: [0.8, 0.7, 0.9],
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <img src={room.bgUrl} alt="" width="100px" />
+                      <Box sx={{ ml: "1rem" }}>
+                        <Typography
+                          sx={{ fontSize: "15px", fontWeight: "700" }}
+                        >
+                          {room.homeStayName}
+                        </Typography>
+                        <Typography sx={{ fontSize: "13px" }}>
+                          {room.district}, {room.province}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Link>
+              );
+            })}
+          </Box>
+        )}
+        </Box>
 
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
@@ -309,7 +356,7 @@ export default function Header() {
               </Typography>
               <Box
                 onClick={handleProfileMenuOpen}
-                sx={{ cursor: "pointer", width: "3rem", borderRadius: "10px" }}
+                sx={{ cursor: "pointer", width: "2rem", borderRadius: "10px" }}
               >
                 <img
                   src={userAuth.avatar}
@@ -329,7 +376,6 @@ export default function Header() {
               <Link to="/login">
                 <Typography
                   variant="subtitle2"
-                  component="h2"
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -356,55 +402,7 @@ export default function Header() {
           </IconButton>
         </Box>
       </Toolbar>
-      {roomSeacrhing.length !== 0 && (
-        <Box
-          sx={{
-            width: "23rem",
-            height: "auto",
-            mt: "4.5rem",
-            position: "absolute",
-            left: "7%",
-            zIndex: "100",
-            bgcolor: "white",
-            padding: "1rem",
-            borderRadius: "5px",
-            boxShadow: "-1px 3px 16px -4px #000000",
-          }}
-        >
-          {roomSeacrhing.map((room: any, key: any) => {
-            return (
-              <Link
-                to={`/home/roomsDetail/${room.id}`}
-                onClick={() => onGoToRoomPage(room)}
-              >
-                <Box
-                  sx={{
-                    color: "black",
-                    mb: "1rem",
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: "#e6e6e6",
-                      opacity: [0.8, 0.7, 0.9],
-                    },
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <img src={room.bgUrl} alt="" width="100px" />
-                    <Box sx={{ ml: "1rem" }}>
-                      <Typography sx={{ fontSize: "15px", fontWeight: "700" }}>
-                        {room.homeStayName}
-                      </Typography>
-                      <Typography sx={{ fontSize: "13px" }}>
-                        {room.district}, {room.province}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Link>
-            );
-          })}
-        </Box>
-      )}
+
       {renderMobileMenu}
       {renderMenu}
     </AppBar>

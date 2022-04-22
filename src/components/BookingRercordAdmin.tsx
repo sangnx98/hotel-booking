@@ -136,7 +136,12 @@ export default function BookingRecordAdmin() {
                     scope="row"
                     sx={{ textAlign: "center" }}
                   >
-                    <img src={bookings.roomImg} alt="" width="250px" />
+                    <img
+                      src={bookings.roomImg}
+                      alt=""
+                      width="250px"
+                      height="250px"
+                    />
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {bookings.roomName}

@@ -17,7 +17,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['user, snackbar, room']
+  whitelist: ['user']
 }
 
 const persistedReducer = persistReducer(persistConfig, userReducer)

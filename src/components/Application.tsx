@@ -9,12 +9,11 @@ export default function Application() {
     <Container maxWidth="xl">
       <Box>
         <Grid container>
-          <Grid xs={12} sm={6} md={6}>
+          <Grid item xs={12} sm={6} md={6}>
             <Box sx={{ mr: "1rem" }}>
               <Typography
                 variant="h6"
                 noWrap
-                component="div"
                 sx={{
                   display: { xs: "block", sm: "block" },
                   color: "black",
@@ -26,14 +25,13 @@ export default function Application() {
               </Typography>
               <Typography
                 variant="h4"
-                component="h6"
                 sx={{ display: "flex", marginBottom: "1rem" }}
               >
                 TÌM KIẾM CHỖ Ở GIÁ TỐT NHẤT
               </Typography>
               <Typography
                 variant="subtitle2"
-                component="h6"
+                
                 sx={{ display: "flex", marginBottom: "1rem" }}
               >
                 Luxstay hiện là nền tảng đặt phòng trực tuyến #1 Việt Nam. Đồng
@@ -104,7 +102,7 @@ export default function Application() {
               </Box>
             </Box>
           </Grid>
-          <Grid xs={12} sm={6} md={6}>
+          <Grid item xs={12} sm={6} md={6}>
             <Box>
               <img
                 src="https://www.luxstay.com/home/home-02.png"

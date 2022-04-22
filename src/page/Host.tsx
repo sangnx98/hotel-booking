@@ -7,11 +7,9 @@ import Header from "../components/Header/Header";
 import { Container } from "@mui/material";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
-import axios from "axios";
 
 import { getRoomsById } from "../store/userSlice";
 import Footer from "../components/Footer";
-import Contact from "../components/Contact";
 import HostDashBoard from "../components/HostDashboard";
 import HostHomeStay from "../components/HostHomstay";
 import { useSelector } from "react-redux";

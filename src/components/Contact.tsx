@@ -27,7 +27,7 @@ export default function Contact() {
         <Box>
           <Typography
             variant="h6"
-            component="h6"
+            
             sx={{ display: "flex", marginBottom: "1rem" }}
           >
             TOP HOMESTAY ĐƯỢC HIÊU THÍCH
@@ -42,7 +42,7 @@ export default function Contact() {
         <Box>
           <Typography
             variant="h6"
-            component="h6"
+            
             sx={{ display: "flex", marginBottom: "1rem" }}
           >
             KHÔNG GIAN ƯA THÍCH
@@ -56,7 +56,7 @@ export default function Contact() {
         <Box>
           <Typography
             variant="h6"
-            component="h6"
+            
             sx={{ display: "flex", marginBottom: "1rem" }}
           >
             VỀ CHÚNG TÔI

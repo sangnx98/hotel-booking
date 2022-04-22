@@ -24,7 +24,7 @@ import { Pagination, FreeMode, Navigation } from "swiper";
 import { Snackbar } from "@mui/material";
 import NumberFormat from "react-number-format";
 
-import { setSnackbar } from "../store/snackBarSlice";
+import { setSnackbar } from "../store/userSlice";
 import { CONFIG } from "../config/config";
 import { addNewBooking } from "../services/homestayService";
 import { BookingStatus, RoomsStatus } from "../enum/index";
@@ -298,7 +298,6 @@ export default function RoomDetail() {
               <Box sx={{ mb: "2rem" }}>
                 <Typography
                   variant="h5"
-                  component="h2"
                   sx={{
                     display: "flex",
                     fontWeight: "600",
@@ -343,21 +342,18 @@ export default function RoomDetail() {
               <Box sx={{ mb: "3rem" }}>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
                   sx={{ display: "flex", fontWeight: "600", mb: "1rem" }}
                 >
                   Tóm tắt về The Galaxy Home Apartment
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Vị trí rất đẹp và thuận tiện ở quận Cầu Giấy
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Gần công viên Cầu Giấy, Lotteria, trung tâm mua sắm với môi
@@ -365,7 +361,6 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
                   sx={{ display: "flex" }}
                 >
                   Bạn hoàn toàn có thể trải nghiệm những dịch vụ cao cấp tại đây
@@ -375,81 +370,76 @@ export default function RoomDetail() {
               <Box sx={{ mb: "3rem" }}>
                 <Typography
                   variant="h5"
-                  component="h2"
                   sx={{ display: "flex", fontWeight: "600", mb: "0.5rem" }}
                 >
                   Tiện nghi chỗ ở
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
                   sx={{ display: "flex", mb: "1.5rem" }}
                 >
                   Giới thiệu về tiện nghi
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
                   sx={{ display: "flex", mb: "0.5rem", fontWeight: "600" }}
                 >
                   Tiện nghi
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Wifi
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     TV
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Điều hòa
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Máy giặt
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Dầu gội/xả
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     {" "}
                     Giấy vệ sinh
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Khăn tắm
                   </Grid>
                 </Grid>
 
                 <Typography
                   variant="subtitle1"
-                  component="h2"
                   sx={{ display: "flex", mb: "0.5rem", fontWeight: "600" }}
                 >
                   Tiện nghi bếp
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Bếp điện
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Tủ lạnh
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Lò nướng
                   </Grid>
-                  <Grid xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={4} md={4} sx={{ mb: "1rem" }}>
                     Bát đũa
                   </Grid>
                 </Grid>
 
                 <Typography
                   variant="subtitle1"
-                  component="h2"
                   sx={{ display: "flex", mb: "0.5rem", fontWeight: "600" }}
                 >
                   Tiện nghi phòng
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
                     Ban công
                   </Grid>
                 </Grid>
@@ -458,21 +448,21 @@ export default function RoomDetail() {
               <Box sx={{ mb: "3rem" }}>
                 <Typography
                   variant="h5"
-                  component="h2"
+                  
                   sx={{ display: "flex", fontWeight: "600", mb: "0.5rem" }}
                 >
                   Nội quy chỗ ở
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "1.5rem", fontWeight: "600" }}
                 >
                   Chính sách hủy phòng
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Linh hoạt: Miễn phí hủy phòng trong vòng 48h sau khi đặt phòng
@@ -483,7 +473,7 @@ export default function RoomDetail() {
 
                 <Typography
                   variant="subtitle1"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem", fontWeight: "600" }}
                 >
                   Lưu ý đặc biệt
@@ -491,14 +481,14 @@ export default function RoomDetail() {
 
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Vị trí rất đẹp và thuận tiện ở quận Cầu Giấy
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Gần công viên Cầu Giấy, Lotteria, trung tâm mua sắm với môi
@@ -506,20 +496,20 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem" }}
                 >
                   Bạn hoàn toàn có thể trải nghiệm những dịch vụ cao cấp tại đây
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  component="h2"
+                  
                   sx={{ display: "flex", mb: "0.5rem", fontWeight: "600" }}
                 >
                   Thời gian nhận phòng
                 </Typography>
                 <Grid container>
-                  <Grid xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
+                  <Grid item xs={6} sm={6} md={4} sx={{ mb: "1rem" }}>
                     Ban công
                   </Grid>
                 </Grid>
@@ -530,7 +520,7 @@ export default function RoomDetail() {
               <Box
                 sx={{
                   height: "17rem",
-                  border: "2px solid #dbd3bd",
+                  border: "0.5px solid #eeeee4",
                   borderRadius: "10px",
                   padding: "2rem",
                   display: "flex",
@@ -539,7 +529,7 @@ export default function RoomDetail() {
               >
                 <Typography
                   variant="h5"
-                  component="h2"
+                  
                   sx={{
                     display: "flex",
                     fontWeight: "700",
@@ -595,6 +585,7 @@ export default function RoomDetail() {
                         id="outlined-disabled"
                         label="Người lớn"
                         type="number"
+                        value={adult}
                         onChange={handleAdultChange}
                         InputLabelProps={{
                           shrink: true,
@@ -607,6 +598,7 @@ export default function RoomDetail() {
                         id="outlined-number"
                         label="Trẻ em"
                         type="number"
+                        value={children}
                         onChange={handleChildrenChange}
                         InputLabelProps={{
                           shrink: true,
@@ -651,14 +643,14 @@ export default function RoomDetail() {
                   </Typography>
                 </Box>
 
-                <Button variant="outlined" onClick={handleBooking}>
+                <Button variant="outlined" onClick={handleBooking} sx={{padding:'0.5rem',bgcolor: '#e28743', width: '50%', margin: '0 auto', color: 'black'}}>
                   Đặt ngay
                 </Button>
               </Box>
               <Box
                 sx={{
                   height: "15rem",
-                  border: "2px solid #dbd3bd",
+                  border: "0.5px solid #eeeee4",
                   borderRadius: "10px",
                   padding: "2rem",
                   display: "flex",
@@ -668,7 +660,7 @@ export default function RoomDetail() {
               >
                 <Typography
                   variant="h5"
-                  component="h2"
+                  
                   sx={{
                     display: "flex",
                     fontWeight: "700",
@@ -679,7 +671,7 @@ export default function RoomDetail() {
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  component="h2"
+                  
                   sx={{ display: "flex", marginBottom: "1rem" }}
                 >
                   Cùng Luxstay bắt đầu chuyến hành trình chinh phục thế giới của

@@ -17,14 +17,12 @@ export default function UserManual() {
       <Container maxWidth="xl">
         <Typography
           variant="h5"
-          component="h2"
           sx={{ display: "flex", fontWeight: "600", margin: "2rem 0 1rem 0" }}
         >
           Hướng dẫn sử dụng
         </Typography>
         <Typography
           variant="subtitle2"
-          component="h2"
           sx={{ display: "flex", marginBottom: "2rem" }}
         >
           Những địa điểm thường đến mà Luxstay gợi ý dành cho bạn

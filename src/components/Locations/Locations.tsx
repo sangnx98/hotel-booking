@@ -36,14 +36,12 @@ export default function Locations() {
         <Box sx={{ height: "auto", marginTop: "1rem", padding: "2rem 0 0 0" }}>
           <Typography
             variant="h5"
-            component="h2"
             sx={{ display: "flex", fontWeight: "600", marginBottom: "1rem" }}
           >
             Địa điểm nổi bật
           </Typography>
           <Typography
             variant="subtitle2"
-            component="h2"
             sx={{ display: "flex", marginBottom: "2rem" }}
           >
             Cùng Luxstay bắt đầu chuyến hành trình chinh phục thế giới của bạn
@@ -83,8 +81,8 @@ export default function Locations() {
               },
             }}
           >
-            {locations.map((location: any) => (
-                <SwiperSlide>
+            {locations.map((location: any, index: any) => (
+                <SwiperSlide key={index}>
                   <Typography
                     sx={{
                       position: "absolute",

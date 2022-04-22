@@ -28,8 +28,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById} from "../store/roomSlice";
-import { setSnackbar } from "../store/snackBarSlice";
+import { setSnackbar, getRoomsById } from "../store/userSlice";
 import { Booking } from "../types";
 import { BookingStatus, RoomsStatus } from "../enum/index";
 
@@ -174,11 +173,13 @@ export default function HostDashBoard() {
         const newRooms = [...bookings];
         newRooms[index] = result;
         setBookings(newRooms);
-        dispatch(setSnackbar({
-          snackbarOpen: true,
-          snackbarType: "success",
-          snackbarMessage: "Trả phòng thành công !!"
-        }))
+        dispatch(
+          setSnackbar({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: "Trả phòng thành công !!",
+          })
+        );
       })
       .then(() => {
         fetch(`${CONFIG.ApiRooms}/${roomId}`, {
@@ -194,9 +195,8 @@ export default function HostDashBoard() {
   return (
     <Box maxWidth="xl">
       <Typography
-        variant="h6"
-        component="h2"
-        sx={{ display: "flex", fontWeight: "500" }}
+        component={'span'}
+        sx={{ display: "flex", fontWeight: "500", fontSize: "25px" }}
       >
         Thống kê tình hình kinh doanh
       </Typography>
@@ -204,14 +204,15 @@ export default function HostDashBoard() {
         sx={{
           width: "auto",
           bgcolor: "background.paper",
-          display: {md:"flex", sm:'flex'},
+          display: { md: "flex", sm: "flex" },
           flexDirection: "row",
           margin: "1rem 0 1rem 0",
         }}
       >
         <ListItem
+        component="li"
           sx={{
-            border: "1px solid #dae3dc"
+            border: "1px solid #dae3dc",
           }}
         >
           <ListItemAvatar>
@@ -223,7 +224,7 @@ export default function HostDashBoard() {
         </ListItem>
         <ListItem
           sx={{
-            border: "1px solid #dae3dc"
+            border: "1px solid #dae3dc",
           }}
         >
           <ListItemAvatar>
@@ -235,7 +236,7 @@ export default function HostDashBoard() {
         </ListItem>
         <ListItem
           sx={{
-            border: "1px solid #dae3dc"
+            border: "1px solid #dae3dc",
           }}
         >
           <ListItemAvatar>
@@ -255,9 +256,13 @@ export default function HostDashBoard() {
         </ListItem>
       </List>
       <Typography
-        variant="h6"
-        component="h2"
-        sx={{ display: "flex", fontWeight: "500", mb: "2rem" }}
+        component={'span'}
+        sx={{
+          display: "flex",
+          fontWeight: "500",
+          mb: "2rem",
+          fontSize: "25px",
+        }}
       >
         Đặt chỗ gần đây
       </Typography>
@@ -291,7 +296,12 @@ export default function HostDashBoard() {
                     scope="row"
                     sx={{ textAlign: "center" }}
                   >
-                    <img src={bookings.roomImg} alt="" width="250px" height='250px'/>
+                    <img
+                      src={bookings.roomImg}
+                      alt=""
+                      width="250px"
+                      height="250px"
+                    />
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {bookings.roomName}
@@ -346,11 +356,11 @@ export default function HostDashBoard() {
                     {bookings.status === BookingStatus.Processing ? (
                       <>
                         <CheckIcon
-                          sx={{ cursor: "pointer", mr: '1rem', color: 'green' }}
+                          sx={{ cursor: "pointer", mr: "1rem", color: "green" }}
                           onClick={() => approveBooking(bookings, index)}
                         />
                         <ClearIcon
-                          sx={{ cursor: "pointer", color: 'red' }}
+                          sx={{ cursor: "pointer", color: "red" }}
                           onClick={() => cancelBooking(bookings, index)}
                         />
                       </>
@@ -385,7 +395,7 @@ export default function HostDashBoard() {
             />
             <Typography
               variant="subtitle1"
-              component="span"
+              component={'span'}
               sx={{ fontWeight: "500" }}
             >
               Chưa có người đặt chỗ

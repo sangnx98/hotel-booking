@@ -1,8 +1,5 @@
-import React, { useRef, useState } from "react";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -14,16 +11,17 @@ import Grid from "@mui/material/Grid";
 
 import "./Slider.css";
 
-// import required modules
 import { Autoplay, Pagination, Navigation } from "swiper";
+import { useSelector } from "react-redux";
 
 export default function Slider() {
+  const userAuth = useSelector((state: any) => state.user)
   return (
     <>
       <CssBaseline />
       <Container maxWidth="xl">
         <Grid container>
-          <Grid xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={12} md={12}>
             <Box sx={{ marginTop: "4rem" }}>
               <Swiper
                 slidesPerView={1}
@@ -59,10 +57,9 @@ export default function Slider() {
         </Grid>
         <Typography
           variant="h4"
-          component="h2"
           sx={{ display: "flex", fontWeight: "600", margin: "2rem 0 1rem 0" }}
         >
-          Chào mừng đến với Luxstay
+          Chào mừng đến với Luxstay, {userAuth.name}
         </Typography>
         <Typography variant="subtitle2" component="span" sx={{ display: "flex" }}>
           Đặt chỗ ở, homestay, cho thuê xe, trải nghiệm và nhiều hơn nữa trên

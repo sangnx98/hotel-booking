@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -16,10 +16,10 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUpUser } from "../store/apiRequest";
 import { signUpSuccess } from "../store/userSlice";
-import { setSnackbar } from "../store/snackBarSlice";
+import { setSnackbar } from "../store/userSlice";
 import { CONFIG } from "../config/config";
 
 function Copyright(props: any) {

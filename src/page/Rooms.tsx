@@ -75,7 +75,7 @@ export default function Rooms() {
           </Box>
           <Typography
             variant="subtitle1"
-            component="h2"
+            
             sx={{ display: "flex", margin: "4rem 0 4rem 0" }}
           >
             Trước khi đặt phòng, hãy kiểm tra những địa điểm bị hạn chế du lịch
@@ -85,7 +85,7 @@ export default function Rooms() {
           </Typography>
           <Typography
             variant="h4"
-            component="h2"
+            
             sx={{ display: "flex", fontWeight: "600", marginBottom: "1rem" }}
           >
             Các homestay tại {address}
@@ -137,7 +137,6 @@ export default function Rooms() {
                           <Typography
                             gutterBottom
                             variant="subtitle1"
-                            component="div"
                           >
                             <b>
                               {item.homeStayType} - {item.bedRooms} phòng ngủ
@@ -149,7 +148,6 @@ export default function Rooms() {
                           <Typography
                             gutterBottom
                             variant="subtitle1"
-                            component="div"
                             fontWeight="700"
                           >
                             <NumberFormat

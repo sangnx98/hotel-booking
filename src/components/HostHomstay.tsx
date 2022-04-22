@@ -40,10 +40,10 @@ import { useSelector } from "react-redux";
 import NumberFormat from "react-number-format";
 
 import { CONFIG } from "../config/config";
-import { getRoomsById} from "../store/userSlice";
-import { setSnackbar } from "../store/snackBarSlice";
+import { setSnackbar, getRoomsById } from "../store/userSlice";
 import { Room } from "../types";
 import { RoomsStatus } from "../enum/index";
+import Map from "./Map";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -104,7 +104,6 @@ const provinces = [
 
 export default function HostHomeStay() {
   const userAuth = useSelector((state: any) => state.user);
-  const snackBar = useSelector((state: any) => state.noticationBar);
   const dispatch = useDispatch();
   const [rooms, setRooms] = useState<any[]>([]);
   const initialState: Room = {
@@ -130,13 +129,23 @@ export default function HostHomeStay() {
     isChecked: 0,
     intro: "",
     bgUrl: "",
+    lat: 0,
+    lng: 0,
   };
 
   const [room, setRoom] = useState<any>([]);
   const [open, setOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [roomData, setRoomData] = useState<Room>(initialState);
-  const [searchRoomName, setSearchRoomName] = useState("")
+  const [searchRoomName, setSearchRoomName] = useState("");
+  const lat = useSelector((state: any) => state.center.lat);
+  const lng = useSelector((state: any) => state.center.lng);
+
+  useEffect(() => {
+    if (lat && lng) {
+      setRoomData({ ...roomData, lat, lng });
+    }
+  }, [lat, lng]);
 
   const handleSubmit = async (id: number) => {
     const res = await axios.put(`${CONFIG.ApiRooms}/${id}`, roomData);
@@ -150,10 +159,6 @@ export default function HostHomeStay() {
         snackbarMessage: "Cập nhật chỗ ở thành công",
       })
     );
-  };
-
-  const handleClickOpen = () => {
-    setDeleteConfirm(true);
   };
 
   const handleCloseDeleteConfirm = () => {
@@ -195,7 +200,9 @@ export default function HostHomeStay() {
       _.isEmpty(roomData.status) &&
       _.isEmpty(roomData.isChecked) &&
       _.isEmpty(roomData.intro) &&
-      _.isEmpty(roomData.bgUrl)
+      _.isEmpty(roomData.bgUrl) &&
+      _.isEmpty(roomData.lat) &&
+      _.isEmpty(roomData.lng)
     ) {
       setRoomData({
         ...roomData,
@@ -220,6 +227,8 @@ export default function HostHomeStay() {
         isChecked: room.isChecked,
         intro: room.intro,
         bgUrl: room.bgUrl,
+        lat: room.lat,
+        lng: room.lng,
       });
     }
   }, [room, roomData]);
@@ -348,7 +357,12 @@ export default function HostHomeStay() {
                         scope="row"
                         sx={{ textAlign: "center" }}
                       >
-                        <img src={room.bgUrl} alt="" width="250px" height='250px'/>
+                        <img
+                          src={room.bgUrl}
+                          alt=""
+                          width="250px"
+                          height="250px"
+                        />
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {room.homeStayName}
@@ -414,7 +428,6 @@ export default function HostHomeStay() {
                             />
                             <DeleteIcon
                               sx={{ cursor: "pointer", color: "red" }}
-                              // onClick={handleClickOpen}
                               onClick={() => handleDelete(room, index)}
                             />
                           </Box>
@@ -705,6 +718,31 @@ export default function HostHomeStay() {
                   value={roomData.bgUrl}
                   onChange={(e) => handleSetValue("bgUrl", e.target.value)}
                 />
+              </Grid>
+              <Grid item xs={12} md={4} sm={6}>
+                <span>Vĩ độ</span>
+                <TextField
+                  variant="outlined"
+                  placeholder="Vĩ độ"
+                  fullWidth
+                  margin="normal"
+                  value={roomData.lat}
+                  onChange={(e) => handleSetValue("lat", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={4} sm={6}>
+                <span>Kinh độ</span>
+                <TextField
+                  variant="outlined"
+                  placeholder="Kinh độ"
+                  fullWidth
+                  margin="normal"
+                  value={roomData.lng}
+                  onChange={(e) => handleSetValue("lng", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} sm={6}>
+                <Map lat={roomData.lat} lng={roomData.lng} />
               </Grid>
             </Grid>
           </Box>
