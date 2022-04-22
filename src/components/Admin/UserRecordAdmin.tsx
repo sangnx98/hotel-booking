@@ -11,8 +11,8 @@ import Stack from "@mui/material/Stack";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import { getAllUser } from "../services/userService";
-import { User } from "../types";
+import { getAllUser } from "../../services/userService";
+import { User } from "../../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

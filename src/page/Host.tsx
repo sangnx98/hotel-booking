@@ -10,8 +10,8 @@ import _ from "lodash";
 
 import { getRoomsById } from "../store/userSlice";
 import Footer from "../components/Footer";
-import HostDashBoard from "../components/HostDashboard";
-import HostHomeStay from "../components/HostHomstay";
+import HostDashBoard from "../components/Host/HostDashboard";
+import HostHomeStay from "../components/Host/HostHomstay";
 import { useSelector } from "react-redux";
 import { CONFIG } from "../config/config";
 

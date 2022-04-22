@@ -10,10 +10,10 @@ import _ from "lodash";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { CONFIG } from "../config/config";
+import { CONFIG } from "../../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpSuccess, setSnackbar } from "../store/userSlice";
+import { signUpSuccess, setSnackbar } from "../../store/userSlice";
 import { useForm } from "react-hook-form";
 
 type User = {

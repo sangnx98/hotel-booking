@@ -14,8 +14,8 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import { getAllBookings } from "../services/homestayService";
-import { BookingStatus } from "../enum";
+import { getAllBookings } from "../../services/homestayService";
+import { BookingStatus } from "../../enum";
 import SuccessBooking from "./SuccessBooking";
 import ProcessingBooking from "./ProcessingBooking";
 import BookedBooking from "./BookedBooking";

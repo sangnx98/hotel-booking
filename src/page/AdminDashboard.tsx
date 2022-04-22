@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import { Box } from "@mui/system";
-import AdminHeader from "../components/AdminHeader";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -9,9 +8,10 @@ import TabPanel from "@mui/lab/TabPanel";
 import { getAllRooms } from "../services/homestayService";
 
 import { Room } from "../types";
-import UserRecordAdmin from "../components/UserRecordAdmin";
-import BookingRecordAdmin from "../components/BookingRercordAdmin";
-import HomestayRecord from "../components/HomestayRecord";
+import AdminHeader from "../components/Admin/AdminHeader";
+import UserRecordAdmin from "../components/Admin/UserRecordAdmin";
+import BookingRecordAdmin from "../components/Admin/BookingRercordAdmin";
+import HomestayRecord from "../components/Admin/HomestayRecord";
 
 export default function AdminDashboard() {
   const [rooms, setRooms] = useState<Room[]>([]);

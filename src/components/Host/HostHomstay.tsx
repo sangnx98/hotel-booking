@@ -39,11 +39,11 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import NumberFormat from "react-number-format";
 
-import { CONFIG } from "../config/config";
-import { setSnackbar, getRoomsById } from "../store/userSlice";
-import { Room } from "../types";
-import { RoomsStatus } from "../enum/index";
-import Map from "./Map";
+import { CONFIG } from "../../config/config";
+import { setSnackbar, getRoomsById } from "../../store/userSlice";
+import { Room } from "../../types";
+import { RoomsStatus } from "../../enum/index";
+import Map from "../Map";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

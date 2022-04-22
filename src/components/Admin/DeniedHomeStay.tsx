@@ -10,11 +10,11 @@ import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch } from "react-redux";
-import { setSnackbar } from "../store/userSlice";
+import { setSnackbar } from "../../store/userSlice";
 
-import { Room } from "../types";
-import { CONFIG } from "../config/config";
-import { RoomApprovement, RoomsStatus } from "../enum";
+import { Room } from "../../types";
+import { CONFIG } from "../../config/config";
+import { RoomApprovement, RoomsStatus } from "../../enum";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

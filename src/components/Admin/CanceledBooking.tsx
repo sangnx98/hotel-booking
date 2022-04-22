@@ -9,9 +9,9 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import { User } from "../types";
-import { BookingStatus } from "../enum";
-import { CONFIG } from "../config/config";
+import { User } from "../../types";
+import { BookingStatus } from "../../enum";
+import { CONFIG } from "../../config/config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

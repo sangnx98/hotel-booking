@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,9 +9,9 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import { User } from "../types";
-import { BookingStatus } from "../enum";
-import { CONFIG } from "../config/config";
+import { User } from "../../types";
+import { BookingStatus } from "../../enum";
+import { CONFIG } from "../../config/config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,17 +27,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-export default function BookedBooking() {
+export default function SuccessBooking() {
   const [bookings, setBookings] = useState<User[]>([]);
 
   useEffect(() => {
-    fetch(`${CONFIG.ApiBooking}?status=${BookingStatus.Booked}`, {
+    fetch(`${CONFIG.ApiBooking}?status=${BookingStatus.Completed}`, {
       headers: {
         "Content-Type": "application/json",
       },

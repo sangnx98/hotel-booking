@@ -18,7 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
-import SocialLogin from "../components/SocialLogin";
+import SocialLogin from "../components/User/SocialLogin";
 import { signUpSuccess } from "../store/userSlice";
 import { setSnackbar } from "../store/userSlice";
 import { useDispatch } from "react-redux";
@@ -213,9 +213,9 @@ export default function Login() {
               >
                 Sign In
               </Button>
-              {/* <Button type="submit" fullWidth sx={{ mt: 1, mb: 2 }}>
+              <Button type="submit" fullWidth sx={{ mt: 1, mb: 2 }}>
                 <SocialLogin />
-              </Button> */}
+              </Button>
               <Grid item>
                 <Link href="/signup" variant="body2">
                   {"Do you have account? Sign up"}

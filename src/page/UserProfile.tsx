@@ -17,7 +17,7 @@ import NumberFormat from "react-number-format";
 import { Booking } from "../types";
 import { CONFIG } from "../config/config";
 import Header from "../components/Header/Header";
-import ProfileAccount from "../components/ProfileAccount";
+import ProfileAccount from "../components/User/ProfileAccount";
 import { BookingStatus, RoomsStatus } from "../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

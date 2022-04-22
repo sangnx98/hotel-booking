@@ -3,9 +3,9 @@ import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { CONFIG } from "../config/config";
-import { signUpUser } from "../store/apiRequest";
-import { signUpSuccess } from "../store/userSlice";
+import { CONFIG } from "../../config/config";
+import { signUpUser } from "../../store/apiRequest";
+import { signUpSuccess } from "../../store/userSlice";
 
 export default function SocialLogin() {
   const dispatch = useDispatch()

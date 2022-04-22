@@ -27,10 +27,10 @@ import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import NumberFormat from "react-number-format";
 
-import { CONFIG } from "../config/config";
-import { setSnackbar, getRoomsById } from "../store/userSlice";
-import { Booking } from "../types";
-import { BookingStatus, RoomsStatus } from "../enum/index";
+import { CONFIG } from "../../config/config";
+import { setSnackbar, getRoomsById } from "../../store/userSlice";
+import { Booking } from "../../types";
+import { BookingStatus, RoomsStatus } from "../../enum/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

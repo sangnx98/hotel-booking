@@ -13,11 +13,11 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { setSnackbar } from "../store/userSlice";
+import { setSnackbar } from "../../store/userSlice";
 
-import { Room } from "../types";
-import { CONFIG } from "../config/config";
-import { RoomApprovement, RoomsStatus } from "../enum";
+import { Room } from "../../types";
+import { CONFIG } from "../../config/config";
+import { RoomApprovement, RoomsStatus } from "../../enum";
 import DeniedHomeStay from "./DeniedHomeStay";
 import WaittingHomeStay from "./WaittingHomeStay";
 
